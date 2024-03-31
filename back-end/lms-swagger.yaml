@@ -1,0 +1,126 @@
+openapi: 3.0.3
+
+info:
+  title: Learning Management System API Document
+  description: |-
+    This is the back end API blueprint for the front end to get data
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+
+servers:
+  - url: http://localhost:5000/api
+
+tags:
+  - name: user
+    description: Operations about user
+
+paths:
+
+  /user:
+    post:
+      tags: 
+        - user
+      summary: Create new user
+      description: Create new user by the information from request body
+      operationId: createNewUser
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserArray'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserArray'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserArray'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  mess:
+                    type: string
+                    example: Created new user successfully !
+                  data:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        example: 1
+                required:
+                  - success
+                  - mess
+                  - data
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  mess:
+                    type: string
+                    example: Created new user successfully !
+                  data:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        example: 1
+                required:
+                  - success
+                  - mess
+                  - data
+        '500':
+          description: 'Missing input'
+
+components:
+  schemas:
+    UserArray:
+      type: array
+      items:
+        properties:
+          firstname:
+            type: string
+            example: Quach
+          lastname:
+            type: string
+            example: Dien
+          avatar:
+            type: string
+            format: url
+            example: https://i.pinimg.com/564x/84/40/de/8440de499edaf314a9d8e8f6353fe0de.jpg
+          password:
+            type: string
+            # format
+            example: 12345
+          email:
+            type: string
+            format: email
+            example: dienbku@gmail.com
+          role:
+            type: string
+            enum:
+              - STUDENT
+              - TEACHER
+              - ADMIN
+      xml:
+        name: user

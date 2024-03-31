@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Hóa đại cương",
+    "description":"Chemistry is the study of matter and the changes it undergoes.",
+    "image":"https://i.pinimg.com/736x/9d/90/71/9d907124cc2b18eeecaa0d4aaec997a7.jpg",
+    "course_id": "CH1003"
+  },
+  {
+    "title": "Xác suất thống kê",
+    "description":"Probability and statistics unlock the hidden patterns in the chaos of data, revealing the underlying order in the seemingly random.",
+    "image":"https://i.pinimg.com/564x/37/67/dc/3767dc58e3f7df66aa2cba93ad2a4518.jpg",
+    "course_id": "MT2013"
+  },
+  {
+    "title": "Giải tích 1",
+    "description":"Calculus 1 lays the foundation for understanding rates of change and the fundamental principles of differentiation and integration.",
+    "image":"https://i.pinimg.com/564x/18/2f/29/182f295f417f3a9ca7fdf8ea39d8d833.jpg",
+    "course_id": "MT1003"
+  }
+]

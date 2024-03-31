@@ -1,0 +1,28 @@
+[
+  {
+    "firstname":"Koi",
+    "lastname":"Koi",
+    "password":"3112",
+    "email":"koikoidth12@gmail.com"
+  },
+  {
+    "firstname":"King",
+    "lastname":"Crimson",
+    "password":"12",
+    "email":"kingcrimson3112@gmail.com",
+    "role":"TEACHER"
+  },
+  {
+    "firstname":"Doan",
+    "lastname":"Hung",
+    "email":"hung.doantrymybest@hcmut.edu.vn",
+    "password": "2004",
+    "role": "ADMIN"
+  },
+  {
+    "firstname":"Vu",
+    "lastname":"Long",
+    "password":"2211",
+    "email":"vulong2211@gmail.com"
+  }
+]
