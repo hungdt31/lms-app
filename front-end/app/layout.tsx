@@ -6,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/auth";
+import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,19 +20,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en">
       <body>
         <Theme>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
-            themes={["light", "dark"]}
+            themes={["blue", "light", "dark"]}
             disableTransitionOnChange
           >
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <div
+                className={cn(inter.className, {
+                  "debug-screens": process.env.NODE_ENV === "development",
+                })}
+              >
+                {children}
+              </div>
+            </AuthProvider>
           </ThemeProvider>
-
           <Toaster />
         </Theme>
       </body>

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import StoreProvider from "./AdminProvider";
+
+import StoreProvider from "../../features/admin/AdminProvider";
+import SideNavbar from "@/components/admin/SideNavbar";
+import TopNavbar from "@/components/admin/TopNavbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,5 +16,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <StoreProvider>{children}</StoreProvider>;
+  return (
+    <div className="min-h-screen w-full flex relative flex-col sm:flex-row">
+      <TopNavbar />
+      <div className="min-w-[80px] relative border-r pl-5 pr-9 pb-10 pt-24 sm:block hidden">
+        <SideNavbar />
+      </div>
+      <div className="w-full p-7">
+        <StoreProvider>{children}</StoreProvider>
+      </div>
+    </div>
+  );
 }
