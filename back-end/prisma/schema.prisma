@@ -28,6 +28,7 @@ model User {
   role        Role        @default(STUDENT)
   courseIDs   String[]    @db.ObjectId
   courses     Course[]    @relation(fields: [courseIDs], references: [id])
+  posts Post[] 
   updatedAt String @default("")
   createdAt String @default("")
 }
@@ -40,5 +41,13 @@ model Course {
   public_id   String      
   course_id   String
   userIDs     String[]    @db.ObjectId
-  users       User[]      @relation(fields: [userIDs], references: [id])
+  users       User[]      @relation(fields: [userIDs], references: [id])   
+}
+model Post { 
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  content String? 
+  published Boolean @default(false) 
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
 }

@@ -41,7 +41,7 @@ export default function TemporaryDrawer() {
       <div className="drawer-content flex flex-col items-center justify-center">
         {/* Page content here */}
         <label htmlFor="my-drawer-2">
-          <RxTextAlignLeft size={35} color="white" />
+          <RxTextAlignLeft size={35}/>
         </label>
       </div>
       <div className="drawer-side">
@@ -51,7 +51,7 @@ export default function TemporaryDrawer() {
           className="drawer-overlay"
         ></label>
 
-        <ul className="menu p-4 w-80 min-h-full text-base-content bg-main font-bold">
+        <ul className="menu p-4 w-80 min-h-full text-nav-text bg-nav font-bold">
           {nav.map((el) => {
             return (
               <Link
