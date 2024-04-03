@@ -51,28 +51,29 @@ export default function NavLayout() {
   if (error) return "An error has occurred ...";
   return (
     <div className="flex flex-col gap-3 mb-7">
-      <div className="flex bg-main justify-between py-5 items-center shadow-lg px-5">
+      <div className="absolute bottom-5 right-5">
+        <ToggleTheme />
+      </div>
+      <div className="flex bg-nav justify-between py-5 items-center shadow-lg px-5 text-nav-text">
         <div className="gap-5 flex items-center">
           <Link href={"/"} className="flex items-center gap-5">
             <div className="object-cover w-[50px] h-[50px]">
               <img src="../favicon.ico" className="w-[100%] h-[100%]" />
             </div>
             <div>
-              <p className="font-bold text-2xl text-white">LMS </p>
-              <p className="text-white">
+              <p className="font-bold text-2xl">LMS </p>
+              <p>
                 Welcome,{" "}
                 <b>{data?.data?.lastname + " " + data?.data?.firstname} </b> !
               </p>
             </div>
           </Link>
-          <div className="absolute bottom-5 right-5">
-            <ToggleTheme />
-          </div>
+          
         </div>
         <div className="sm:hidden">
           <TemporaryDrawer/>
         </div>
-        <div className="sm:flex gap-5 font-bold text-white items-center hidden">
+        <div className="sm:flex gap-5 font-bold items-center hidden">
           {nav.map((el) => {
             return (
               <Link

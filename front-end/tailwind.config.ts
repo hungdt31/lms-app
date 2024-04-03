@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       colors: {
-        main: "#00416A",
+        main: "#00416a",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -53,6 +53,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        nav: "hsl(var(--nav))",
+        "nav-text": "hsl(var(--nav-text))",
       },
       borderRadius: {
         lg: "var(--radius)",

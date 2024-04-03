@@ -4,12 +4,13 @@
 
 @layer base {
   :root {
+
     /* Name: custom color palette
        Author: Ilias Ism
        URL: https://gradient.page */
 
     /* CSS: .bg-gradient { background: var(--gradient) } */
-    --gradient: #00416a;
+    /* --gradient: #00416a; */
     --background: 216 100% 98.42%;
     --foreground: 216 10% 0.84%;
 
@@ -40,6 +41,8 @@
     --ring: 216 100% 21%;
 
     --radius: 0.5rem;
+    --nav-text: 217 26% 94%;
+    --nav: 200 100% 37%
   }
 
   .light {
@@ -63,6 +66,8 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+    --nav: 217 26% 94%;
+    --nav-text: 210, 76%, 25%;
   }
 
   .dark {
@@ -85,6 +90,8 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
+    --nav: 210 76% 25%;
+    --nav-text: 217 26% 94%;
   }
 }
 
