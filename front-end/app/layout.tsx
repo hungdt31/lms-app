@@ -27,7 +27,7 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
             enableSystem
-            themes={["blue", "light", "dark"]}
+            themes={["blue","light", "dark"]}
             disableTransitionOnChange
           >
             <AuthProvider>

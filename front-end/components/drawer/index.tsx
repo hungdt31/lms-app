@@ -51,14 +51,14 @@ export default function TemporaryDrawer() {
           className="drawer-overlay"
         ></label>
 
-        <ul className="menu p-4 w-80 min-h-full text-nav-text bg-nav font-bold">
+        <ul className="menu p-4 w-80 min-h-full text-nav-text bg-nav">
           {nav.map((el) => {
             return (
               <Link
                 href={el.path}
                 className={
                   path.indexOf(el.path) == 0 && el.path != "/student"
-                    ? "underline"
+                    ? "font-extrabold"
                     : ""
                 }
               >
