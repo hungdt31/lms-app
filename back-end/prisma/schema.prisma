@@ -17,37 +17,144 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  firstname        String      @default("Wren")
-  lastname        String      @default("Evan")
-  password    String    
-  username    String  
-  avatar      String      @default("")
-  public_id   String      @default("")
-  email       String      @unique     
-  role        Role        @default(STUDENT)
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  firstname       String      @default("aaa")
+  lastname        String      @default("bbb")
+  password        String    
+  username        String  
+  avatar          String?
+  public_id       String?
+  birth           String?
+  sex             String?
+  phone           String?
+  email           String      @unique     
+  role            Role        @default(STUDENT)
+  updatedAt       String      @default("")
+  createdAt       String      @default("")
   courseIDs   String[]    @db.ObjectId
   courses     Course[]    @relation(fields: [courseIDs], references: [id])
-  posts Post[] 
-  updatedAt String @default("")
-  createdAt String @default("")
+  quizResults QuizResult[]
+  courseResults CourseResult[]
+  fileSubmits FileSubmit[]
 }
-
+model Category {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  name        String          @default("")
+  image       String?
+  public_id   String?
+  courses     Course[]
+}
+model Semester {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  start_date  DateTime
+  end_date    DateTime
+  courses     Course[]
+}
 model Course {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
-  image       String
-  public_id   String      
-  course_id   String
-  userIDs     String[]    @db.ObjectId
-  users       User[]      @relation(fields: [userIDs], references: [id])   
+  image       String?
+  public_id   String?
+  course_id   String              
+  score_factor Float[]        @default([0.1, 0.2, 0.3, 0.5])
+  VideoSections  VideoSection[]
+  DocumentSections DocumentSection[]
+  category    Category        @relation(fields: [categoryId], references: [id])
+  categoryId  String          @db.ObjectId
+
+  semester       Semester     @relation(fields: [semesterId], references: [id])
+  semesterId     String       @db.ObjectId
+  users       User[]          @relation(fields: [usersId], references: [id])
+  usersId     String[]        @db.ObjectId
+  courseResults CourseResult[]
+  fileSubmits FileSubmit[]
 }
-model Post { 
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  title String 
-  content String? 
-  published Boolean @default(false) 
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String @db.ObjectId
+model VideoSection {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  videos      Video[]
+  courseId    String          @db.ObjectId
+  course      Course          @relation(fields: [courseId], references: [id])
+}
+model DocumentSection {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  content     String?
+  quiz        Quiz[]
+  documentLink DocumentLink[]
+  courseId    String          @db.ObjectId
+  course      Course          @relation(fields: [courseId], references: [id])
+}
+model Video {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  title               String
+  description         String?
+  url                 String
+  videoSection        VideoSection    @relation(fields: [videoSectionId], references: [id])
+  videoSectionId      String          @db.ObjectId
+}
+model DocumentLink {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  description        String?
+  url                String
+  documentSection    DocumentSection  @relation(fields: [documentSectionId], references: [id])
+  documentSectionId  String           @db.ObjectId
+}
+model Quiz {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  start_date  DateTime?
+  end_date    DateTime?
+  time_limit  Int?
+  factor      Float           @default(0)
+  questions   Question[]
+  documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id])
+  documentSectionId  String          @db.ObjectId
+  quizResults  QuizResult[]
+}
+model Question {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  options     String[]
+  answer      String
+  quiz        Quiz            @relation(fields: [quizId], references: [id])
+  quizId      String          @db.ObjectId
+}
+model QuizResult {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  score       Float           @default(0)
+  userId      String          @db.ObjectId 
+  user        User            @relation(fields: [userId], references: [id])         
+  quiz        Quiz            @relation(fields: [quizId], references: [id])
+  quizId      String          @db.ObjectId            
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+}
+model CourseResult {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  score_array Float[]         @default([0, 0, 0, 0]) 
+  average_score Float         @default(0) 
+  userId      String          @db.ObjectId 
+  user        User            @relation(fields: [userId], references: [id])         
+  course      Course          @relation(fields: [courseId], references: [id])
+  courseId    String          @db.ObjectId            
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+}
+model FileSubmit {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  url         String[]
+  userId      String          @db.ObjectId
+  user        User            @relation(fields: [userId], references: [id])
+  courseId    String          @db.ObjectId
+  course      Course          @relation(fields: [courseId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
 }

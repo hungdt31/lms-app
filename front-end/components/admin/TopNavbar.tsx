@@ -9,13 +9,13 @@ export default function TopNavbar() {
   const pathname = usePathname();
   const [show, setShow] = React.useState<boolean>(false);
   return (
-    <div className="sm:hidden shadow-lg bg-main">
+    <div className="sm:hidden shadow-lg bg-nav">
       <div className="p-5 flex justify-between items-center">
-        <LayoutList color="white" onClick={() => setShow(!show)} />
+        <LayoutList onClick={() => setShow(!show)} className="text-nav-text"/>
         <ToggleTheme />
       </div>
       <hr />
-      <div className="flex gap-3 flex-wrap font-bold text-white">
+      <div className="flex gap-3 flex-wrap font-bold text-nav-text">
         {show &&
           nav.map((item: any) => {
             return (

@@ -101,3 +101,8 @@ export const courseMulter = courseUploader.getMulterInstance();
 const userUploader = new CloudinaryUploader("lms-app/users");
 export const userUploadMiddleware = userUploader.uploadToCloudinary;
 export const userMulter = userUploader.getMulterInstance();
+
+const cateUploader = new CloudinaryUploader("lms-app/categories");
+export const cateUploadMiddleware = cateUploader.uploadToCloudinary;
+export const cateMulter = cateUploader.getMulterInstance();
+

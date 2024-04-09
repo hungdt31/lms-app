@@ -24,20 +24,20 @@ export default class CourseController extends BaseController {
     this.router.put(this.path + "/add-student",  this.addStudent);
     // Bạn có thể thêm put, patch, delete sau.
   }
-  private uploadFile = asyncHandler(
-    async (request: express.Request, response: express.Response) => {
-      const cloudinaryUrls = request.body.cloudinaryUrls;
-      const info = request.body
-        if (cloudinaryUrls.length === 0) {
-            console.error('No Cloudinary URLs found.');
-            throw new Error('Internal Server Error');
-        }
-       const images = cloudinaryUrls;
-       response.json({
-        images,
-        info
-       })
-    })
+  // private uploadFile = asyncHandler(
+  //   async (request: express.Request, response: express.Response) => {
+  //     const cloudinaryUrls = request.body.cloudinaryUrls;
+  //     const info = request.body
+  //       if (cloudinaryUrls.length === 0) {
+  //           console.error('No Cloudinary URLs found.');
+  //           throw new Error('Internal Server Error');
+  //       }
+  //      const images = cloudinaryUrls;
+  //      response.json({
+  //       images,
+  //       info
+  //      })
+  //   })
   private getAllCourse = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const courses = await prisma.course.findMany();
@@ -50,7 +50,7 @@ export default class CourseController extends BaseController {
   );
   private addCourse = asyncHandler(
     async (request: express.Request, response: express.Response) => {
-      const course = await prisma.course.createMany({
+      const course = await prisma.course.create({
         data: request.body,
       });
       response.json({
@@ -70,7 +70,7 @@ export default class CourseController extends BaseController {
         }
       })
       if (!course) throw new Error("Cannot find the course !");
-      if (course?.userIDs.includes(_id)) {
+      if (course?.usersId.includes(_id)) {
         course.registered = true
         response.json({
           mess: "Registered for the course !",
@@ -96,30 +96,43 @@ export default class CourseController extends BaseController {
             id: cid,
           },
           select: {
-            userIDs: true,
+            usersId: true,
           },
         });
-        if (!course) throw new Error("Can't find course by id ...");
-        const { userIDs } = course;
-        userIDs.push(uid);
+        const user = await prisma.user.findFirst({
+          where: {
+            id: uid,
+          },
+        });
+        if (!course || !user) throw new Error("Can't find course by id ...");
+        const {courseIDs} = user;
+        const { usersId } = course;
+        usersId.push(uid);
+        courseIDs.push(cid);
+        await prisma.user.update({
+          where: {
+            id: uid,
+          },
+          data: {
+            courseIDs,
+          },
+        });
         const updatedCourse = await prisma.course.update({
           where: {
             id: cid,
           },
           data: {
-            userIDs,
+            usersId,
           },
         });
         response.json({
           success: true,
-          updatedCourse,
+          mess: "Add student to course successfully !",
+          data: updatedCourse,
         });
       } catch (e: any) {
         throw new Error(e);
       }
-      response.json({
-        success: true,
-      });
     },
   );
   private getAllCourseWithUserId = asyncHandler(
@@ -128,12 +141,12 @@ export default class CourseController extends BaseController {
       console.log(_id)
       const course = await prisma.course.findMany({
         where: {
-          userIDs: {
+          usersId: {
             has: _id,
           },
         },
       });
-      console.log(course)
+      //console.log(course)
       response.json({
         success: true,
         mess: "Get all course subscribed successfully",

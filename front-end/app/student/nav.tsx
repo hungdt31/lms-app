@@ -73,14 +73,14 @@ export default function NavLayout() {
         <div className="sm:hidden">
           <TemporaryDrawer/>
         </div>
-        <div className="sm:flex gap-5 font-bold items-center hidden">
+        <div className="sm:flex gap-5 items-center hidden">
           {nav.map((el) => {
             return (
               <Link
                 href={el.path}
                 className={
                   path.indexOf(el.path) == 0 && el.path != "/student"
-                    ? "underline"
+                    ? "font-bold"
                     : ""
                 }
               >
