@@ -2,7 +2,7 @@ import express from "express";
 import { BaseController } from "./abstractions/base-controller";
 import asyncHandler from "express-async-handler";
 import prisma from "../../prisma/prisma";
-import { cateMulter, cateUploadMiddleware } from "../../cloudinary/storage";
+import { cateMulter, cateUploadMiddleware } from "../../config/cloudinary/storage";
 class CategoryController extends BaseController {
   public path = "/category";
 

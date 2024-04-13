@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import TextEditor from "../../components/TextEditor";
 import ToggleTheme from "@/components/toggle-theme";
 import Cate from "@/lib/axios/cate";
@@ -8,12 +8,11 @@ export default function TeacherPage() {
     Cate.GetAllCate().then((res) => {
       console.log(res.data);
     });
-  },[])
+  }, []);
   return (
     <div>
-      <ToggleTheme />
       <h1>Teacher Page</h1>
-      <TextEditor/>
+      <TextEditor />
     </div>
-  )
+  );
 }

@@ -19,8 +19,9 @@ export default function RootLayout({
   return (
     <QueryProvider>
       <Suspense fallback={<LoadingPage />}>
-        <NavLayout/>
-        {children}</Suspense>
+        <NavLayout />
+        {children}
+      </Suspense>
     </QueryProvider>
   );
 }

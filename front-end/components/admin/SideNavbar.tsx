@@ -5,9 +5,7 @@ import { ArrowLeftRight } from "lucide-react";
 
 import { Nav } from "./Nav";
 import { Button } from "../ui/button";
-import {
-  useWindowWidth,
-} from "@react-hook/window-size";
+import { useWindowWidth } from "@react-hook/window-size";
 
 type Props = {};
 export default function SideNavbar({}: Props) {
@@ -25,10 +23,7 @@ export default function SideNavbar({}: Props) {
           <ArrowLeftRight />
         </Button>
       )}
-      <Nav
-        isCollapsed={mobileWidth ? true : isCollapsed}
-        links ={nav}
-      />
+      <Nav isCollapsed={mobileWidth ? true : isCollapsed} links={nav} />
     </div>
   );
 }

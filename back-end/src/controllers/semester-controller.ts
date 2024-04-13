@@ -29,7 +29,7 @@ class SemesterController extends BaseController {
       });
       if (!createdSemester) throw new Error("Cannot create category");
       response.json({
-        message: "Created new category",
+        message: "Created new semester",
         data: createdSemester,
       });
     },
@@ -38,7 +38,8 @@ class SemesterController extends BaseController {
     async (request: any, response: express.Response) => {
       const semesters = await prisma.semester.findMany();
       response.json({
-        message: "Get all category",
+        success: true,
+        message: "Get all semesters",
         data: semesters,
       });
     },

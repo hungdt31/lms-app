@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/auth";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/common/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
             enableSystem
-            themes={["blue","light", "dark"]}
+            themes={["blue", "light", "dark"]}
             disableTransitionOnChange
           >
             <AuthProvider>
@@ -42,6 +43,7 @@ export default function RootLayout({
           </ThemeProvider>
           <Toaster />
         </Theme>
+        <Footer/>
       </body>
     </html>
   );

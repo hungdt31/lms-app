@@ -6,8 +6,8 @@ const hash = async (plainTextPassword: string): Promise<string> => {
   console.log("Hashed Password: ", hashedPassword);
   return hashedPassword;
 };
-const comprare = async (plainTextPassword: any, hashedPassword: any) => {
+const compare = async (plainTextPassword: any, hashedPassword: any) => {
   const isMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
   return isMatch;
 };
-export default { hash, comprare };
+export default { hash, compare };

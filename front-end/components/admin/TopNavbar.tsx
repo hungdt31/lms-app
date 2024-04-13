@@ -11,7 +11,7 @@ export default function TopNavbar() {
   return (
     <div className="sm:hidden shadow-lg bg-nav">
       <div className="p-5 flex justify-between items-center">
-        <LayoutList onClick={() => setShow(!show)} className="text-nav-text"/>
+        <LayoutList onClick={() => setShow(!show)} className="text-nav-text" />
         <ToggleTheme />
       </div>
       <hr />
