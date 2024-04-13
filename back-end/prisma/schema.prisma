@@ -86,14 +86,14 @@ model DocumentSection {
   quiz        Quiz[]
   documentLink DocumentLink[]
   courseId    String          @db.ObjectId
-  course      Course          @relation(fields: [courseId], references: [id])
+  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 model Video {
-  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+id                  String          @id @default(auto()) @map("_id") @db.ObjectId
   title               String
   description         String?
   url                 String
-  videoSection        VideoSection    @relation(fields: [videoSectionId], references: [id])
+  videoSection        VideoSection    @relation(fields: [videoSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   videoSectionId      String          @db.ObjectId
 }
 model DocumentLink {
@@ -101,7 +101,8 @@ model DocumentLink {
   title              String
   description        String?
   url                String
-  documentSection    DocumentSection  @relation(fields: [documentSectionId], references: [id])
+  path               String
+  documentSection    DocumentSection  @relation(fields: [documentSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   documentSectionId  String           @db.ObjectId
 }
 model Quiz {
@@ -113,7 +114,7 @@ model Quiz {
   time_limit  Int?
   factor      Float           @default(0)
   questions   Question[]
-  documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id])
+  documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   documentSectionId  String          @db.ObjectId
   quizResults  QuizResult[]
 }
@@ -122,14 +123,14 @@ model Question {
   content     String
   options     String[]
   answer      String
-  quiz        Quiz            @relation(fields: [quizId], references: [id])
+  quiz        Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   quizId      String          @db.ObjectId
 }
 model QuizResult {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   score       Float           @default(0)
   userId      String          @db.ObjectId 
-  user        User            @relation(fields: [userId], references: [id])         
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)         
   quiz        Quiz            @relation(fields: [quizId], references: [id])
   quizId      String          @db.ObjectId            
   createdAt   DateTime        @default(now())
@@ -140,8 +141,8 @@ model CourseResult {
   score_array Float[]         @default([0, 0, 0, 0]) 
   average_score Float         @default(0) 
   userId      String          @db.ObjectId 
-  user        User            @relation(fields: [userId], references: [id])         
-  course      Course          @relation(fields: [courseId], references: [id])
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)         
+  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId    String          @db.ObjectId            
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
@@ -152,9 +153,9 @@ model FileSubmit {
   description String?
   url         String[]
   userId      String          @db.ObjectId
-  user        User            @relation(fields: [userId], references: [id])
+user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId    String          @db.ObjectId
-  course      Course          @relation(fields: [courseId], references: [id])
+  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
 }

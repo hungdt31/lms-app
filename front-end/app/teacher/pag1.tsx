@@ -1,7 +1,16 @@
+'use client'
 import Image from "next/image";
 import yard from "../../public/friend.jpg";
-
-export default function StudentPage() {
+import TextEditor from "../../components/TextEditor";
+import ToggleTheme from "@/components/toggle-theme";
+import Cate from "@/lib/axios/cate";
+import { useEffect } from "react";
+export default function TeacherPage() {
+  useEffect(() => {
+    Cate.GetAllCate().then((res) => {
+      console.log(res.data);
+    });
+  },[])
   return (
     <div className="flex gap-5 px-7 items-center flex-col sm:flex-row">
       <Image
@@ -16,7 +25,11 @@ export default function StudentPage() {
         placeholder="blur"
         alt="Picture of the author"
       />
-
+      {/*
+      <ToggleTheme />
+      <h1>Teacher Page</h1>
+      <TextEditor/>
+      */}
       <figure className="max-w-screen-md mx-auto text-center">
         <svg
           className="w-10 h-10 mx-auto mb-3 text-gray-400 dark:text-gray-600"
@@ -50,5 +63,5 @@ export default function StudentPage() {
         </figcaption>
       </figure>
     </div>
-  );
+  )
 }

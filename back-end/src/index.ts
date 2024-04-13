@@ -6,6 +6,7 @@ import UserController from "./controllers/user-controllers";
 import CategoryController from "./controllers/category-controller";
 import SemesterController from "./controllers/semester-controller";
 import DocumentSectionController from "./controllers/document-controller";
+import QuizController from "./controllers/quiz-controller";
 dotenv.config();
 connection();
 
@@ -17,6 +18,7 @@ const app = new App(
     new CategoryController(),
     new SemesterController(),
     new DocumentSectionController(),
+    new QuizController(),
   ],
   port,
 );

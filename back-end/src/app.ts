@@ -5,8 +5,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import YAML from "yaml"
 import path from "path";
-import swaggerUi from "swagger-ui-express"
-import fs from "fs"
+import swaggerUi from "swagger-ui-express";
+import fs from "fs";
 import multer from "multer";
 class App {
   public app: express.Application;
