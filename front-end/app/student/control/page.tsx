@@ -1,7 +1,3 @@
-export default function ControlPage(){
-  return (
-    <div>
-      There are nothing !
-    </div>
-  )
+export default function ControlPage() {
+  return <div>There are nothing !</div>;
 }

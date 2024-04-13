@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserAvatar from "@/components/common/UserAvatar";
 import ToggleTheme from "@/components/toggle-theme";
 import { useRouter, usePathname } from "next/navigation";
 import TemporaryDrawer from "@/components/drawer";
@@ -41,7 +41,7 @@ export default function NavLayout() {
       path: "/student/my",
     },
   ];
-  
+
   if (isPending)
     return (
       <div className="m-auto w-screen flex justify-center items-center h-screen">
@@ -68,10 +68,9 @@ export default function NavLayout() {
               </p>
             </div>
           </Link>
-          
         </div>
         <div className="sm:hidden">
-          <TemporaryDrawer/>
+          <TemporaryDrawer />
         </div>
         <div className="sm:flex gap-5 items-center hidden">
           {nav.map((el) => {
@@ -88,10 +87,7 @@ export default function NavLayout() {
               </Link>
             );
           })}
-          <Avatar>
-            <AvatarImage src={data?.data?.avatar} alt="@shadcn" />
-            <AvatarFallback>{data?.data?.username}</AvatarFallback>
-          </Avatar>
+          <UserAvatar data={data?.data} />
           <DropdownMenu>
             <DropdownMenuTrigger>
               <motion.div

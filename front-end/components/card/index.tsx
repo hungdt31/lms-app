@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 interface MediaCardProps {
   children: {
-    id: string,
+    id: string;
     title: string;
     description: string;
     image: string;
@@ -16,7 +16,8 @@ const MediaCard: React.FC<MediaCardProps> = ({ children }) => {
   const { title, description, image, course_id, index, id } = children;
 
   return (
-    <Link href={`course/detail?id=${id}`}
+    <Link
+      href={`course/detail?id=${id}`}
       key={index}
       className="h-[350px] rounded-lg p-5 lg:w-[30%] sm:w-[45%] relative w-[100%] shadow-xl border-gray-600"
     >
@@ -26,7 +27,9 @@ const MediaCard: React.FC<MediaCardProps> = ({ children }) => {
           {" - "}
           {course_id}
         </b>
-        <p className="mt-3 truncate lg:w-[300px] sm:w-[250px] w-[350px]">{description}</p>
+        <p className="mt-3 truncate lg:w-[300px] sm:w-[250px] w-[350px]">
+          {description}
+        </p>
         <div className="mt-5">
           <Button variant="link">Learn more</Button>
         </div>

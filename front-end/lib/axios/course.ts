@@ -15,14 +15,21 @@ async function GetAllSubscribedCourse(token: any) {
     },
   });
 }
-async function GetDetailCourse(token: string, id : string) {
+async function GetDetailCourse(token: string, id: string) {
   return await instance({
-    method: 'get',
+    method: "get",
     url: `/course/detail?id=${id}`,
     headers: {
-      "Authorization": "Bearer " + token
-    }
-  })
+      Authorization: "Bearer " + token,
+    },
+  });
 }
-const Course = { GetAllCourse, GetAllSubscribedCourse, GetDetailCourse };
+async function GetCourseByFilter(data : any) {
+  return await instance({
+    method: "post",
+    url: "/course/filter",
+    data
+  });
+}
+const Course = { GetAllCourse, GetAllSubscribedCourse, GetDetailCourse, GetCourseByFilter };
 export default Course;

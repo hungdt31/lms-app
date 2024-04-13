@@ -57,7 +57,7 @@ class CloudinaryUploader {
       const resizedBuffer: Buffer = await sharp(file.buffer)
         .resize({ width: 800, height: 600 })
         .toBuffer();
-
+      // cloudinary.uploader.upload
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: "auto",
@@ -91,7 +91,6 @@ class CloudinaryUploader {
     }
   }
 }
-
 // Sử dụng lớp CloudinaryUploader để xử lý hai loại folder khác nhau
 const courseUploader = new CloudinaryUploader("lms-app/courses");
 export const courseUploadMiddleware = courseUploader.uploadToCloudinary;
@@ -105,4 +104,8 @@ export const userMulter = userUploader.getMulterInstance();
 const cateUploader = new CloudinaryUploader("lms-app/categories");
 export const cateUploadMiddleware = cateUploader.uploadToCloudinary;
 export const cateMulter = cateUploader.getMulterInstance();
+
+const documentUploader = new CloudinaryUploader("lms-app/resources");
+export const documentUploadMiddleware = documentUploader.uploadToCloudinary;
+export const documentMulter = documentUploader.getMulterInstance();
 

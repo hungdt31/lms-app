@@ -1,7 +1,7 @@
 import Course from "@/lib/axios/course";
 import Cookies from "universal-cookie";
-import { useQuery } from "@tanstack/react-query";
-export default function CourseQuery(id: string) {
+import { useMutation, useQuery } from "@tanstack/react-query";
+export function CourseQuery(id: string) {
   const cookies = new Cookies();
   const token = cookies.get("token") ?? null;
   const fecthCourse = async () => {
@@ -14,4 +14,16 @@ export default function CourseQuery(id: string) {
     queryFn: fecthCourse,
   });
   return user;
+}
+export function CourseFilterQuery() {
+  const fecthCourse = async (data: any) => {
+    const user = await Course.GetCourseByFilter(data);
+    return user;
+  };
+
+  const course = useMutation({
+    mutationKey: ["courseFilterData"],
+    mutationFn: (data : any) => fecthCourse(data),
+  });
+  return course;
 }

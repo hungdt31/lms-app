@@ -20,4 +20,4 @@ const deleteToken = async () => {
     console.error("Error deleting token:", error);
   }
 };
-export default deleteToken
+export default deleteToken;
