@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-
     /* Name: custom color palette
        Author: Ilias Ism
        URL: https://gradient.page */
@@ -42,7 +41,7 @@
 
     --radius: 0.5rem;
     --nav-text: 217 26% 94%;
-    --nav: 200 100% 37%
+    --nav: 200 100% 37%;
   }
 
   .light {

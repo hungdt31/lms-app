@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import YAML from "yaml"
 import path from "path";
-import swaggerUi from "swagger-ui-express";
-import fs from "fs";
-import multer from "multer";
+import swaggerUi from "swagger-ui-express"
+import fs from "fs"
+
 class App {
   public app: express.Application;
   public port: number | string;
@@ -22,6 +22,7 @@ class App {
   }
 
   private initializeMiddlewares() {
+    
     this.app.use(express.json());
     this.app.use(cookieParser());
     this.app.use(
@@ -29,8 +30,7 @@ class App {
         origin: process.env.FRONT_END_URL,
       }),
     );
-    const upload = multer() 
-    this.app.use(express.static('public'));
+    this.app.use("/resources", express.static("resources"))
   }
 
   private initializeErrorHandling() {

@@ -10,7 +10,7 @@ import randomstring from "randomstring";
 import { verifyAccessToken, isAdmin } from "../middlewares/verifyToken";
 import token from "../../moongose/model/token";
 import multer from "multer";
-import { userMulter, userUploadMiddleware, deleteCloudinaryImage } from "../../cloudinary/storage";
+import { userMulter, userUploadMiddleware, deleteCloudinaryImage } from "../../config/cloudinary/storage";
 class UserController extends BaseController {
   public path = "/user";
 

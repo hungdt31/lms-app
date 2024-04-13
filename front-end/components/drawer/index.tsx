@@ -41,7 +41,7 @@ export default function TemporaryDrawer() {
       <div className="drawer-content flex flex-col items-center justify-center">
         {/* Page content here */}
         <label htmlFor="my-drawer-2">
-          <RxTextAlignLeft size={35}/>
+          <RxTextAlignLeft size={35} />
         </label>
       </div>
       <div className="drawer-side">

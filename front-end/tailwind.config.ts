@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -66,6 +66,26 @@ const config = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
+        "slide-right": {
+          "0%": {
+            "-webkit-transform": "translateX(-50px)",
+            transform: "translateX(-50px)",
+          },
+          "100%": {
+            "-webkit-transform": "translateX(0)",
+            transform: "translateX(0)",
+          },
+        },
+        "slide-left": {
+          "0%": {
+            "-webkit-transform": "translateX(0px)",
+            transform: "translateX(0px)",
+          },
+          "100%": {
+            "-webkit-transform": "translateX(-50px)",
+            transform: "translateX(-50px)",
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -79,10 +99,16 @@ const config = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slide-right": "slide-right 0.5s ease-out",
+        "slide-left": "slide-left 0.5s linear infinite"
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("daisyui"), require('tailwindcss-debug-screens')]
-} satisfies Config
+  plugins: [
+    require("tailwindcss-animate"),
+    require("daisyui"),
+    require("tailwindcss-debug-screens"),
+  ],
+} satisfies Config;
 
-export default config
+export default config;

@@ -62,17 +62,17 @@ async function UpdatePassword(data: any) {
     data,
   });
 }
-async function UpdateAvatar(token : string, avatar: string){
-  const form = new FormData()
-  form.append("file",avatar)
+async function UpdateAvatar(token: string, avatar: string) {
+  const form = new FormData();
+  form.append("file", avatar);
   return await instance({
     method: "put",
     url: "/user/update-avatar",
     headers: {
-      "Authorization": "Bearer " + token,
+      Authorization: "Bearer " + token,
       "Content-Type": "multipart/form-data",
     },
-    data: form
+    data: form,
   });
 }
 const User = {
@@ -83,6 +83,6 @@ const User = {
   SendMail,
   VerifyCodeFromEmail,
   UpdatePassword,
-  UpdateAvatar
+  UpdateAvatar,
 };
 export default User;

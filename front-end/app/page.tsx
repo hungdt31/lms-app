@@ -72,7 +72,7 @@ export default function Home() {
           {auth ? (
             <Button
               onClick={async () => {
-                await deleteToken()
+                await deleteToken();
                 setAuth(null);
               }}
             >
