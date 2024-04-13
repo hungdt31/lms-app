@@ -9,6 +9,8 @@ import CategoryController from "./controllers/category-controller";
 import SemesterController from "./controllers/semester-controller";
 import DocumentSectionController from "./controllers/document-controller";
 import DocumentLinkController from "./controllers/documentLink-controller";
+import QuizController from "./controllers/quiz-controller";
+
 dotenv.config();
 initializeApp(config.firebaseConfig);
 connection();
@@ -22,6 +24,7 @@ const app = new App(
     new SemesterController(),
     new DocumentSectionController(),
     new DocumentLinkController(),
+    new QuizController(),
   ],
   port,
 );

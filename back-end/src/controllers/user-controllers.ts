@@ -127,7 +127,7 @@ class UserController extends BaseController {
         },
       });
       if (!foundUser) throw new Error("Email doesn't exist");
-      if (await bc.comprare(password, foundUser?.password)) {
+      if (await bc.compare(password, foundUser?.password)) {
         const token = await jwt.generateAccessToken(
           foundUser?.id,
           foundUser?.role,
@@ -193,7 +193,7 @@ class UserController extends BaseController {
         },
       });
       if (!foundUser) throw new Error("Account doesn't exist !");
-      const checkPass = await bc.comprare(old_password, foundUser?.password);
+      const checkPass = await bc.compare(old_password, foundUser?.password);
       if (!checkPass) throw new Error("Password is wrong !");
       const time = moment().format("MMMM Do YYYY h:mm:ss a");
       const hashPass = await bc.hash(new_password.toString());
