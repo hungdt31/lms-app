@@ -28,7 +28,10 @@ export default function TeacherPage() {
         <Select
           onValueChange={(el: any) => {
             setInfo(el);
-            mutation.mutate({ semesterId: el?.id , userId : user?.data?.data?.id});
+            mutation.mutate({
+              semesterId: el?.id,
+              userId: user?.data?.data?.id,
+            });
           }}
         >
           <SelectTrigger className="w-[250px]">
@@ -54,23 +57,20 @@ export default function TeacherPage() {
         <div className="flex flex-wrap gap-5 mt-3">
           {mutation.data?.data?.map((el: any) => {
             return (
-              <div className="card w-96 bg-base-100 shadow-xl image-full ">
-                <figure>
-                  <img src={el?.image} alt="....." />
-                </figure>
-                <div className="card-body">
-                  <div className="flex items-center gap-3">
-                    <Layers />
-                    <h2 className="card-title">{el?.title}</h2>
-                  </div>
-                  <p>{el?.course_id}</p>
-                  <div className="card-actions justify-end">
-                    <Link href={`/teacher/course/detail?id=${el?.id}`}>
-                    <Button>Detail</Button>
-                    </Link>
+              <Link href={`/teacher/course/detail?id=${el?.id}`}>
+                <div className="card w-96 bg-base-100 shadow-xl image-full ">
+                  <figure>
+                    <img src={el?.image} alt="....." />
+                  </figure>
+                  <div className="card-body">
+                    <div className="flex items-center gap-3">
+                      <Layers />
+                      <h2 className="card-title">{el?.title}</h2>
+                    </div>
+                    <p>{el?.course_id}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

@@ -23,7 +23,7 @@ export function CourseFilterQuery() {
 
   const course = useMutation({
     mutationKey: ["courseFilterData"],
-    mutationFn: (data : any) => fecthCourse(data),
+    mutationFn: (data: any) => fecthCourse(data),
   });
   return course;
 }

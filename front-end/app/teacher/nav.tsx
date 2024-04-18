@@ -41,7 +41,7 @@ export default function NavLayout() {
       path: "/student/my",
     },
   ];
-  
+
   if (isPending)
     return (
       <div className="m-auto w-screen flex justify-center items-center h-screen">
@@ -68,10 +68,9 @@ export default function NavLayout() {
               </p>
             </div>
           </Link>
-          
         </div>
         <div className="sm:hidden">
-          <TemporaryDrawer/>
+          <TemporaryDrawer />
         </div>
         <div className="sm:flex gap-5 items-center hidden">
           {nav.map((el) => {

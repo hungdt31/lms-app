@@ -1,9 +1,9 @@
 import instance from "@/axios";
-async function DeleteDocumentLink(data : any) {
+async function DeleteDocumentLink(data: any) {
   return await instance({
     method: "delete",
     url: `/document-link`,
-    data
+    data,
   });
 }
 const DocLinks = { DeleteDocumentLink };

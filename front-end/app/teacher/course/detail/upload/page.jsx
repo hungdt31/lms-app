@@ -18,9 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
-import {
-  ArrowLeftIcon,
-} from "@radix-ui/react-icons";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import {
   Form,
   FormControl,
@@ -73,50 +71,45 @@ export default function Attendance() {
     console.log(rs);
     setLoading(false);
     if (rs.success) {
-    Swal.fire({
-      title: "<strong>Created new document successfully</strong>",
-      icon: "info",
-      html: `
+      Swal.fire({
+        title: "<strong>Created new document successfully</strong>",
+        icon: "info",
+        html: `
         You can use <b>bold text</b>,
         <a href="#">links</a>,
         and other HTML tags
       `,
-      showCloseButton: true,
-      showCancelButton: true,
-      focusConfirm: false,
-      confirmButtonText: `
-        <i class="fa fa-thumbs-up"></i> Go to create new document and quiz 
+        showCloseButton: true,
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: `
+        <i class="fa fa-thumbs-up"></i> Return to course detail 
       `,
-      confirmButtonAriaLabel: "Thumbs up, great!",
-    }).then((result) => {
-      if (result.isDismissed) {
-        router.push(
-          `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`
-        );
-      }
-      else if (result.isConfirmed){
-        router.push(
-          `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/update?id=${rs?.data?.id}`
-        )
-      }
-    })
-  } else {
-    Swal.fire({
-      title: "<strong>Created new document failed</strong>",
-      icon: "error",
-      html: `
+        confirmButtonAriaLabel: "Thumbs up, great!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push(
+            `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`,
+          );
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "<strong>Created new document failed</strong>",
+        icon: "error",
+        html: `
         You can use <b>bold text</b>,
         <a href="#">links</a>,
         and other HTML tags
       `,
-      showCancelButton: true,
-      focusConfirm: false,
-      cancelButtonText: `
+        showCancelButton: true,
+        focusConfirm: false,
+        cancelButtonText: `
         <i class="fa fa-thumbs-down"></i>
       `,
-      cancelButtonAriaLabel: "Upload failed"
-    });
-  }
+        cancelButtonAriaLabel: "Upload failed",
+      });
+    }
   }
   return (
     <div className="flex justify-center pt-8">
@@ -159,7 +152,9 @@ export default function Attendance() {
                 <LoginLooading />
               ) : (
                 <div className="flex justify-between">
-                  <Link href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`}>
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`}
+                  >
                     <Btn variant={"link"}>
                       <ArrowLeftIcon />
                       <p className="text-[14px] ml-[2px]">Return</p>
@@ -172,8 +167,8 @@ export default function Attendance() {
                     <Button
                       variant="surface"
                       onClick={() => {
-                        form.trigger(["title","content"]);
-                        form.reset(); 
+                        form.trigger(["title", "content"]);
+                        form.reset();
                       }}
                     >
                       Clear

@@ -43,7 +43,7 @@ export default function RootLayout({
           </ThemeProvider>
           <Toaster />
         </Theme>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

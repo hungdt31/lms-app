@@ -3,7 +3,7 @@ import { BlockLoading } from "../loading";
 import UserQuery from "@/hooks/user";
 import UserAvatar from "../common/UserAvatar";
 import Link from "next/link";
-import Image from 'next/image'
+import Image from "next/image";
 import ToggleTheme from "../toggle-theme";
 export default function TopNav() {
   const { data, isPending, error } = UserQuery();
@@ -39,7 +39,7 @@ export default function TopNav() {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow rounded-box w-52 z-50 bg-nav"
           >
             <li>
-            <Link href={"/teacher/course"}>Quản lý khóa học</Link>
+              <Link href={"/teacher/course"}>Quản lý khóa học</Link>
             </li>
             <li>
               <a>Parent</a>
@@ -58,7 +58,7 @@ export default function TopNav() {
           </ul>
         </div>
         <div className="hidden lg:block">
-          <Image src="/favicon.ico" alt="Logo" width={50} height={50}/>
+          <Image src="/favicon.ico" alt="Logo" width={50} height={50} />
         </div>
         <a className="btn btn-ghost text-xl text-nav-text ">LMS</a>
       </div>

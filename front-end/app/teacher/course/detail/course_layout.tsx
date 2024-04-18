@@ -64,7 +64,7 @@ export default function DetailCourse({
         </div>
       )}
 
-      <div className="sm:w-1/4 relative">
+      <div className="sm:w-1/4 relative min-w-[200px]">
         <div className="relative">
           <img src={data?.data?.image} alt="..." className="rounded-xl" />
           <div className="absolute top-[50%] -left-2 z-50">
@@ -83,7 +83,7 @@ export default function DetailCourse({
         <h1 className="font-bold text-xl p-5 text-center">
           {data?.data?.title} - {data?.data?.course_id}
         </h1>
-        <blockquote className="mt-6 border-l-2 pl-6 italic border-nav-text shadow-md">
+        <blockquote className="mt-6 border-l-2 pl-6 italic border-nav-text shadow-md py-3">
           " {data?.data?.description} "
         </blockquote>
       </div>
