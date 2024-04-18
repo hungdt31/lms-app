@@ -32,6 +32,7 @@ export default class CourseController extends BaseController {
     );
     this.router.put(`${this.path}/add-student`, this.addStudent);
     this.router.post(`${this.path}/filter`, this.getCourseByFilter);
+    this.router.get(`${this.path}/score-factor`, this.getScoreFactor);
     // Bạn có thể thêm put, patch, delete sau.
   }
   // private uploadFile = asyncHandler(
@@ -223,6 +224,26 @@ export default class CourseController extends BaseController {
       response.json({
         success: true,
         mess: "Find courses successfully",
+        data: course,
+      });
+    },
+  );
+  private getScoreFactor = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      const course = await prisma.course.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          score_factor: true,
+          name_factor: true
+        },
+      });
+      if (!course) throw new Error("Cannot find course by id !");
+      response.json({
+        success: true,
+        mess: "Get score factor successfully",
         data: course,
       });
     },

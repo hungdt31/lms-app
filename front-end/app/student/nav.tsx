@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BlockLoading } from "@/components/loading";
 import Cookies from "universal-cookie";
 import { FaAngleDown } from "react-icons/fa6";
+import { Layers } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   DropdownMenu,
@@ -51,15 +52,13 @@ export default function NavLayout() {
   if (error) return "An error has occurred ...";
   return (
     <div className="flex flex-col gap-3 mb-7">
-      <div className="absolute bottom-5 right-5">
+      <div className="fixed bottom-5 right-5">
         <ToggleTheme />
       </div>
       <div className="flex bg-nav justify-between py-5 items-center shadow-lg px-5 text-nav-text">
         <div className="gap-5 flex items-center">
           <Link href={"/"} className="flex items-center gap-5">
-            <div className="object-cover w-[50px] h-[50px]">
-              <img src="../favicon.ico" className="w-[100%] h-[100%]" />
-            </div>
+            <Layers size={50}/>
             <div>
               <p className="font-bold text-2xl">LMS </p>
               <p>

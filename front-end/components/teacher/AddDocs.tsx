@@ -30,7 +30,7 @@ type FormValues = {
   file: File | null; // Change the type of 'file' to File | null
 };
 
-export default function UpdateDocumentPage(data : any) {
+export default function UploadDocument(data: any) {
   // console.log(data)
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -42,7 +42,6 @@ export default function UpdateDocumentPage(data : any) {
       file: null,
     },
   });
-
 
   async function onSubmit(values: FormValues) {
     // Handle form submission here
@@ -57,7 +56,7 @@ export default function UpdateDocumentPage(data : any) {
         didOpen: () => {
           Swal.showLoading();
         },
-      })
+      });
       // .then((result) => {
       //   /* Read more about handling dismissals below */
       //   if (result.dismiss === Swal.DismissReason.timer) {

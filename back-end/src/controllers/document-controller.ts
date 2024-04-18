@@ -30,6 +30,11 @@ export default class DocumentSectionController extends BaseController {
       this.uploadPdf,
     );
     this.router.delete(`${this.path}`, this.deleteDocument);
+    this.router.delete(
+      `${this.path}/document-link-and-quiz`,
+      this.deleteDocumentLinkAndQuiz,
+    );
+    this.router.put(`${this.path}`, this.updateDocument);
   }
   // uploadPdf.single("file"),
   private getAllDocument = asyncHandler(
@@ -39,6 +44,43 @@ export default class DocumentSectionController extends BaseController {
         mess: "Get all topic successfully !",
         success: true,
         data: topics,
+      });
+    },
+  );
+  private deleteDocumentLinkAndQuiz = asyncHandler(
+    async (request: express.Request, response: express.Response) => {
+      const idArray = request.body;
+      for (let i = 0; i < idArray.length; i++) {
+        const foundDocumentLink = await prisma.documentLink.findFirst({
+          where: {
+            id: idArray[i],
+          },
+        });
+        if (foundDocumentLink) {
+          const deletedDocumentLink = await prisma.documentLink.delete({
+            where: {
+              id: idArray[i],
+            },
+          });
+          const path: any = deletedDocumentLink?.path;
+          try {
+            const storageRef = ref(this.storage, path);
+            await deleteObject(storageRef);
+          } catch (error) {
+            throw new Error(`Failed to delete ${path}: ${error}`);
+          }
+        } else {
+          await prisma.quiz.delete({
+            where: {
+              id: idArray[i],
+            },
+          });
+        }
+      }
+      response.json({
+        mess: "Delete quiz and document link successfully !",
+        success: true,
+        data: null,
       });
     },
   );
@@ -136,6 +178,21 @@ export default class DocumentSectionController extends BaseController {
         mess: "Delete document successfully !",
         success: true,
         data: arr,
+      });
+    },
+  );
+  private updateDocument = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const document = await prisma.documentSection.update({
+        where: {
+          id: request.query.id,
+        },
+        data: request.body,
+      });
+      response.json({
+        mess: "Update document successfully !",
+        success: true,
+        data: document,
       });
     },
   );

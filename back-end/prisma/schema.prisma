@@ -12,6 +12,11 @@ enum Role {
   ADMIN
   TEACHER
 }
+enum Gender {
+  Male
+  Female
+  Undefined
+}
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -24,18 +29,18 @@ model User {
   username        String  
   avatar          String?
   public_id       String?
-  birth           String?
-  sex             String?
+  date_of_birth   DateTime?
+  gender          Gender      @default(Undefined)
   phone           String?
   email           String      @unique     
   role            Role        @default(STUDENT)
   updatedAt       String      @default("")
   createdAt       String      @default("")
-  courseIDs   String[]    @db.ObjectId
-  courses     Course[]    @relation(fields: [courseIDs], references: [id])
-  quizResults QuizResult[]
-  courseResults CourseResult[]
-  fileSubmits FileSubmit[]
+  courseIDs       String[]    @db.ObjectId
+  courses         Course[]    @relation(fields: [courseIDs], references: [id])
+  quizResults     QuizResult[]
+  courseResults   CourseResult[]
+  fileSubmits     FileSubmit[]
 }
 model Category {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -59,6 +64,7 @@ model Course {
   public_id   String?
   course_id   String              
   score_factor Float[]        @default([0.1, 0.2, 0.3, 0.5])
+  name_factor  String[]       @default(["Thực hành", "Bài tập lớn", "Giữa kỳ", "Cuối kỳ"])
   VideoSections  VideoSection[]
   DocumentSections DocumentSection[]
   category    Category        @relation(fields: [categoryId], references: [id])
@@ -73,8 +79,8 @@ model Course {
 }
 model VideoSection {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String?
+  title       String          @default("")
+  description String?         
   videos      Video[]
   courseId    String          @db.ObjectId
   course      Course          @relation(fields: [courseId], references: [id])
@@ -89,10 +95,12 @@ model DocumentSection {
   course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 model Video {
-id                  String          @id @default(auto()) @map("_id") @db.ObjectId
-  title               String
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  title               String          @default("")
   description         String?
-  url                 String
+  url                 String          @default("")
+  thumbnail           String?         
+  provider            String?
   videoSection        VideoSection    @relation(fields: [videoSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   videoSectionId      String          @db.ObjectId
 }
