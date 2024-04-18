@@ -24,12 +24,24 @@ async function GetDetailCourse(token: string, id: string) {
     },
   });
 }
-async function GetCourseByFilter(data : any) {
+async function GetCourseByFilter(data: any) {
   return await instance({
     method: "post",
     url: "/course/filter",
-    data
+    data,
   });
 }
-const Course = { GetAllCourse, GetAllSubscribedCourse, GetDetailCourse, GetCourseByFilter };
+async function GetScoreFactor(id : any) {
+  return await instance({
+    method: "get",
+    url: `/course/score-factor?id=${id}`,
+  });
+}
+const Course = {
+  GetAllCourse,
+  GetAllSubscribedCourse,
+  GetDetailCourse,
+  GetCourseByFilter,
+  GetScoreFactor
+};
 export default Course;

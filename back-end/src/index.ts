@@ -10,7 +10,8 @@ import SemesterController from "./controllers/semester-controller";
 import DocumentSectionController from "./controllers/document-controller";
 import DocumentLinkController from "./controllers/documentLink-controller";
 import QuizController from "./controllers/quiz-controller";
-
+import VideoController from "./controllers/video-controller";
+import GradeController from "./controllers/grade-controller";
 dotenv.config();
 initializeApp(config.firebaseConfig);
 connection();
@@ -25,6 +26,8 @@ const app = new App(
     new DocumentSectionController(),
     new DocumentLinkController(),
     new QuizController(),
+    new VideoController(),
+    new GradeController()
   ],
   port,
 );

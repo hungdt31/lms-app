@@ -47,4 +47,19 @@ const isAdmin = asyncHandler(
     next();
   },
 );
-export { verifyAccessToken, isAdmin };
+const isTeacher = asyncHandler(
+  async (
+    request: any,
+    response: express.Response,
+    next: express.NextFunction,
+  ) => {
+    const { role } = request.user;
+    if (role !== "TEACHER")
+      response.status(401).json({
+        success: false,
+        mess: "REQUIRE TEACHER ROLE",
+      });
+    next();
+  },
+);
+export { verifyAccessToken, isAdmin, isTeacher };

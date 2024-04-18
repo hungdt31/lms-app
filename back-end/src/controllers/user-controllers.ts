@@ -10,6 +10,7 @@ import randomstring from "randomstring";
 import { verifyAccessToken, isAdmin } from "../middlewares/verifyToken";
 import token from "../../moongose/model/token";
 import multer from "multer";
+import { isTeacher } from "../middlewares/verifyToken";
 import { userMulter, userUploadMiddleware, deleteCloudinaryImage } from "../../config/cloudinary/storage";
 class UserController extends BaseController {
   public path = "/user";
@@ -27,6 +28,11 @@ class UserController extends BaseController {
       [verifyAccessToken],
       this.getCurrentUser,
     );
+    this.router.get(
+      this.path + "/student-info",
+      [verifyAccessToken, isTeacher],
+      this.getStudentInfo
+    )
     this.router.post(this.path, this.addUser);
     this.router.post(this.path + "/login", this.login);
     this.router.post(this.path + "/logout", this.logout);
@@ -39,6 +45,9 @@ class UserController extends BaseController {
       this.verifyToChangePassword,
     );
     this.router.put(this.path + "/reset-password", this.changePasswordById);
+    this.router.get(this.path + "/list-pagination", [verifyAccessToken], this.getListUserWithPagination);
+    this.router.get(this.path + "/count", [verifyAccessToken], this.getCountPagination);
+    this.router.get(this.path + "/list", [verifyAccessToken], this.getListUser);
     // Bạn có thể thêm put, patch, delete sau.
   }
   private updateAvatar = asyncHandler(async(request: any, response: express.Response) => {
@@ -287,5 +296,131 @@ class UserController extends BaseController {
       data: rs
     });
   });
+  private getListUserWithPagination = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { role } = request.user;
+      let list;
+      const TAKE = Number(process.env.SKIP);
+      const SKIP = TAKE * (request.query.page - 1);
+      if (role === 'ADMIN') {
+        list = await prisma.user.findMany({
+          skip: SKIP,
+          take: TAKE,
+          where: {
+            courseIDs: {has: request.query.id},
+          },
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            role: true,
+            email: true,
+            phone: true
+          },
+        });
+      }
+      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
+      else 
+      list = await prisma.user.findMany({
+        skip: SKIP,
+        take: TAKE,
+        where: {
+          courseIDs: {has: request.query.id},
+          role: "STUDENT"
+        },
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          role: true,
+          email: true,
+          phone: true,
+          gender: true
+        },
+      });
+
+      response.json({
+        mess: "Get users successfully !",
+        success: true,
+        data: list,
+      });
+    },
+  );
+  private getCountPagination = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { role } = request.user;
+      let count;
+      if (role === 'ADMIN') {
+        count = await prisma.user.count({
+          where: {
+            courseIDs: {has: request.query.id},
+          }
+        });
+      }
+      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
+      else 
+      count = await prisma.user.count({
+        where: {
+          role: "STUDENT",
+          courseIDs: {has: request.query.id},
+        }
+      });
+      // lấy data = count / skip , làm tròn lên
+      response.json({
+        mess: "Get users successfully !",
+        success: true,
+        data: Math.ceil(count / Number(process.env.SKIP)),
+      });
+    },
+  );
+  private getListUser = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { role } = request.user;
+      let list;
+      if (role === 'ADMIN') {
+        list = await prisma.user.findMany({
+          where: {
+            courseIDs: {has: request.query.id},
+          },
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            role: true,
+            email: true,
+            phone: true,
+            date_of_birth: true
+          },
+        });
+      }
+      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
+      else 
+      list = await prisma.user.findMany({
+        where: {
+          courseIDs: {has: request.query.id},
+          role: "STUDENT"
+        },
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          role: true,
+          email: true,
+          phone: true,
+          gender: true,
+          date_of_birth: true
+        },
+      });
+
+      response.json({
+        mess: "Get users successfully !",
+        success: true,
+        data: list,
+      });
+    },
+  );
+  private getStudentInfo = asyncHandler(async(request: any, response: express.Response) => {
+    
+  })
 }
 export default UserController;

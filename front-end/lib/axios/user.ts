@@ -75,6 +75,25 @@ async function UpdateAvatar(token: string, avatar: string) {
     data: form,
   });
 }
+async function GetCountPagination(data : any, id: any) {
+  return await instance({
+    method: "get",
+    url: `/user/count?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + data,
+    },
+  });
+}
+async function GetListUser(token: any, id : any) {
+  return await instance({
+    method: "get",
+    url:  `/user/list?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+  
+}
 const User = {
   Login,
   GetCurrentUser,
@@ -84,5 +103,7 @@ const User = {
   VerifyCodeFromEmail,
   UpdatePassword,
   UpdateAvatar,
+  GetCountPagination,
+  GetListUser
 };
 export default User;
