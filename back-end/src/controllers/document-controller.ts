@@ -70,15 +70,35 @@ export default class DocumentSectionController extends BaseController {
             throw new Error(`Failed to delete ${path}: ${error}`);
           }
         } else {
-          await prisma.quiz.delete({
+          const foundQuiz = await prisma.quiz.findFirst({
             where: {
               id: idArray[i],
             },
           });
+          if (foundQuiz) {
+            await prisma.quiz.delete({
+              where: {
+                id: idArray[i],
+              },
+            });
+          } else {
+            const foundSubmission = await prisma.submission.findFirst({
+              where: {
+                id: idArray[i],
+              },
+            });
+            if (foundSubmission) {
+              await prisma.submission.delete({
+                where: {
+                  id: idArray[i],
+                },
+              });
+            }
+          }
         }
       }
       response.json({
-        mess: "Delete quiz and document link successfully !",
+        mess: "Delete quiz, document link and submission successfully !",
         success: true,
         data: null,
       });

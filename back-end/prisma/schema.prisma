@@ -12,6 +12,15 @@ enum Role {
   ADMIN
   TEACHER
 }
+enum Day {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
 enum Gender {
   Male
   Female
@@ -40,7 +49,7 @@ model User {
   courses         Course[]    @relation(fields: [courseIDs], references: [id])
   quizResults     QuizResult[]
   courseResults   CourseResult[]
-  fileSubmits     FileSubmit[]
+  UserSubmissions UserSubmission[]
 }
 model Category {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -62,7 +71,10 @@ model Course {
   description String
   image       String?
   public_id   String?
-  course_id   String              
+  course_id   String
+  time        String          @default("14:00 - 16:00") 
+  schedule    Int[]           @default([1, 2, 3, 4])  
+  date        Day             @default(Monday)           
   score_factor Float[]        @default([0.1, 0.2, 0.3, 0.5])
   name_factor  String[]       @default(["Thực hành", "Bài tập lớn", "Giữa kỳ", "Cuối kỳ"])
   VideoSections  VideoSection[]
@@ -75,7 +87,6 @@ model Course {
   users       User[]          @relation(fields: [usersId], references: [id])
   usersId     String[]        @db.ObjectId
   courseResults CourseResult[]
-  fileSubmits FileSubmit[]
 }
 model VideoSection {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -91,6 +102,7 @@ model DocumentSection {
   content     String?
   quiz        Quiz[]
   documentLink DocumentLink[]
+  submissions Submission[]
   courseId    String          @db.ObjectId
   course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
@@ -121,6 +133,7 @@ model Quiz {
   end_date    DateTime?
   time_limit  Int?
   factor      Float           @default(0)
+  times       Int?
   questions   Question[]
   documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   documentSectionId  String          @db.ObjectId
@@ -136,13 +149,28 @@ model Question {
 }
 model QuizResult {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  score       Float           @default(0)
+  score       Float[]         @default([])
+  history     PlayQuiz[]
   userId      String          @db.ObjectId 
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)         
-  quiz        Quiz            @relation(fields: [quizId], references: [id])
-  quizId      String          @db.ObjectId            
+  quiz        Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  quizId      String          @db.ObjectId          
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
+}
+model PlayQuiz {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  score       Float           @default(0)
+  answers     String[]
+  isDone      Boolean         @default(false)
+  timeStarted DateTime?       @default(now())
+  timeFinished DateTime?
+  timeEnded   DateTime?  
+  timeEndedString String?  
+  timeStartedString String?
+  timeFinishedString String?   
+  quizResult  QuizResult      @relation(fields: [quizResultId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quizResultId String         @db.ObjectId
 }
 model CourseResult {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -155,15 +183,50 @@ model CourseResult {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
 }
-model FileSubmit {
+model Submission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  url         String[]
+  files       SubmissionFile[]
+  start_date  DateTime?       @default(now())
+  end_date    DateTime?       @default(now()) 
+  documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  documentSectionId  String          @db.ObjectId
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+  UserSubmissions UserSubmission[] 
+}
+model UserSubmission {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  isChecked   Boolean         @default(false)
+  score       Float           @default(0)
+  files       UserFile[]      
   userId      String          @db.ObjectId
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  courseId    String          @db.ObjectId
-  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  submission  Submission      @relation(fields: [submissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  submissionId String         @db.ObjectId
+  beGraded    DateTime?
+  editGradeAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+}
+model UserFile {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  url         String
+  path        String
+  userSubmission UserSubmission   @relation(fields: [userSubmissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userSubmissionId String         @db.ObjectId
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @default(now())
+}
+model SubmissionFile {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  url         String
+  path        String
+  submission  Submission      @relation(fields: [submissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  submissionId String         @db.ObjectId
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
 }

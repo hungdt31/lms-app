@@ -75,9 +75,9 @@ export default function EditVidSection(data: any) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="btn btn-outline btn-warning">
+              <Button className="py-5" variant={"secondary"}>
                 <Wrench />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               <p>Edit video section</p>

@@ -12,6 +12,7 @@ import DocumentLinkController from "./controllers/documentLink-controller";
 import QuizController from "./controllers/quiz-controller";
 import VideoController from "./controllers/video-controller";
 import GradeController from "./controllers/grade-controller";
+import SubmissionController from "./controllers/submission-controller";
 dotenv.config();
 initializeApp(config.firebaseConfig);
 connection();
@@ -27,7 +28,8 @@ const app = new App(
     new DocumentLinkController(),
     new QuizController(),
     new VideoController(),
-    new GradeController()
+    new GradeController(),
+    new SubmissionController()
   ],
   port,
 );

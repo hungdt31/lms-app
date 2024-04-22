@@ -5,7 +5,15 @@ import UserAvatar from "../common/UserAvatar";
 import Link from "next/link";
 import Image from "next/image";
 import ToggleTheme from "../toggle-theme";
+import deleteToken from "@/hooks/deleteToken";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { use } from "react";
 export default function TopNav() {
+  const router = useRouter();
+  const path = usePathname();
+  console.log(path);
   const { data, isPending, error } = UserQuery();
   if (isPending)
     return (
@@ -42,18 +50,18 @@ export default function TopNav() {
               <Link href={"/teacher/course"}>Quản lý khóa học</Link>
             </li>
             <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
+              <Link href={"/teacher"}>Profile</Link>
             </li>
             <li>
-              <a>Item 3</a>
+              <Button
+                variant={"link"}
+                onClick={async () => {
+                  await deleteToken();
+                  router.push("/login?admin=false");
+                }}
+              >
+                Log out
+              </Button>
             </li>
           </ul>
         </div>
@@ -71,12 +79,20 @@ export default function TopNav() {
             <Link href={"/teacher"}>Profile</Link>
           </li>
           <li>
-            <Link href={"/teacher"}>Mục khác</Link>
+            <Button
+              variant={"link"}
+              onClick={async () => {
+                await deleteToken();
+                router.push("/login?admin=false");
+              }}
+            >
+              Log out
+            </Button>
           </li>
         </ul>
       </div>
       <div className="navbar-end gap-3">
-        <UserAvatar data={data?.data} />
+        {path !== "/teacher" && <UserAvatar data={data?.data} />}
         <div className="text-nav-text">
           Welcome
           <p className="font-bold">

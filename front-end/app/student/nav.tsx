@@ -20,7 +20,7 @@ import TemporaryDrawer from "@/components/drawer";
 import UserQuery from "@/hooks/user";
 import deleteToken from "@/hooks/deleteToken";
 export default function NavLayout() {
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const router = useRouter();
   const { data, isPending, error } = UserQuery();
   const path = usePathname();

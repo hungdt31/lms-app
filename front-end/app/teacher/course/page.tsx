@@ -24,7 +24,7 @@ export default function TeacherPage() {
   // console.log(mutation);
   return (
     <div className="flex justify-center flex-col items-center">
-      <div className="flex gap-5 items-center mt-5">
+      <div className="flex gap-5 items-center mt-5 lg:flex-row flex-col">
         <Select
           onValueChange={(el: any) => {
             setInfo(el);
@@ -46,7 +46,7 @@ export default function TeacherPage() {
         {info && (
           <div className="flex gap-4">
             <p>{TimeConvert(info?.start_date)}</p>
-            <FastForward />
+            {" - "}
             <p>{TimeConvert(info?.end_date)}</p>
           </div>
         )}
@@ -54,7 +54,7 @@ export default function TeacherPage() {
       {mutation.isPending && <BlockLoading />}
       {mutation.isError && <p>Something is not good ..</p>}
       {mutation.isSuccess && (
-        <div className="flex flex-wrap gap-5 mt-3">
+        <div className="flex flex-wrap gap-5 mt-3 justify-center mb-3">
           {mutation.data?.data?.map((el: any) => {
             return (
               <Link href={`/teacher/course/detail?id=${el?.id}`}>

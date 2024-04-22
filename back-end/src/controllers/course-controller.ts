@@ -2,7 +2,10 @@ import express from "express";
 import { BaseController } from "./abstractions/base-controller";
 import asyncHandler from "express-async-handler";
 import prisma from "../../prisma/prisma";
-import { courseMulter, courseUploadMiddleware } from "../../config/cloudinary/storage";
+import {
+  courseMulter,
+  courseUploadMiddleware,
+} from "../../config/cloudinary/storage";
 import { verifyAccessToken } from "../middlewares/verifyToken";
 export default class CourseController extends BaseController {
   public path = "/course";
@@ -33,6 +36,7 @@ export default class CourseController extends BaseController {
     this.router.put(`${this.path}/add-student`, this.addStudent);
     this.router.post(`${this.path}/filter`, this.getCourseByFilter);
     this.router.get(`${this.path}/score-factor`, this.getScoreFactor);
+    this.router.get(`${this.path}/schedule`, this.getSchedule);
     // Bạn có thể thêm put, patch, delete sau.
   }
   // private uploadFile = asyncHandler(
@@ -49,6 +53,51 @@ export default class CourseController extends BaseController {
   //       info
   //      })
   //   })
+  /*json: 
+    body 
+    semesterId:
+    userId:
+  */
+  private getSchedule = asyncHandler(
+    async (request: express.Request, response: express.Response) => {
+      const start = await prisma.semester.findFirst({
+        where: {
+          id: request.body.semesterId,
+        },
+        select: {
+          start_date: true,
+        },
+      });
+
+      if (!start) throw new Error("Wrong semester!");
+      const currentDate = new Date();
+
+      const week = Math.ceil(
+        (Number(currentDate) - Number(start.start_date)) /
+          (60 * 60 * 24 * 7 * 1000),
+      );
+      const course = await prisma.course.findMany({
+        where: {
+          semesterId: request.body.semesterId,
+          usersId: { has: request.body.userId },
+          schedule: { has: week },
+        },
+        select: {
+          title: true,
+          time: true,
+          date: true,
+        },
+      });
+
+      if (!course) throw new Error("Cannot find schedule!");
+
+      response.json({
+        success: true,
+        mess: "Get schedule successfully",
+        data: course,
+      });
+    },
+  );
   private getAllCourse = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const courses = await prisma.course.findMany();
@@ -93,7 +142,8 @@ export default class CourseController extends BaseController {
               title: true,
               content: true,
               quiz: true,
-              documentLink: true
+              documentLink: true,
+              submissions: true,
             },
           },
           VideoSections: {
@@ -104,7 +154,7 @@ export default class CourseController extends BaseController {
               videos: true,
             },
           },
-        }
+        },
       });
       if (!course) throw new Error("Cannot find the course !");
       if (course?.usersId.includes(_id)) {
@@ -115,13 +165,13 @@ export default class CourseController extends BaseController {
           data: course,
         });
       } else {
-      course.registered = false;
-      response.json({
-        mess: "Haven't registered for the course yet !",
-        success: true,
-        data: course,
-      });
-    }
+        course.registered = false;
+        response.json({
+          mess: "Haven't registered for the course yet !",
+          success: true,
+          data: course,
+        });
+      }
     },
   );
   private addStudent = asyncHandler(
@@ -237,7 +287,7 @@ export default class CourseController extends BaseController {
         },
         select: {
           score_factor: true,
-          name_factor: true
+          name_factor: true,
         },
       });
       if (!course) throw new Error("Cannot find course by id !");

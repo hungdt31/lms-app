@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +16,9 @@ import Image from "next/image";
 import icon from "./favicon.ico";
 import deleteToken from "@/hooks/deleteToken";
 import { verifyJwtToken } from "@/lib/auth";
+
 export default function Home() {
+  const router = useRouter();
   const cookie = new Cookies();
   const [auth, setAuth] = React.useState<any>(null);
   const checkToken = async () => {
@@ -67,10 +70,11 @@ export default function Home() {
             </form>
           )}
         </CardContent>
-        <CardFooter className="flex justify-between items-center">
-          <ToggleTheme />
-          {auth ? (
+
+        {auth ? (
+          <CardFooter className="flex justify-between items-center w-full">
             <Button
+              variant={"secondary"}
               onClick={async () => {
                 await deleteToken();
                 setAuth(null);
@@ -78,12 +82,24 @@ export default function Home() {
             >
               Log out
             </Button>
-          ) : (
+            <Button
+              onClick={() =>
+                router.push(
+                  `${process.env.NEXT_PUBLIC_FRONT_END}/${auth?.role.toLowerCase()}`,
+                )
+              }
+            >
+              Explore your home
+            </Button>
+          </CardFooter>
+        ) : (
+          <CardFooter className="flex justify-between items-center">
+            <ToggleTheme />
             <Link href={{ pathname: "login", query: { admin: type } }}>
               <Button className="min-w-32">Login</Button>
             </Link>
-          )}
-        </CardFooter>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );

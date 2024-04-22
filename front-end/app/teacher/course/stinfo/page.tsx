@@ -7,7 +7,7 @@ import TotalPoint from "@/components/teacher/TotalPoint"
 import Submission from "@/components/teacher/Submission"
 const nav = [
   {
-    title: "Điểm quiz",
+    title: "Bài nộp",
     icon: ""
   },
   {
@@ -15,9 +15,9 @@ const nav = [
     icon: ""
   },
   {
-    title: "Bài nộp",
+    title: "Điểm quiz",
     icon: ""
-  }
+  },
 ]
 
 export default function Stinfo() {
@@ -27,13 +27,13 @@ export default function Stinfo() {
   const selectPage = (index: Number) => {
     switch (index) {
       case 0:
-        return <QuizResult/>
+        return <Submission cid={cid} uid={id}/>
       case 1:
         return <TotalPoint cid={cid} uid={id}/>
       case 2:
-        return <Submission />
-      default:
-        return <QuizResult/>
+        return <QuizResult cid={cid} uid={id}/>
+      default: 
+        return <QuizResult cid={cid} uid={id}/>
     }
   }
   return (

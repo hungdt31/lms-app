@@ -75,9 +75,9 @@ export default function EditDocSection(data: any) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="btn btn-outline btn-warning">
+              <Button variant={"secondary"} className="py-5">
                 <Wrench />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               <p>Edit document section</p>

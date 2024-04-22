@@ -77,7 +77,7 @@ export const columns: ColumnDef<UserInfo>[] = [
     header: "Date of birth",
     cell: ({ row }) => {
       const date_of_birth = row.getValue("date_of_birth");
-      const formatted = new Date(date_of_birth as string).toLocaleDateString();
+      const formatted = new Date(date_of_birth as string).toUTCString();
       return <div className="font-medium">{formatted}</div>;
     },
   },
