@@ -1,11 +1,26 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   FileText,
   SquarePlus,
   Plus,
   SquarePen,
   X,
+  FileUp,
   MessageCircleQuestion,
 } from "lucide-react";
 import {
@@ -23,16 +38,17 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@radix-ui/themes";
 import Link from "next/link";
+import { Button as Btn } from "../ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import DocumentSection from "@/lib/axios/document";
 import UploadDocument from "./AddDocs";
 import EditDocSection from "./EditDocSection";
-
+import { useRouter } from "next/navigation";
 export default function DocSection(data: any) {
   const { qr } = data;
-  // const [title, setTitle] = useState<String>("");
+  const router = useRouter();
   const checkboxRefs = useRef<HTMLInputElement[]>([]);
   // const checkboxDocLinkRefs = useRef<HTMLInputElement[]>([]);
   const [trigger, setTrigger] = useState<any>(null);
@@ -103,7 +119,7 @@ export default function DocSection(data: any) {
   return (
     <div>
       <div className="flex gap-3 items-center">
-        <p className="text-xl font-bold">Danh sách tài liệu tham khảo</p>
+        <p className="text-xl font-bold">Tài liệu và bài kiểm tra</p>
       </div>
       <div className="flex items-center gap-3 mt-5">
         <Select onValueChange={(e) => setOption(e)}>
@@ -134,8 +150,10 @@ export default function DocSection(data: any) {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="flex gap-3 mb-3 items-center">
-                  <button
-                    className="btn btn-outline btn-error"
+                  <Btn
+                    variant={"destructive"}
+                    className="py-5"
+                    // className="btn btn-outline btn-error"
                     onClick={() => {
                       setClickDelete(!clickDelete);
                       setTrigger(index);
@@ -145,25 +163,51 @@ export default function DocSection(data: any) {
                     }}
                   >
                     {clickDelete && trigger == index ? "Delete" : <X />}
-                  </button>
-                  <button
-                    className="btn btn-outline btn-info"
-                    onClick={() => {
-                      setClickAdd(!clickAdd);
-                      setTrigger(index);
-                    }}
-                  >
-                    <Plus />
-                  </button>
+                  </Btn>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Btn variant="outline" className="py-5">
+                        <Plus />
+                      </Btn>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setClickAdd(true);
+                          setTrigger(index);
+                        }}
+                      >
+                        Tạo thẻ tài liệu
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push(
+                            `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/upload/submission?id=${id}&did=${el?.id}`,
+                          );
+                        }}
+                      >
+                        Tạo phần submission
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setClickAdd(false);
+                          setTrigger(index);
+                        }}
+                      >
+                        Đóng
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <Link
                     href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/upload/quiz?id=${id}&did=${el?.id}`}
                   >
-                    <button
-                      className="btn btn-outline btn-info"
-                      onClick={() => {}}
+                    <Btn
+                      // className="btn btn-outline btn-info"
+                      className="py-5"
                     >
                       <MessageCircleQuestion />
-                    </button>
+                    </Btn>
                   </Link>
 
                   <EditDocSection qr={qr} id={el?.id} />
@@ -172,11 +216,13 @@ export default function DocSection(data: any) {
 
                 {el?.documentLink?.map((doc: any, _index: any) => {
                   return (
-                    <div
+                    <Link 
+                      target="_blank" 
+                      href={doc?.url}
                       className={
                         trigger == index && clickDelete
                           ? `flex items-center gap-3`
-                          : "max-w-[400px]"
+                          : ""
                       }
                     >
                       <div
@@ -184,10 +230,10 @@ export default function DocSection(data: any) {
                         key={_index}
                       >
                         <FileText className="text-cyan-500" />
-                        <Link href={doc?.url} className="text-cyan-500">
+                        <div className="text-cyan-500">
                           <p className="text-base font-bold">{doc?.title}</p>
                           <p className="text-xs">{doc?.description}</p>
-                        </Link>
+                        </div>
                       </div>
                       {clickDelete && trigger == index && (
                         <input
@@ -196,7 +242,7 @@ export default function DocSection(data: any) {
                           value={doc?.id}
                         />
                       )}
-                    </div>
+                    </Link>
                   );
                 })}
                 {el?.quiz?.map((quiz: any, _index: any) => {
@@ -205,7 +251,7 @@ export default function DocSection(data: any) {
                       className={
                         trigger == index && clickDelete
                           ? `flex items-center gap-3`
-                          : "max-w-[400px]"
+                          : ""
                       }
                     >
                       <div
@@ -228,6 +274,38 @@ export default function DocSection(data: any) {
                         />
                       )}
                     </div>
+                  );
+                })}
+                {el?.submissions?.map((submission: any, _index: any) => {
+                  return (
+                    <Link
+                      target="_blank"
+                      href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/submission?sid=${submission?.id}&id=${id}`}
+                      className={
+                        trigger == index && clickDelete
+                          ? `flex items-center gap-3`
+                          : ""
+                      }
+                    >
+                      <div
+                        className="flex items-center mt-3 gap-3 border-2 border-section p-3 rounded-md shadow-lg dark:border-rose-900"
+                        key={_index}
+                      >
+                        <FileUp className="text-rose-900" />
+                        <div className="text-rose-900">
+                          <div className="text-base font-bold">
+                            {submission?.title}
+                          </div>
+                        </div>
+                      </div>
+                      {clickDelete && trigger == index && (
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-error"
+                          value={submission?.id}
+                        />
+                      )}
+                    </Link>
                   );
                 })}
                 {clickAdd && trigger == index && (

@@ -1,23 +1,15 @@
-"use client"
-import { useSearchParams } from "next/navigation"
-import Quiz from "@/lib/axios/quiz"
-import { useEffect, useState } from "react"
+"use client";
+import { useSearchParams } from "next/navigation";
+import { QuizResultQuery } from "@/hooks/result";
 export default function ResultPage() {
-  const [result, setResult] = useState<any>(null)
-  const id : string = useSearchParams().get("id") as string
-  console.log(id)
-  const fetchResult = async() => {
-    const rs = await Quiz.GetResult(id)
-    console.log(rs)
-    setResult(rs?.data)
-  }
-  useEffect(() => {
-    fetchResult()
-  },[])
+  const id: string = useSearchParams().get("id") as string;
+  const { data } = QuizResultQuery(id);
+  //console.log(data);
   return (
     <div>
       <p>Result Page</p>
-      <p>Điểm thi: {result?.score}</p>
+      <p>Điểm thi: [{data?.data?.score.join(', ')}]</p>
+      <p>{data?.mess}</p>
     </div>
-  )
+  );
 }

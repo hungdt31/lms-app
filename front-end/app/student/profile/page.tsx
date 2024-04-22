@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import Cookies from "universal-cookie";
 import { useState } from "react";
 import { LoginLoading } from "@/components/loading";
+import ProfileForm from "@/components/profile-form";
 export default function DetailCourse() {
   const cookies = new Cookies();
   const query = UserQuery();
@@ -112,6 +113,7 @@ export default function DetailCourse() {
           </p>
         </div>
       </div>
+      <ProfileForm />
     </div>
   );
 }

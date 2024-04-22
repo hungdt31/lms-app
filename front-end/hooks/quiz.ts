@@ -23,3 +23,14 @@ export function GetResultQuery() {
   })
   return result
 }
+export function QuizPlayQuery(id: string) {
+  const fetchQuizPlay = async () => {
+    const quiz = await Quiz.GetQuizPlay(id);
+    return quiz;
+  };
+  const quiz: any = useQuery({
+    queryKey: ["quizPlay"],
+    queryFn: fetchQuizPlay,
+  });
+  return quiz;
+}

@@ -223,9 +223,9 @@ export default function VideoSection(data: any) {
                 <div className="flex gap-3 items-center flex-wrap mb-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button className="btn btn-outline btn-info">
+                      <Button className="py-5">
                         <Plus />
-                      </button>
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 p-3 flex flex-col gap-5">
                       <Label htmlFor="video_link">Link</Label>
@@ -243,8 +243,9 @@ export default function VideoSection(data: any) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <EditVidSection qr={qr} id={el?.id} />
-                  <button
-                    className="btn btn-outline btn-error"
+                  <Button
+                    className="py-5"
+                    variant={"destructive"}
                     onClick={() => {
                       setTrigger(index);
                       setDeleteVid(!deleteVid);
@@ -252,7 +253,7 @@ export default function VideoSection(data: any) {
                     }}
                   >
                     {deleteVid ? "Delete" : <VideoOff />}
-                  </button>
+                  </Button>
                 </div>
                 <div dangerouslySetInnerHTML={{ __html: el?.description }} className="p-3"/>
                 {el?.videos?.map((e: any) => {

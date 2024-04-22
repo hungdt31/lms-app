@@ -25,5 +25,28 @@ async function CreateQuiz(data : any) {
     data
   });
 }
-const Quiz = { GetQuiz, MarkQuiz, GetResult, CreateQuiz };
+async function GetAllQuizResultByUser(data: any) {
+  return await instance({
+    method: "get",
+    url: `/quiz/all-result?uid=${data?.uid}&cid=${data?.cid}`,
+  })
+}
+async function GetQuizPlay(id: any) {
+  return await instance({
+    method: "get",
+    url: `/quiz/play?id=${id}`,
+  });
+}
+async function StartQuiz(id: any, uid: any) {
+  const data = {
+    id,
+    uid
+  }
+  return await instance({
+    method: "post",
+    url: `/quiz/start`,
+    data
+  });
+}
+const Quiz = { GetQuiz, MarkQuiz, GetResult, CreateQuiz, GetAllQuizResultByUser, GetQuizPlay, StartQuiz };
 export default Quiz;

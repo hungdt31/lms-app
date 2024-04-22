@@ -3,7 +3,8 @@ import { BaseController } from "./abstractions/base-controller";
 import asyncHandler from "express-async-handler";
 import prisma from "../../prisma/prisma";
 import { kMaxLength } from "buffer";
-
+import timeConvert from "../helper/time";
+import { now } from "mongoose";
 export default class QuizController extends BaseController {
   public path = "/quiz";
 
@@ -21,6 +22,10 @@ export default class QuizController extends BaseController {
     this.router.delete(`${this.path}` + "/question", this.deleteQuestion);
     this.router.post(`${this.path}` + "/result", this.markQuiz);
     this.router.get(`${this.path}/result`, this.getResult);
+    this.router.get(`${this.path}/all-result`, this.getAllQuizByUser);
+    this.router.post(`${this.path}/start`, this.startQuiz);
+    this.router.get(`${this.path}/play`, this.getPlayQuiz);
+    this.router.delete(`${this.path}/play/all`, this.deleteAllPlayQuiz);
   }
   /*format create json like this
      "key1": ... ,
@@ -169,7 +174,7 @@ export default class QuizController extends BaseController {
           id: true,
         },
       });
-      if (!deleted) throw new Error("Can't delete question!")
+      if (!deleted) throw new Error("Can't delete question!");
       response.json({
         mess: "Delete question successfully !",
         success: true,
@@ -187,6 +192,7 @@ export default class QuizController extends BaseController {
   private markQuiz = asyncHandler(
     async (request: any, response: express.Response) => {
       ///làm ra cái điểm
+      console.log(request.body)
       const solution = await prisma.quiz.findFirst({
         where: {
           id: request.body.quizId,
@@ -211,20 +217,106 @@ export default class QuizController extends BaseController {
       }
 
       score = (score / solution.questions.length) * 10;
-      console.log(score);
-
-      const result = await prisma.quizResult.create({
-        data: {
+      //console.log(score);
+      let result;
+      const foundResult = await prisma.quizResult.findFirst({
+        where: {
           userId: request.body.userId,
           quizId: request.body.quizId,
-          score: score,
+        },
+        select: {
+          score: true,
+          id: true,
         },
       });
-
+      if (foundResult) {
+        foundResult.score.push(score);
+        result = await prisma.quizResult.update({
+          where: {
+            id: foundResult.id,
+          },
+          data: {
+            score: foundResult.score,
+          },
+        });
+      } else {
+        result = await prisma.quizResult.create({
+          data: {
+            userId: request.body.userId,
+            quizId: request.body.quizId,
+            score: [score],
+          },
+        });
+      }
+      const answers = request.body.answer.map((item : any )=> item === null ? "" : item);
+      await prisma.playQuiz.update({
+        where: {
+          id: request.body.playId,
+        },
+        data: {
+          isDone: true,
+          score: score,
+          timeFinished: new Date(),
+          timeFinishedString: timeConvert(new Date().toISOString()),
+          answers,
+        },
+      });
       response.json({
         mess: "Your result has been saved!",
         success: true,
         data: result,
+      });
+    },
+  );
+  private startQuiz = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id, uid } = request.body;
+      const quiz: any = await prisma.quiz.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          start_date: true,
+          end_date: true,
+          time_limit: true,
+        },
+      });
+      if (!quiz) throw new Error("Can't find the quiz!");
+      const now = new Date();
+      if (now < quiz?.start_date) throw new Error("Quiz has not started yet!");
+      if (now > quiz?.end_date) throw new Error("Quiz has ended!");
+      let foundResult = await prisma.quizResult.findFirst({
+        where: {
+          userId: uid,
+          quizId: id,
+        },
+      });
+      // console.log(foundResult)
+      if (!foundResult) {
+        foundResult = await prisma.quizResult.create({
+          data: {
+            userId: uid,
+            quizId: id,
+          },
+        });
+      }
+      // console.log(timeConvert((new Date(now.getTime())).toISOString()))
+      // console.log(timeConvert((new Date(now.getTime() + quiz?.time_limit)).toISOString()))
+      const played = await prisma.playQuiz.create({
+        data: {
+          timeEnded: new Date(now.getTime() + quiz?.time_limit),
+          quizResultId: foundResult.id,
+          timeEndedString: timeConvert(
+            new Date(now.getTime() + quiz?.time_limit).toISOString(),
+          ),
+          timeStarted: now,
+          timeStartedString: timeConvert(now.toISOString()),
+        },
+      });
+      response.json({
+        mess: "Your quiz playing is started!",
+        success: true,
+        data: played,
       });
     },
   );
@@ -238,6 +330,67 @@ export default class QuizController extends BaseController {
       if (!result) throw new Error("Can't find your result!");
       response.json({
         mess: "Your result has been given!",
+        success: true,
+        data: result,
+      });
+    },
+  );
+  private getPlayQuiz = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const result = await prisma.playQuiz.findFirst({
+        where: {
+          quizResult: {
+            quizId: request.query.id,
+          },
+          timeEnded: {
+            gt: now(),
+          },
+          isDone: false,
+        },
+      });
+      response.json({
+        mess: result ? "Your quiz playing has been exist!" : "Nothing to play!",
+        success: true,
+        data: result,
+      });
+    },
+  );
+  private getAllQuizByUser = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const result = await prisma.quizResult.findMany({
+        where: {
+          userId: request.query?.uid,
+          quiz: {
+            documentSection: {
+              courseId: request.query?.cid,
+            },
+          },
+        },
+        select: {
+          createdAt: true,
+          updatedAt: true,
+          quiz: {
+            select: {
+              title: true,
+              factor: true,
+            },
+          },
+          score: true,
+        },
+      });
+      if (!result) throw new Error("Can't find your result!");
+      response.json({
+        mess: "Your result has been given!",
+        success: true,
+        data: result,
+      });
+    },
+  );
+  private deleteAllPlayQuiz = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const result = await prisma.playQuiz.deleteMany();
+      response.json({
+        mess: "All your quiz playing has been deleted!",
         success: true,
         data: result,
       });

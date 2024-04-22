@@ -30,8 +30,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoginLooading from "../loading/login";
+import { LoginLoading } from "../loading";
 export default function TotalPoint(data: any) {
   const { cid, uid } = data;
+  const [loading, setLoading] = useState<Boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,11 +71,11 @@ export default function TotalPoint(data: any) {
   const fetchScoreFactor = async () => {
     const res = await Course.GetScoreFactor(cid);
     setScoreFactor(res?.data);
-    console.log(res);
+    // console.log(res);
   };
   const fetchGrade = async () => {
     const res = await Grade.GetCourseResult({ cid, uid });
-    console.log(res);
+    // console.log(res);
     setGradeCourse(res?.data);
   };
   useEffect(() => {
@@ -89,12 +92,13 @@ export default function TotalPoint(data: any) {
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        setLoading(true);
         console.log(data);
         let new_data = [];
         for (let i = 0; i < data.score_array.length; i++) {
           new_data.push(data.score_array[i].score);
         }
-        console.log(new_data);
+        // console.log(new_data);
         const obj = {
           courseId: cid,
           userId: uid,
@@ -108,6 +112,7 @@ export default function TotalPoint(data: any) {
           timer: 1500,
         });
         fetchGrade();
+        setLoading(false)
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -147,59 +152,65 @@ export default function TotalPoint(data: any) {
                   <TableCell className="font-medium">{el}</TableCell>
                 ))}
                 <TableCell className="font-bold text-right">
-                  {gradeCourse?.average_score}
+                  {gradeCourse?.average_score.toFixed(1)}
                 </TableCell>
               </TableRow>
               <TableRow></TableRow>
             </TableBody>
           </Table>
           <Button onClick={() => setOpen(!open)}>Update</Button>
-          {open && (
-            <div className="flex justify-center">
-              <Card className="w-[350px] mt-5">
-                <CardHeader>
-                  <CardTitle>Update new total point</CardTitle>
-                  <CardDescription>
-                    Deploy your new point in one-click.
-                  </CardDescription>
-                </CardHeader>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <CardContent>
-                    {fields?.map((filed, index) => {
-                      const errorForField = errors?.score_array?.[index]?.score;
-                      return (
-                        <div>
-                          <Label htmlFor={`score_array.${index}.score`}>
-                            {scoreFactor?.name_factor[index]}
-                          </Label>
-                          <Input
-                            {...register(`score_array.${index}.score`, {
-                              valueAsNumber: true,
-                            })}
-                          />
-                          {errorForField && (
-                            <p className="text-red-500 font-light text-xs py-3">
-                              {errorForField?.message}
-                            </p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button type="submit">Submit</Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </div>
-          )}
         </div>
       ) : (
         <div>
-          <p>Chưa tổng kết điểm</p>
-          <Button className="p-5">
-            <Plus />
-          </Button>
+          <div className="flex gap-3 items-center">
+            <p>Chưa tổng kết điểm</p>
+            <Button className="p-5" onClick={() => setOpen(!open)}>
+              <Plus />
+            </Button>
+          </div>
+        </div>
+      )}
+      {open && (
+        <div className="flex justify-center mb-5">
+          <Card className="w-[350px] mt-5">
+            <CardHeader>
+              <CardTitle>Update new total point</CardTitle>
+              <CardDescription>
+                Deploy your new point in one-click.
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <CardContent>
+                {fields?.map((filed, index) => {
+                  const errorForField = errors?.score_array?.[index]?.score;
+                  return (
+                    <div>
+                      <Label htmlFor={`score_array.${index}.score`}>
+                        {scoreFactor?.name_factor[index]}
+                      </Label>
+                      <Input
+                        {...register(`score_array.${index}.score`, {
+                          valueAsNumber: true,
+                        })}
+                      />
+                      {errorForField && (
+                        <p className="text-red-500 font-light text-xs py-3">
+                          {errorForField?.message}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                {loading ? (
+                  <LoginLoading />
+                ) : (
+                  <Button type="submit">Submit</Button>
+                )}
+              </CardFooter>
+            </form>
+          </Card>
         </div>
       )}
     </div>

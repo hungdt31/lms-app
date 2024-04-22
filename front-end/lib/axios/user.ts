@@ -94,6 +94,16 @@ async function GetListUser(token: any, id : any) {
   });
   
 }
+async function UpdateUser(token : string, data: any) {
+  return await instance({
+    method: "put",
+    url: "/user",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    data
+  });
+}
 const User = {
   Login,
   GetCurrentUser,
@@ -104,6 +114,7 @@ const User = {
   UpdatePassword,
   UpdateAvatar,
   GetCountPagination,
-  GetListUser
+  GetListUser,
+  UpdateUser
 };
 export default User;

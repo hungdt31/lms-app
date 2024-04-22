@@ -11,7 +11,11 @@ import { verifyAccessToken, isAdmin } from "../middlewares/verifyToken";
 import token from "../../moongose/model/token";
 import multer from "multer";
 import { isTeacher } from "../middlewares/verifyToken";
-import { userMulter, userUploadMiddleware, deleteCloudinaryImage } from "../../config/cloudinary/storage";
+import {
+  userMulter,
+  userUploadMiddleware,
+  deleteCloudinaryImage,
+} from "../../config/cloudinary/storage";
 class UserController extends BaseController {
   public path = "/user";
 
@@ -21,7 +25,7 @@ class UserController extends BaseController {
   }
 
   public initializeRoutes() {
-    const upload = multer()
+    const upload = multer();
     this.router.get(this.path, [verifyAccessToken, isAdmin], this.getAllUser);
     this.router.get(
       this.path + "/current",
@@ -31,52 +35,87 @@ class UserController extends BaseController {
     this.router.get(
       this.path + "/student-info",
       [verifyAccessToken, isTeacher],
-      this.getStudentInfo
-    )
+      this.getStudentInfo,
+    );
     this.router.post(this.path, this.addUser);
     this.router.post(this.path + "/login", this.login);
     this.router.post(this.path + "/logout", this.logout);
     this.router.delete(this.path + "/delete-all", this.deleteAllUser);
     this.router.put(this.path + "/change-password", this.updatePassword);
-    this.router.put(this.path + "/update-avatar", [verifyAccessToken],userMulter.single('file'), userUploadMiddleware, this.updateAvatar);
+    this.router.put(
+      this.path + "/update-avatar",
+      [verifyAccessToken],
+      userMulter.single("file"),
+      userUploadMiddleware,
+      this.updateAvatar,
+    );
     this.router.post(this.path + "/reset-password", this.resetPassword);
     this.router.get(
       this.path + "/reset-password/:reset_code",
       this.verifyToChangePassword,
     );
     this.router.put(this.path + "/reset-password", this.changePasswordById);
-    this.router.get(this.path + "/list-pagination", [verifyAccessToken], this.getListUserWithPagination);
-    this.router.get(this.path + "/count", [verifyAccessToken], this.getCountPagination);
+    this.router.get(
+      this.path + "/list-pagination",
+      [verifyAccessToken],
+      this.getListUserWithPagination,
+    );
+    this.router.get(
+      this.path + "/count",
+      [verifyAccessToken],
+      this.getCountPagination,
+    );
     this.router.get(this.path + "/list", [verifyAccessToken], this.getListUser);
+    this.router.put(this.path, [verifyAccessToken], this.updateUser);
     // Bạn có thể thêm put, patch, delete sau.
   }
-  private updateAvatar = asyncHandler(async(request: any, response: express.Response) => {
-    const cloudinaryUrl = request.body.image;
-    const publicId = request.body.public_id
-    const {_id} = request.user
-    const deletedImage = await prisma.user.findUnique({
-      where:{
-        id: _id
-      }
-    })
-    if(deletedImage)
-      await deleteCloudinaryImage(deletedImage?.public_id)
-    const user = await prisma.user.update({
-      where:{
-        id: _id
-      },
-      data:{
-        avatar: cloudinaryUrl,
-        public_id: publicId
-      }
-    })
-    if (!user || !cloudinaryUrl) throw new Error("Cannot update user's avatar !")
-    response.json({
-      success: true,
-      mess: "Update avatar successfully !",
-      data: user
-    })
-  })
+  private updateUser = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { _id } = request.user;
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: _id,
+        },
+        data: request.body,
+      });
+      response.json({
+        success: true,
+        mess: "Update user successfully !",
+        data: updatedUser,
+      });
+    },
+  );
+  private updateAvatar = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const cloudinaryUrl = request.body.image;
+      const publicId = request.body.public_id;
+      const { _id } = request.user;
+      const deletedImage = await prisma.user.findUnique({
+        where: {
+          id: _id,
+        },
+      });
+      if (deletedImage)
+        if (deletedImage.avatar)
+          await deleteCloudinaryImage(deletedImage?.public_id);
+      const user = await prisma.user.update({
+        where: {
+          id: _id,
+        },
+        data: {
+          avatar: cloudinaryUrl,
+          public_id: publicId,
+        },
+      });
+      if (!user || !cloudinaryUrl)
+        throw new Error("Cannot update user's avatar !");
+      response.json({
+        success: true,
+        mess: "Update avatar successfully !",
+        data: user,
+      });
+    },
+  );
   private getAllUser = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const courses = await prisma.user.findMany({
@@ -98,7 +137,7 @@ class UserController extends BaseController {
   private addUser = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const requestData = request.body;
-      const arr = []
+      const arr = [];
       // Mã hóa mật khẩu cho từng người dùng trước khi thêm vào cơ sở dữ liệu
       for (const user of requestData) {
         // const {avatar} = user
@@ -106,10 +145,10 @@ class UserController extends BaseController {
         const time = moment().format("MMMM Do YYYY h:mm:ss a");
         const { email, password, lastname, firstname } = user;
         if (!email || !password)
-        response.status(402).json({
-          success: false,
-          mess: "Missing inputs !"
-        });;
+          response.status(402).json({
+            success: false,
+            mess: "Missing inputs !",
+          });
         user.password = await bc.hash(user.password.toString());
         user.username = (firstname[0] + "." + lastname).toLowerCase();
         user.updatedAt = time;
@@ -234,7 +273,7 @@ class UserController extends BaseController {
       if (!user) throw new Error("Account doesn't exist !");
       const hmacDigest = randomstring.generate({
         length: 6,
-        charset: 'numeric'
+        charset: "numeric",
       });
       let Token = await token.findOne({
         userId: user?.id,
@@ -246,11 +285,11 @@ class UserController extends BaseController {
           userId: user?.id,
           token: hmacDigest,
         }).save();
-      }
-      else response.json({
-        success: true,
-        mess: "Sent mail to you, code still doesn't expire, use it right now !"
-      });
+      } else
+        response.json({
+          success: true,
+          mess: "Sent mail to you, code still doesn't expire, use it right now !",
+        });
       // >> "xqm5wXX"
       response.json({
         success: true,
@@ -275,25 +314,25 @@ class UserController extends BaseController {
     const { id, password } = req.body;
     let rs = await prisma.user.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
     if (!rs) throw new Error("No one to update !");
     const time = moment().format("MMMM Do YYYY h:mm:ss a");
     const hashPass = await bc.hash(password.toString());
     rs = await prisma.user.update({
       where: {
-        id
+        id,
       },
       data: {
         password: hashPass,
-        updatedAt: time
-      }
-    })
+        updatedAt: time,
+      },
+    });
     res.json({
       success: true,
       mess: "Update password successfully !",
-      data: rs
+      data: rs,
     });
   });
   private getListUserWithPagination = asyncHandler(
@@ -302,12 +341,12 @@ class UserController extends BaseController {
       let list;
       const TAKE = Number(process.env.SKIP);
       const SKIP = TAKE * (request.query.page - 1);
-      if (role === 'ADMIN') {
+      if (role === "ADMIN") {
         list = await prisma.user.findMany({
           skip: SKIP,
           take: TAKE,
           where: {
-            courseIDs: {has: request.query.id},
+            courseIDs: { has: request.query.id },
           },
           select: {
             id: true,
@@ -315,29 +354,29 @@ class UserController extends BaseController {
             lastname: true,
             role: true,
             email: true,
-            phone: true
+            phone: true,
           },
         });
-      }
-      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
-      else 
-      list = await prisma.user.findMany({
-        skip: SKIP,
-        take: TAKE,
-        where: {
-          courseIDs: {has: request.query.id},
-          role: "STUDENT"
-        },
-        select: {
-          id: true,
-          firstname: true,
-          lastname: true,
-          role: true,
-          email: true,
-          phone: true,
-          gender: true
-        },
-      });
+      } else if (role === "STUDENT")
+        throw new Error("You don't have permission to get list user !");
+      else
+        list = await prisma.user.findMany({
+          skip: SKIP,
+          take: TAKE,
+          where: {
+            courseIDs: { has: request.query.id },
+            role: "STUDENT",
+          },
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            role: true,
+            email: true,
+            phone: true,
+            gender: true,
+          },
+        });
 
       response.json({
         mess: "Get users successfully !",
@@ -350,21 +389,21 @@ class UserController extends BaseController {
     async (request: any, response: express.Response) => {
       const { role } = request.user;
       let count;
-      if (role === 'ADMIN') {
+      if (role === "ADMIN") {
         count = await prisma.user.count({
           where: {
-            courseIDs: {has: request.query.id},
-          }
+            courseIDs: { has: request.query.id },
+          },
         });
-      }
-      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
-      else 
-      count = await prisma.user.count({
-        where: {
-          role: "STUDENT",
-          courseIDs: {has: request.query.id},
-        }
-      });
+      } else if (role === "STUDENT")
+        throw new Error("You don't have permission to get list user !");
+      else
+        count = await prisma.user.count({
+          where: {
+            role: "STUDENT",
+            courseIDs: { has: request.query.id },
+          },
+        });
       // lấy data = count / skip , làm tròn lên
       response.json({
         mess: "Get users successfully !",
@@ -377,10 +416,10 @@ class UserController extends BaseController {
     async (request: any, response: express.Response) => {
       const { role } = request.user;
       let list;
-      if (role === 'ADMIN') {
+      if (role === "ADMIN") {
         list = await prisma.user.findMany({
           where: {
-            courseIDs: {has: request.query.id},
+            courseIDs: { has: request.query.id },
           },
           select: {
             id: true,
@@ -389,28 +428,28 @@ class UserController extends BaseController {
             role: true,
             email: true,
             phone: true,
-            date_of_birth: true
+            date_of_birth: true,
           },
         });
-      }
-      else if (role === 'STUDENT') throw new Error("You don't have permission to get list user !");
-      else 
-      list = await prisma.user.findMany({
-        where: {
-          courseIDs: {has: request.query.id},
-          role: "STUDENT"
-        },
-        select: {
-          id: true,
-          firstname: true,
-          lastname: true,
-          role: true,
-          email: true,
-          phone: true,
-          gender: true,
-          date_of_birth: true
-        },
-      });
+      } else if (role === "STUDENT")
+        throw new Error("You don't have permission to get list user !");
+      else
+        list = await prisma.user.findMany({
+          where: {
+            courseIDs: { has: request.query.id },
+            role: "STUDENT",
+          },
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            role: true,
+            email: true,
+            phone: true,
+            gender: true,
+            date_of_birth: true,
+          },
+        });
 
       response.json({
         mess: "Get users successfully !",
@@ -419,8 +458,8 @@ class UserController extends BaseController {
       });
     },
   );
-  private getStudentInfo = asyncHandler(async(request: any, response: express.Response) => {
-    
-  })
+  private getStudentInfo = asyncHandler(
+    async (request: any, response: express.Response) => {},
+  );
 }
 export default UserController;
