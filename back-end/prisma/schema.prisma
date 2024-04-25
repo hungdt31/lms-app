@@ -21,6 +21,11 @@ enum Day {
   Saturday
   Sunday
 }
+enum TypePoint {
+  Max
+  Last
+  Average
+}
 enum Gender {
   Male
   Female
@@ -133,7 +138,8 @@ model Quiz {
   end_date    DateTime?
   time_limit  Int?
   factor      Float           @default(0)
-  times       Int?
+  attempts    Int?
+  typePoint   TypePoint       @default(Average)
   questions   Question[]
   documentSection    DocumentSection        @relation(fields: [documentSectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   documentSectionId  String          @db.ObjectId
@@ -142,6 +148,7 @@ model Quiz {
 model Question {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   content     String
+  explain     String          @default("")
   options     String[]
   answer      String
   quiz        Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -150,6 +157,7 @@ model Question {
 model QuizResult {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   score       Float[]         @default([])
+  total_score Float           @default(0)
   history     PlayQuiz[]
   userId      String          @db.ObjectId 
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)         
@@ -161,6 +169,9 @@ model QuizResult {
 model PlayQuiz {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   score       Float           @default(0)
+  correct     Int?            @default(0)
+  incorrect   Int?            @default(0)
+  empty       Int?            @default(0)
   answers     String[]
   isDone      Boolean         @default(false)
   timeStarted DateTime?       @default(now())

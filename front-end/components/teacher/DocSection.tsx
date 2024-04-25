@@ -60,7 +60,7 @@ export default function DocSection(data: any) {
     if (option === "add") {
       return (
         <Link
-          href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/upload?id=${id}`}
+          href={`/teacher/course/detail/upload?id=${id}`}
         >
           <div className="tooltip" data-tip={option}>
             <SquarePlus />
@@ -183,7 +183,7 @@ export default function DocSection(data: any) {
                       <DropdownMenuItem
                         onClick={() => {
                           router.push(
-                            `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/upload/submission?id=${id}&did=${el?.id}`,
+                            `/teacher/course/detail/upload/submission?id=${id}&did=${el?.id}`,
                           );
                         }}
                       >
@@ -200,7 +200,7 @@ export default function DocSection(data: any) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Link
-                    href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/upload/quiz?id=${id}&did=${el?.id}`}
+                    href={`/teacher/course/detail/upload/quiz?id=${id}&did=${el?.id}`}
                   >
                     <Btn
                       // className="btn btn-outline btn-info"
@@ -280,7 +280,7 @@ export default function DocSection(data: any) {
                   return (
                     <Link
                       target="_blank"
-                      href={`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/submission?sid=${submission?.id}&id=${id}`}
+                      href={`/teacher/course/detail/submission?sid=${submission?.id}&id=${id}`}
                       className={
                         trigger == index && clickDelete
                           ? `flex items-center gap-3`

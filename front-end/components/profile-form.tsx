@@ -227,7 +227,7 @@ export default function ProfileForm() {
                       <SelectGroup>
                         <SelectItem value="Female">Female</SelectItem>
                         <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Underfined">Underfined</SelectItem>
+                        <SelectItem value="Undefined">Undefined</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

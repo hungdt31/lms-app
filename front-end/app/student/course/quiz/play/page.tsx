@@ -2,7 +2,6 @@
 import * as React from "react";
 import { CheckIcon } from "@radix-ui/react-icons";
 import UserQuery from "@/hooks/user";
-import Countdown from "react-countdown";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
 import {
@@ -32,7 +31,7 @@ export default function CarouselDemo() {
   const [time, setTime] = useState<any>(0);
   const quiz = QuizQuery(id);
   const [quizPlay, setQuizPLay] = useState<any>(null);
-  const user = UserQuery();
+  const user : any = UserQuery();
   const rs = GetResultQuery();
   const [buttonState, setButtonState] = React.useState<any>(null);
   const [hasUploaded, setHasUploaded] = useState<any>(false);
@@ -57,7 +56,7 @@ export default function CarouselDemo() {
     });
   };
   const fetchQuizPlay = async () => {
-    const quiz = await Quiz.GetQuizPlay(id);
+    const quiz = await Quiz.GetQuizPlay(id, user?.data?.data?.id);
     const timeEnded = new Date(quiz?.data?.timeEnded).getTime();
 
     const now = Date.now();
@@ -152,7 +151,7 @@ export default function CarouselDemo() {
         <div className="flex flex-col gap-3">
           {quiz?.data?.data?.questions.map((el: any, index: any) => (
             <div className="p-1 min-w-[30%] question-item">
-              <Card>
+              <Card className="min-w-[400px]">
                 <CardHeader>
                   <p className="font-bold">Câu {index + 1}:</p>
                   <div dangerouslySetInnerHTML={{ __html: el?.content }} />

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Quiz from "@/lib/axios/quiz";
-export function QuizQuery(id: string) {
+export function QuizQuery(id: String) {
   const fetchQuiz = async () => {
     const user = await Quiz.GetQuiz(id);
     return user;
@@ -23,9 +23,9 @@ export function GetResultQuery() {
   })
   return result
 }
-export function QuizPlayQuery(id: string) {
+export function QuizPlayQuery(id: string, uid: string) {
   const fetchQuizPlay = async () => {
-    const quiz = await Quiz.GetQuizPlay(id);
+    const quiz = await Quiz.GetQuizPlay(id, uid);
     return quiz;
   };
   const quiz: any = useQuery({

@@ -1,4 +1,13 @@
 "use client";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import Quiz from "@/lib/axios/quiz";
@@ -24,11 +33,11 @@ import { Button } from "@/components/ui/button";
 import LoginLooading from "@/components/loading/login";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import JoditReact from "jodit-react-ts"; 
+import JoditReact from "jodit-react-ts";
 export default function UploadQuiz() {
-  const router = useRouter()
-  const id : string = useSearchParams().get("id") as string;
-  const did : string = useSearchParams().get("did") as string;
+  const router = useRouter();
+  const id: string = useSearchParams().get("id") as string;
+  const did: string = useSearchParams().get("did") as string;
   const [loading, setLoading] = useState(false);
   const [api, setApi] = React.useState<CarouselApi>();
   const form: any = useForm<z.infer<typeof formSchema>>({
@@ -37,17 +46,19 @@ export default function UploadQuiz() {
       quizData: {
         title: "",
         description: "",
-        time_limit: 0,
+        time_limit: 600000,
         factor: 0,
         start_date: new Date(),
         end_date: new Date(),
-        documentSectionId: did
+        documentSectionId: did,
+        typePoint: "Average",
       },
       questions: [
         {
           content: "1 + 1 = ?",
           options: [],
           answer: "",
+          explain: "",
         },
       ],
     },
@@ -71,18 +82,18 @@ export default function UploadQuiz() {
   });
   // console.log(fields)
   // console.log(errors);
-  const onSubmit = async(data : any) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
-    const result : any = await Quiz.CreateQuiz(data);
+    const result: any = await Quiz.CreateQuiz(data);
     if (result?.success) {
       Swal.fire({
         position: "top-end",
         icon: "success",
         title: result?.mess,
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       }).then(() => {
-        router.push(`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`)
+        router.push(`/teacher/course/detail?id=${id}`);
       });
     } else {
       Swal.fire({
@@ -90,12 +101,12 @@ export default function UploadQuiz() {
         icon: "error",
         title: result?.mess,
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     }
-    setLoading(false)
+    setLoading(false);
     console.log(data);
-  }
+  };
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/docs/,
     uploader: {
@@ -131,7 +142,7 @@ export default function UploadQuiz() {
           placeholder="Nhập mô tả bài kiểm tra"
           {...register("quizData.description")}
         />
-        <Label>Thời gian giới hạn</Label>
+        <Label>Thời gian giới hạn (ms)</Label>
         <Input
           type="text"
           placeholder="Nhập thời gian giới hạn"
@@ -155,6 +166,23 @@ export default function UploadQuiz() {
             {...register("quizData.end_date", { valueAsDate: true })}
           />
         </div>
+        <Select
+          onValueChange={(content) =>
+            form.setValue("quizData.typePoint", content)
+          }
+          defaultValue="Average"
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Chọn cách tính điểm" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="Average">Điểm trung bình</SelectItem>
+              <SelectItem value="Max">Điểm lớn nhất</SelectItem>
+              <SelectItem value="Last">Điểm cuối cùng</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
       <div className="grow flex justify-center flex-col items-center max-w-[900px]">
         <Carousel
@@ -179,13 +207,27 @@ export default function UploadQuiz() {
                         <p className="text-4xl font-semibold text-center mb-5">
                           {index + 1}
                         </p>
-                        {/* <Textarea
-                          className="desc"
-                          {...register(`questions.${index}.content` as const)}
-                        /> */}
-                        <JoditReact onChange={(content) => {
-                          form.setValue(`questions.${index}.content`, content);
-                        }} config={config}/>
+                        <JoditReact
+                          onChange={(content) => {
+                            form.setValue(
+                              `questions.${index}.content`,
+                              content,
+                            );
+                          }}
+                          config={config}
+                        />
+                        <div className="mt-3">
+                          <Label>Giải thích</Label>
+                          <JoditReact
+                            onChange={(content) => {
+                              form.setValue(
+                                `questions.${index}.explain`,
+                                content,
+                              );
+                            }}
+                            config={config}
+                          />
+                        </div>
                         <p className="text-red-500 font-light text-[14px] mt-3">
                           {errorForField?.message ?? <>&nbsp;</>}
                         </p>
@@ -258,24 +300,26 @@ export default function UploadQuiz() {
             );
           })}
         </div>
-        { loading ? <LoginLooading/> :
-        <div className="flex gap-3">
-          <Button
-            onClick={() => {
-              append({
-                desc: "",
-                options: ["", "", "", ""],
-                answer: "",
-              });
-              api?.reInit();
-            }}
-            variant={"secondary"}
-          >
-            Thêm câu hỏi
-          </Button>
-          <Button type="submit">Hoàn thành</Button>
-        </div>
-}
+        {loading ? (
+          <LoginLooading />
+        ) : (
+          <div className="flex gap-3">
+            <Button
+              onClick={() => {
+                append({
+                  desc: "",
+                  options: ["", "", "", ""],
+                  answer: "",
+                });
+                api?.reInit();
+              }}
+              variant={"secondary"}
+            >
+              Thêm câu hỏi
+            </Button>
+            <Button type="submit">Hoàn thành</Button>
+          </div>
+        )}
       </div>
     </form>
   );
