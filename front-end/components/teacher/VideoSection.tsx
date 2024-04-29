@@ -144,7 +144,13 @@ export default function VideoSection(data: any) {
   };
   return (
     <div>
-      <p className="text-xl font-bold">Videos</p>
+      <div className="text-main">
+        <p className="h-[3px] w-[50px] bg-nav ml-auto"></p>
+        <h1 className="font-bold text-2xl border-l-2 border-nav border-r-2 px-3">
+          Videos
+        </h1>
+        <p className="h-[3px] w-[50px] bg-nav"></p>
+      </div>
       <div className="p-3 flex gap-3 lg:flex-row flex-col justify-center">
         <Button
           variant={"destructive"}
@@ -255,7 +261,10 @@ export default function VideoSection(data: any) {
                     {deleteVid ? "Delete" : <VideoOff />}
                   </Button>
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: el?.description }} className="p-3"/>
+                <div
+                  dangerouslySetInnerHTML={{ __html: el?.description }}
+                  className="p-3"
+                />
                 {el?.videos?.map((e: any) => {
                   return (
                     <a className="card card-side shadow-xl" href={e?.url}>

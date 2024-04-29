@@ -31,7 +31,7 @@ export default function CarouselDemo() {
   const [time, setTime] = useState<any>(0);
   const quiz = QuizQuery(id);
   const [quizPlay, setQuizPLay] = useState<any>(null);
-  const user : any = UserQuery();
+  const user: any = UserQuery();
   const rs = GetResultQuery();
   const [buttonState, setButtonState] = React.useState<any>(null);
   const [hasUploaded, setHasUploaded] = useState<any>(false);
@@ -153,7 +153,13 @@ export default function CarouselDemo() {
             <div className="p-1 min-w-[30%] question-item">
               <Card className="min-w-[400px]">
                 <CardHeader>
-                  <p className="font-bold">Câu {index + 1}:</p>
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold">Câu {index + 1}:</p>
+                    <div className="flex gap-3 items-center">
+                    <input type="checkbox" />
+                    <p className="font-light text-[12px]">Đặt cờ</p>
+                    </div>
+                  </div>
                   <div dangerouslySetInnerHTML={{ __html: el?.content }} />
                 </CardHeader>
                 <CardContent className="">
@@ -193,9 +199,9 @@ export default function CarouselDemo() {
             ) : (
               ""
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-center">
               <Button variant={"link"} onClick={handleClick}>
-                More quiz
+                Bảng câu hỏi
               </Button>
             </div>
           </CardHeader>
@@ -253,9 +259,9 @@ export default function CarouselDemo() {
             ) : (
               ""
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-center">
               <Button variant={"link"} onClick={handleClick}>
-                More quiz
+                Bảng câu hỏi
               </Button>
             </div>
             <div className="grid grid-cols-4 gap-4 place-content-start mt-5">

@@ -6,12 +6,12 @@ async function GetAllCourse() {
     url: "/course",
   });
 }
-async function GetAllSubscribedCourse(token: any) {
+async function GetAllSubscribedCourse(data: any) {
   return await instance({
     method: "get",
-    url: "/course/my",
+    url: `/course/my?cate_id=${data?.cate_id}&semester_id=${data?.semester_id}&name=${data?.name}&name_sort=${data?.name_sort}&page=${data?.page}`,
     headers: {
-      Authorization: "Bearer " + token,
+      Authorization: `Bearer ${data?.token}`,
     },
   });
 }
@@ -37,11 +37,36 @@ async function GetScoreFactor(id : any) {
     url: `/course/score-factor?id=${id}`,
   });
 }
+async function GetBredcrumbByQuizId(id : any) {
+  return await instance({
+    method: "get",
+    url: `/course/quiz?id=${id}`,
+  });
+}
+async function GetBredcrumbBySubmissonId(id : any) {
+  return await instance({
+    method: "get",
+    url: `/course/submission?id=${id}`,
+  });
+}
+async function AddStudentToCourse(data: any) {
+  return await instance({
+    method: "put",
+    url: '/course/add-student',
+    headers: {
+      Authorization: `Bearer ${data?.token}`,
+    },
+    data : data?.courseIds,
+  });
+}
 const Course = {
   GetAllCourse,
   GetAllSubscribedCourse,
   GetDetailCourse,
   GetCourseByFilter,
-  GetScoreFactor
+  GetScoreFactor,
+  GetBredcrumbByQuizId,
+  GetBredcrumbBySubmissonId,
+  AddStudentToCourse
 };
 export default Course;

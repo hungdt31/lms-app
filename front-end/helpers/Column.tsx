@@ -22,6 +22,18 @@ export type UserInfo = {
   email: string;
   phone: string;
 };
+export type CouseInfo = {
+  id: string;
+  title: string;
+  course_id: string;
+  date: string;
+  schedule: Array<number>;
+  usersId: boolean;
+  quantity: number;
+  _count: {
+    users: number;
+  };
+};
 export const columns: ColumnDef<UserInfo>[] = [
   {
     id: "select",
@@ -136,6 +148,79 @@ export const columns: ColumnDef<UserInfo>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      );
+    },
+  },
+];
+export const semester_columns: ColumnDef<CouseInfo>[] = [
+  {
+    id: "select",
+    cell: ({ row }) => {
+      return !row.original.usersId &&
+        row.original._count.users < row.original.quantity ? (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+          }}
+        />
+      ) : null;
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    header: ({ column }) => {
+      return (
+        <div
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+          className="flex items-center"
+        >
+          Tên khóa học
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      );
+    },
+    accessorKey: "title",
+  },
+  {
+    accessorKey: "course_id",
+    header: "Mã môn học",
+  },
+  {
+    accessorKey: "schedule",
+    header: "Tuần học",
+  },
+  {
+    accessorKey: "date",
+    header: "Ngày học",
+  },
+  {
+    accessorKey: "time",
+    header: "Giờ học",
+  },
+  {
+    accessorKey: "_count",
+    header: "Số lượng học viên",
+    cell: ({ row }) => {
+      return <p className="text-center">{row.original._count.users} / {row.original.quantity}</p>;
+    },
+  },
+  {
+    header: "Tình trạng",
+    accessorKey: "usersId",
+    cell: ({ row }) => {
+      const usersId = row.getValue("usersId");
+      return (
+        <div className="font-medium">
+          {row.original._count.users >= row.original.quantity
+            ? "Hết chỗ"
+            : usersId
+              ? "Đã đăng ký"
+              : "Chưa đăng ký"}
+        </div>
       );
     },
   },

@@ -31,7 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import downloadToExcel from "@/lib/xslx";
+import downloadToExcel from "@/components/teacher/xslx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

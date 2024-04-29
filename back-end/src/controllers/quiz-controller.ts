@@ -490,6 +490,7 @@ export default class QuizController extends BaseController {
             },
           },
           score: true,
+          total_score: true
         },
       });
       if (!result) throw new Error("Can't find your result!");

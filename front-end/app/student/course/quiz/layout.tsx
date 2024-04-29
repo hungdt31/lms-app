@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import QueryProvider from "@/lib/react_query/query_provider";
+import Breadcrumb from "./breadcrumb";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,5 +14,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <QueryProvider>{children} </QueryProvider>;
+  return <QueryProvider>
+    {children} 
+    </QueryProvider>;
 }

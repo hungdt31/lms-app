@@ -59,9 +59,7 @@ export default function DocSection(data: any) {
   const setIcon = () => {
     if (option === "add") {
       return (
-        <Link
-          href={`/teacher/course/detail/upload?id=${id}`}
-        >
+        <Link href={`/teacher/course/detail/upload?id=${id}`}>
           <div className="tooltip" data-tip={option}>
             <SquarePlus />
           </div>
@@ -118,9 +116,14 @@ export default function DocSection(data: any) {
   };
   return (
     <div>
-      <div className="flex gap-3 items-center">
-        <p className="text-xl font-bold">Tài liệu và bài kiểm tra</p>
+      <div className="text-main">
+        <p className="h-[3px] w-[50px] bg-nav ml-auto"></p>
+        <h1 className="font-bold text-2xl border-l-2 border-nav border-r-2 px-3">
+          Tài liệu và bài kiểm tra
+        </h1>
+        <p className="h-[3px] w-[50px] bg-nav"></p>
       </div>
+      <div className="flex gap-3 items-center"></div>
       <div className="flex items-center gap-3 mt-5">
         <Select onValueChange={(e) => setOption(e)}>
           <SelectTrigger className="w-[180px]">
@@ -216,8 +219,8 @@ export default function DocSection(data: any) {
 
                 {el?.documentLink?.map((doc: any, _index: any) => {
                   return (
-                    <Link 
-                      target="_blank" 
+                    <Link
+                      target="_blank"
                       href={doc?.url}
                       className={
                         trigger == index && clickDelete

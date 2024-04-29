@@ -10,6 +10,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import multer from "multer";
+import { verifyAccessToken } from "../middlewares/verifyToken";
 
 export default class SubmissionController extends BaseController {
   public path = "/submission";
@@ -30,13 +31,115 @@ export default class SubmissionController extends BaseController {
     this.router.post(
       this.path + "/result",
       this.upload.any(),
+      [verifyAccessToken],
       this.createSubmissionResult,
     );
     this.router.get(this.path, this.getSubmission);
     this.router.get(this.path + "/all-result", this.getAllSubmissionResult);
     this.router.get(this.path + "/result", this.getSubmissionResult);
+    this.router.get(
+      this.path + "/result/token",
+      [verifyAccessToken],
+      this.getUserSubmissionByToken,
+    );
     this.router.put(this.path + "/result", this.updateSubmissionResult);
+    this.router.put(
+      this.path + "/result/user",
+      this.upload.array("files", 5),
+      this.updateSubmissionResultByUser,
+    );
   }
+  private updateSubmissionResultByUser = asyncHandler(
+    async (req: any, response: any) => {
+      const { id, deleteList, deleteId } = req.body;
+      // console.log(deleteList)
+      console.log(req.body)
+      const files = req.files;
+      const foundSubmissionResult = await prisma.userSubmission.findFirst({
+        where: {
+          id,
+        },
+        include: {
+          files: true,
+        },
+      });
+      if (!foundSubmissionResult)
+        throw new Error("Submission result not found!");
+      if (typeof deleteList === 'string') {
+        const path: any = deleteList;
+        const storageRef = ref(this.storage, path);
+        await deleteObject(storageRef);
+        await prisma.userFile.delete({
+          where: {
+            id: deleteId,
+          },
+        });
+      } else {
+      for (let i = 0; i < deleteList?.length; i++) {
+        const path: any = deleteList[i];
+        const storageRef = ref(this.storage, path);
+        await deleteObject(storageRef);
+        await prisma.userFile.delete({
+          where: {
+            id: deleteId[i],
+          },
+        });
+      }
+    }
+      for (let i = 0; i < files?.length; i++) {
+        const path = `resources/user-submission/${files[i].originalname}`;
+        const storageRef = ref(this.storage, path);
+        const metadata = {
+          contentType: files[i].mimetype,
+        };
+        const snapshot = await uploadBytesResumable(
+          storageRef,
+          files[i].buffer,
+          metadata,
+        );
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        const submissionFile = await prisma.userFile.create({
+          data: {
+            url: downloadURL,
+            path,
+            userSubmissionId: foundSubmissionResult.id,
+            title: files[i].originalname,
+          },
+        });
+      }
+      await prisma.userSubmission.update({
+        where: {
+          id,
+        },
+        data: {
+          updatedAt: new Date(),
+        },
+      });
+      response.json({
+        data: foundSubmissionResult,
+        success: true,
+        mess: "Update submission result successfully!",
+      });
+    },
+  );
+  private getUserSubmissionByToken = asyncHandler(
+    async (req: any, response: any) => {
+      const submission = await prisma.userSubmission.findFirst({
+        where: {
+          userId: req.user._id,
+          submissionId: req.query.id,
+        },
+        include: {
+          files: true,
+        },
+      });
+      response.json({
+        data: submission,
+        success: true,
+        mess: "Get submission successfully!",
+      });
+    },
+  );
   private updateSubmissionResult = asyncHandler(
     async (req: express.Request, response: any) => {
       const { id, score } = req.body;
@@ -98,7 +201,7 @@ export default class SubmissionController extends BaseController {
             },
           },
           beGraded: true,
-          editGradeAt: true
+          editGradeAt: true,
         },
       });
       response.json({
@@ -146,8 +249,8 @@ export default class SubmissionController extends BaseController {
       const files = req.files;
       const submissionResult = await prisma.userSubmission.create({
         data: {
-          submissionId: req.body.submissionId,
-          userId: req.body.userId,
+          submissionId: req.body.id,
+          userId: req.user._id ,
         },
       });
       for (let i = 0; i < files.length; i++) {

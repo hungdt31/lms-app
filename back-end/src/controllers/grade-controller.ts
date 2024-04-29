@@ -2,6 +2,7 @@ import express from "express";
 import { BaseController } from "./abstractions/base-controller";
 import asyncHandler from "express-async-handler";
 import prisma from "../../prisma/prisma";
+import { verifyAccessToken } from "../middlewares/verifyToken";
 
 export default class GradeController extends BaseController {
   public path = "/grade";
@@ -22,6 +23,8 @@ export default class GradeController extends BaseController {
     this.router.get(this.path, this.getUserResultByFilter);
     //lay ket qua khoa hoc cua sinh vien
     this.router.get(this.path + "/course/result", this.getCourseResult);
+    //lay ket qua quiz va nop bai
+    this.router.get(this.path + "/quiz-submit", [verifyAccessToken], this.getQuizResultAndSubmit);
   }
   /* json
     courseId
@@ -221,6 +224,61 @@ export default class GradeController extends BaseController {
         success: true,
         mess: "Get score result successfully",
         data: courseResult,
+      });
+    },
+  );
+  private getQuizResultAndSubmit = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.query;
+      const uid = request.user._id;
+      const quizResult = await prisma.quizResult.findMany({
+        where: {
+          userId: uid,
+          quiz: {
+            documentSection: {
+              courseId: id
+            }
+          }
+        },
+        select: {
+          id: true,
+          total_score: true,
+          quiz: {
+            select: {
+              id: true,
+              title: true,
+              factor: true,
+            }
+          },
+        },
+      });
+      const submitResult = await prisma.userSubmission.findMany({
+        where: {
+          userId: uid,
+          submission: {
+            documentSection: {
+              courseId: id
+            }
+          }
+        },
+        select: {
+          id: true,
+          score: true,
+          submission: {
+            select: {
+              id: true,
+              title: true,
+            }
+          }
+        }
+      });
+      response.json({
+        success: true,
+        mess: "Get score result successfully",
+        data: {
+          quizResult,
+          submitResult
+        },
       });
     },
   );

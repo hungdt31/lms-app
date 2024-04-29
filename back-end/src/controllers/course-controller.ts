@@ -33,71 +33,18 @@ export default class CourseController extends BaseController {
       courseUploadMiddleware,
       this.addCourse,
     );
-    this.router.put(`${this.path}/add-student`, this.addStudent);
+    this.router.put(
+      `${this.path}/add-student`,
+      [verifyAccessToken],
+      this.addStudent,
+    );
     this.router.post(`${this.path}/filter`, this.getCourseByFilter);
     this.router.get(`${this.path}/score-factor`, this.getScoreFactor);
-    this.router.get(`${this.path}/schedule`, this.getSchedule);
+    this.router.get(`${this.path}/quiz`, this.getCourseByQuizId);
+    this.router.get(`${this.path}/submission`, this.getCourseBySubmissionId);
     // Bạn có thể thêm put, patch, delete sau.
   }
-  // private uploadFile = asyncHandler(
-  //   async (request: express.Request, response: express.Response) => {
-  //     const cloudinaryUrls = request.body.cloudinaryUrls;
-  //     const info = request.body
-  //       if (cloudinaryUrls.length === 0) {
-  //           console.error('No Cloudinary URLs found.');
-  //           throw new Error('Internal Server Error');
-  //       }
-  //      const images = cloudinaryUrls;
-  //      response.json({
-  //       images,
-  //       info
-  //      })
-  //   })
-  /*json: 
-    body 
-    semesterId:
-    userId:
-  */
-  private getSchedule = asyncHandler(
-    async (request: express.Request, response: express.Response) => {
-      const start = await prisma.semester.findFirst({
-        where: {
-          id: request.body.semesterId,
-        },
-        select: {
-          start_date: true,
-        },
-      });
 
-      if (!start) throw new Error("Wrong semester!");
-      const currentDate = new Date();
-
-      const week = Math.ceil(
-        (Number(currentDate) - Number(start.start_date)) /
-          (60 * 60 * 24 * 7 * 1000),
-      );
-      const course = await prisma.course.findMany({
-        where: {
-          semesterId: request.body.semesterId,
-          usersId: { has: request.body.userId },
-          schedule: { has: week },
-        },
-        select: {
-          title: true,
-          time: true,
-          date: true,
-        },
-      });
-
-      if (!course) throw new Error("Cannot find schedule!");
-
-      response.json({
-        success: true,
-        mess: "Get schedule successfully",
-        data: course,
-      });
-    },
-  );
   private getAllCourse = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const courses = await prisma.course.findMany();
@@ -156,8 +103,23 @@ export default class CourseController extends BaseController {
           },
         },
       });
-      if (!course) throw new Error("Cannot find the course !");
+      // if (!course) throw new Error("Cannot find the course !");
       if (course?.usersId.includes(_id)) {
+        const teacher = await prisma.user.findFirst({
+          where: {
+            courseIDs: {
+              has: id,
+            },
+            role: "TEACHER",
+          },
+          select: {
+            lastname: true,
+            firstname: true,
+            email: true,
+            avatar: true,
+          },
+        });
+        course.teacher = teacher;
         course.registered = true;
         response.json({
           mess: "Registered for the course !",
@@ -176,12 +138,11 @@ export default class CourseController extends BaseController {
   );
   private addStudent = asyncHandler(
     async (req: any, response: express.Response) => {
-      const { uid, cid } = req.query;
-      if (!uid) throw new Error("No student attends course");
-      try {
+      let arr = [];
+      for (const id of req.body) {
         const course: any = await prisma.course.findFirst({
           where: {
-            id: cid,
+            id,
           },
           select: {
             usersId: true,
@@ -189,17 +150,18 @@ export default class CourseController extends BaseController {
         });
         const user = await prisma.user.findFirst({
           where: {
-            id: uid,
+            id: req.user._id,
           },
         });
-        if (!course || !user) throw new Error("Can't find course by id ...");
+        if (!course || !user)
+          throw new Error("Can't continue to add student !");
         const { courseIDs } = user;
         const { usersId } = course;
-        usersId.push(uid);
-        courseIDs.push(cid);
+        usersId.push(req.user._id);
+        courseIDs.push(id);
         await prisma.user.update({
           where: {
-            id: uid,
+            id: req.user._id,
           },
           data: {
             courseIDs,
@@ -207,38 +169,66 @@ export default class CourseController extends BaseController {
         });
         const updatedCourse = await prisma.course.update({
           where: {
-            id: cid,
+            id,
           },
           data: {
             usersId,
           },
         });
-        response.json({
-          success: true,
-          mess: "Add student to course successfully !",
-          data: updatedCourse,
-        });
-      } catch (e: any) {
-        throw new Error(e);
+        arr.push(updatedCourse);
       }
+      response.json({
+        success: true,
+        mess: "Add student to course successfully !",
+        data: arr,
+      });
     },
   );
   private getAllCourseWithUserId = asyncHandler(
     async (req: any, response: express.Response) => {
       const { _id } = req.user;
-      console.log(_id);
-      const course = await prisma.course.findMany({
+      console.log(req.query);
+      const take = Number(process.env.TAKE);
+      const { cate_id, semester_id, name, name_sort } = req.query;
+      let page = Number(req.query.page);
+      const coursePage = await prisma.course.count({
         where: {
           usersId: {
             has: _id,
           },
+          categoryId: cate_id != "all" ? cate_id : undefined,
+          semesterId: semester_id != "all" ? semester_id : undefined,
+          title: {
+            contains: name ? name : "",
+          },
         },
       });
-      //console.log(course)
+      const count = Math.ceil(coursePage / take);
+      if (page > count) page = 1;
+      const course: any = await prisma.course.findMany({
+        take,
+        skip: (page - 1) * take,
+        where: {
+          usersId: {
+            has: _id,
+          },
+          categoryId: cate_id != "all" ? cate_id : undefined,
+          semesterId: semester_id != "all" ? semester_id : undefined,
+          title: {
+            contains: name ? name : "",
+          },
+        },
+        orderBy: {
+          title: name_sort ? name_sort : "asc",
+        },
+      });
       response.json({
         success: true,
         mess: "Get all course subscribed successfully",
-        data: course,
+        data: {
+          course,
+          count,
+        },
       });
     },
   );
@@ -291,6 +281,138 @@ export default class CourseController extends BaseController {
         },
       });
       if (!course) throw new Error("Cannot find course by id !");
+      response.json({
+        success: true,
+        mess: "Get score factor successfully",
+        data: course,
+      });
+    },
+  );
+  private getCourseByQuizId = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      let course = null;
+      course = await prisma.course.findFirst({
+        where: {
+          DocumentSections: {
+            some: {
+              quiz: {
+                some: {
+                  id,
+                },
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+        },
+      });
+      if (!course) {
+        course = await prisma.course.findFirst({
+          where: {
+            DocumentSections: {
+              some: {
+                quiz: {
+                  some: {
+                    quizResults: {
+                      some: {
+                        history: {
+                          some: {
+                            id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          select: {
+            id: true,
+            title: true,
+          },
+        });
+        const play_quiz = await prisma.playQuiz.findFirst({
+          where: {
+            id,
+          },
+          select: {
+            id: true,
+            timeFinishedString: true,
+          },
+        });
+        const quiz = await prisma.quiz.findFirst({
+          where: {
+            quizResults: {
+              some: {
+                history: {
+                  some: {
+                    id,
+                  },
+                },
+              },
+            },
+          },
+          select: {
+            id: true,
+            title: true,
+          },
+        });
+        course = [course, quiz, play_quiz];
+      } else {
+        const quiz = await prisma.quiz.findFirst({
+          where: {
+            id,
+          },
+          select: {
+            id: true,
+            title: true,
+          },
+        });
+        course = [course, quiz];
+      }
+      response.json({
+        success: true,
+        mess: "Get course by quiz id successfully",
+        data: course,
+      });
+    },
+  );
+  private getCourseBySubmissionId = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      let course = null;
+      course = await prisma.course.findFirst({
+        where: {
+          DocumentSections: {
+            some: {
+              submissions: {
+                some: {
+                  id,
+                },
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+        },
+      });
+      const submission = await prisma.submission.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          title: true,
+        },
+      });
+      if (!course) throw new Error("Cannot find course by id !");
+      course = [course, submission];
       response.json({
         success: true,
         mess: "Get score factor successfully",

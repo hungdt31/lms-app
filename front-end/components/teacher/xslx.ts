@@ -5,7 +5,6 @@ export default function downloadToExcel(data : any) {
     {
       sheet: "Students",
       columns: [
-        // { label: "Person ID", value: "id" },
         { label: "First Name", value: "firstname" },
         { label: "Last Name", value: "lastname" },
         { label: "Email", value: "email" },

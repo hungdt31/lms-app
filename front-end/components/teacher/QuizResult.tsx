@@ -22,13 +22,7 @@ export default function QuizResult(data: any) {
     setResult(rs?.data);
     let s = 0;
     for (let i = 0; i < rs?.data?.length; i++) {
-      let sum = 0;
-      for (let j = 0; j < rs?.data[i]?.score?.length; j++) {
-        sum = sum + rs?.data[i].score[j];
-      }
-      console.log(sum);
-      sum = (sum * rs?.data[i]?.quiz?.factor) / rs?.data[i]?.score?.length;
-      s = s + sum;
+      s = s + rs?.data[i]?.total_score * rs?.data[i]?.quiz?.factor;
     }
     setTotal(s);
   };
@@ -45,6 +39,7 @@ export default function QuizResult(data: any) {
             <TableHead>Tên quiz</TableHead>
             <TableHead>Thời điểm hoàn thành</TableHead>
             <TableHead>Hệ số</TableHead>
+            <TableHead className="text-right">Các lần làm</TableHead>
             <TableHead className="text-right">Điểm</TableHead>
           </TableRow>
         </TableHeader>
@@ -58,12 +53,13 @@ export default function QuizResult(data: any) {
               <TableCell className="text-right">
                 [{el?.score.join(", ")}]
               </TableCell>
+              <TableCell className="text-right">{el?.total_score}</TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={4}>Total</TableCell>
+            <TableCell colSpan={5}>Total</TableCell>
             <TableCell className="text-right">{total}</TableCell>
           </TableRow>
         </TableFooter>

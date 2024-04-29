@@ -43,6 +43,7 @@
     --nav-text: 217 26% 94%;
     --nav: 200 100% 37%;
     --section-border: 217 26% 94%;
+    --video-card: 206 95% 72%;
   }
 
   .light {
@@ -69,6 +70,7 @@
     --nav: 217 26% 94%;
     --nav-text: 210, 76%, 25%;
     --section-border: 217 26% 94%;
+    --video-card: 240 4.8% 95.9%;
   }
 
   .dark {
@@ -94,6 +96,7 @@
     --nav: 210 76% 25%;
     --nav-text: 217 26% 94%;
     --section-border: 217 26% 94%;
+    --video-card: 217.2 32.6% 17.5%;
   }
 }
 

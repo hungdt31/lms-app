@@ -16,5 +16,14 @@ async function UpdateCourseResult(data : any) {
     data
   });
 }
-const Grade = { GetCourseResult, UpdateCourseResult };
+async function GetQuizResultAndSubmit(data : any) {
+  return await instance({
+    method: "get",
+    url: `/grade/quiz-submit?id=${data.id}`,
+    headers: {
+      Authorization: `Bearer ${data.token}`,
+    }
+  });
+}
+const Grade = { GetCourseResult, UpdateCourseResult, GetQuizResultAndSubmit };
 export default Grade;

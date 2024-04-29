@@ -69,9 +69,12 @@ model Semester {
   start_date  DateTime
   end_date    DateTime
   courses     Course[]
+  DKMH        DKMH[]
 }
 model Course {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  credit      Int             @default(3)
+  quantity    Int             @default(40)
   title       String
   description String
   image       String?
@@ -80,7 +83,7 @@ model Course {
   time        String          @default("14:00 - 16:00") 
   schedule    Int[]           @default([1, 2, 3, 4])  
   date        Day             @default(Monday)           
-  score_factor Float[]        @default([0.1, 0.2, 0.3, 0.5])
+  score_factor Float[]        @default([0.1, 0.2, 0.2, 0.5])
   name_factor  String[]       @default(["Thực hành", "Bài tập lớn", "Giữa kỳ", "Cuối kỳ"])
   VideoSections  VideoSection[]
   DocumentSections DocumentSection[]
@@ -191,8 +194,8 @@ model CourseResult {
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)         
   course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId    String          @db.ObjectId            
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @default(now())
+  createdAt   DateTime?        @default(now())
+  updatedAt   DateTime?        @default(now())
 }
 model Submission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
@@ -210,7 +213,7 @@ model Submission {
 model UserSubmission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   isChecked   Boolean         @default(false)
-  score       Float           @default(0)
+  score       Float?          
   files       UserFile[]      
   userId      String          @db.ObjectId
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -238,6 +241,16 @@ model SubmissionFile {
   path        String
   submission  Submission      @relation(fields: [submissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   submissionId String         @db.ObjectId
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+}
+model DKMH {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  start_date  DateTime
+  end_date    DateTime 
+  semester    Semester        @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  semesterId  String          @db.ObjectId         
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
 }

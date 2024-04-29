@@ -29,6 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import BreadcrumbNav from "../breadcrumb";
 function secondsToHMS(seconds: any) {
   let hours = Math.floor(seconds / 3600);
   let minutes = Math.floor((seconds % 3600) / 60);
@@ -55,6 +56,7 @@ export default function ResultPage() {
   }, []);
   return (
     <div>
+      <BreadcrumbNav/>
       <div className="flex justify-around sm:flex-row flex-col gap-3 items-center px-2">
         <Card className="min-w-[350px]">
           <CardHeader>

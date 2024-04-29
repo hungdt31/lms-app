@@ -35,11 +35,12 @@ export default function NavLayout() {
     },
     {
       name: "Khóa học",
-      path: "/student/course",
+      path: "/student/dkmh",
     },
     {
       name: "Khóa học của tôi",
       path: "/student/my",
+      path2: "/student/course",
     },
   ];
 
@@ -77,9 +78,9 @@ export default function NavLayout() {
               <Link
                 href={el.path}
                 className={
-                  path.indexOf(el.path) == 0 && el.path != "/student"
+                  (path.indexOf(el.path) == 0 && el.path != "/student" ) || (el?.path2 && path.indexOf(el.path2) == 0 && el.path != "/student") 
                     ? "font-bold"
-                    : ""
+                    : "" 
                 }
               >
                 {el.name}
@@ -106,7 +107,9 @@ export default function NavLayout() {
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
               <DropdownMenuItem>Notice</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
+              <Link href={"/student/semester"}>
+              <DropdownMenuItem>Result</DropdownMenuItem>
+              </Link>
               <DropdownMenuItem
                 onClick={async () => {
                   await deleteToken();
