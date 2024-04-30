@@ -31,6 +31,11 @@ enum Gender {
   Female
   Undefined
 }
+enum Receiver {    
+  STUDENT
+  TEACHER
+  ALL
+}
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -87,6 +92,7 @@ model Course {
   name_factor  String[]       @default(["Thực hành", "Bài tập lớn", "Giữa kỳ", "Cuối kỳ"])
   VideoSections  VideoSection[]
   DocumentSections DocumentSection[]
+  forum       Forum[]
   category    Category        @relation(fields: [categoryId], references: [id])
   categoryId  String          @db.ObjectId
 
@@ -253,4 +259,39 @@ model DKMH {
   semesterId  String          @db.ObjectId         
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
+}
+model Forum {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  courseId    String          @db.ObjectId
+  // User        User[]    
+  threads     Thread[]        
+}
+model Thread {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+  forum       Forum           @relation(fields: [forumId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  forumId     String          @db.ObjectId
+  posts       Post[]          
+}
+model Notification {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  updatedAt   DateTime        @default(now())
+  posts       Post[]          
+}
+model Post {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  sender          String          
+  receiver        Receiver        @default(ALL)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now())
+  title           String?
+  thread          Thread?         @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  threadId        String?         @db.ObjectId
+  replyTo         String?         @default("") @db.ObjectId 
+  notification    Notification?   @relation(fields: [notificationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  notificationId  String?         @db.ObjectId
+  content         String
 }

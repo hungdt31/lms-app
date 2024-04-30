@@ -11,6 +11,8 @@ import {
   Trash2,
   Users2,
   ArrowLeftRight,
+  UserRoundCheck,
+  Contact
 } from "lucide-react";
 
 const nav : any = [
@@ -24,7 +26,7 @@ const nav : any = [
   {
     title: "User",
     // label: "9",
-    icon: File,
+    icon: Contact,
     variant: "ghost",
     href: "/admin/users",
   },
@@ -43,11 +45,11 @@ const nav : any = [
     href: "/admin/settings",
   },
   {
-    title: "Trash",
+    title: "My account",
     // label: "",
-    icon: Trash2,
+    icon: UserRoundCheck,
     variant: "ghost",
-    href: "/admin/trash",
+    href: "/admin/account",
   },
 ]
 export default nav

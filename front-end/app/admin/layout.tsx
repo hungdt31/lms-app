@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-
+import QueryProvider from "@/lib/react_query/query_provider";
 import StoreProvider from "../../features/admin/AdminProvider";
 import SideNavbar from "@/components/admin/SideNavbar";
 import TopNavbar from "@/components/admin/TopNavbar";
+import { Query } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,6 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <QueryProvider>
     <div className="min-h-screen w-full flex relative flex-col sm:flex-row">
       <TopNavbar />
       <div className="min-w-[80px] relative border-r pl-5 pr-9 pb-10 pt-24 sm:block hidden">
@@ -26,5 +29,7 @@ export default function RootLayout({
         <StoreProvider>{children}</StoreProvider>
       </div>
     </div>
+    <Toaster/>
+    </QueryProvider>
   );
 }

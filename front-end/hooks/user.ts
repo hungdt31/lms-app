@@ -43,3 +43,17 @@ export function UserQueryByTeacher() {
   });
   return user;
 }
+export function AllUserQuery () {
+  const cookies = new Cookies();
+  const token = cookies.get("token") ?? null;
+  const fetchAllUser = async () => {
+    const user = await User.GetAllUser(token);
+    return user;
+  };
+
+  const allUser: any = useQuery({
+    queryKey: ["allUserData"],
+    queryFn: fetchAllUser,
+  });
+  return allUser;
+}

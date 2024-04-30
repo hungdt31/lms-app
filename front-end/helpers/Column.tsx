@@ -2,6 +2,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 export type UserInfo = {
@@ -33,6 +39,13 @@ export type CouseInfo = {
   _count: {
     users: number;
   };
+};
+export type StudentInfo = {
+  id: string;
+  avatar: string;
+  firstname: string;
+  lastname: string;
+  email: string
 };
 export const columns: ColumnDef<UserInfo>[] = [
   {
@@ -225,3 +238,83 @@ export const semester_columns: ColumnDef<CouseInfo>[] = [
     },
   },
 ];
+export const admin_columns: ColumnDef<StudentInfo>[] = [
+  {
+    id: "select",
+    header: ({ table }) => {
+      return (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+          }}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+          }}
+        />
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    header: "No.",
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.index + 1}</div>;
+    },
+  },
+  {
+    header: "Avatar",
+    cell: ({ row }) => {
+      return (
+        <Avatar>
+          <AvatarImage src={row.original.avatar} alt="@shadcn" />
+          <AvatarFallback>{row.original.firstname[0]}{row.original.lastname[0]}</AvatarFallback>
+        </Avatar>
+      );
+    }
+  },
+  {
+    accessorKey: "firstname",
+    header: "First name",
+  },
+  {
+    accessorKey: "lastname",
+    header: "Last name",
+  },
+  {
+    accessorKey: "date_of_birth",
+    header: "Date of birth",
+    cell: ({ row }) => {
+      const date_of_birth = row.getValue("date_of_birth");
+      const formatted = new Date(date_of_birth as string).toUTCString();
+      return <div className="font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "gender",
+    header: "Gender",
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => {
+      if (row.getIsSelected()) {
+        return <Input type="text" className="font-medium" defaultValue={row.original.email} onChange={(e) => row.original.email = e.target.value}/>;
+      } else {
+        return <div className="font-medium">{row.original.email}</div>;
+      }
+    }
+  },
+]

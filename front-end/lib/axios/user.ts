@@ -10,6 +10,13 @@ interface UpdateUser {
   old_password: string;
   new_password: string;
 }
+async function AddUser (data: any) {
+  return await instance({
+    method: "post",
+    url: "/user",
+    data
+  });
+}
 async function Login(data: User) {
   return await instance({
     method: "post",
@@ -104,6 +111,26 @@ async function UpdateUser(token : string, data: any) {
     data
   });
 }
+async function DeleteUser(token : string, data: any) {
+  return await instance({
+    method: "delete",
+    url: `/user`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    data
+  });
+}
+async function UpdateUserByAdmin (token: string, data: any) {
+  return await instance({
+    method: "put",
+    url: "/user/update-by-admin",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    data
+  });
+}
 const User = {
   Login,
   GetCurrentUser,
@@ -115,6 +142,9 @@ const User = {
   UpdateAvatar,
   GetCountPagination,
   GetListUser,
-  UpdateUser
+  UpdateUser,
+  AddUser,
+  DeleteUser,
+  UpdateUserByAdmin
 };
 export default User;

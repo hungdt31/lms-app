@@ -39,9 +39,9 @@ class UserController extends BaseController {
     );
     this.router.post(this.path, this.addUser);
     this.router.post(this.path + "/login", this.login);
-    this.router.post(this.path + "/logout", this.logout);
     this.router.delete(this.path + "/delete-all", this.deleteAllUser);
     this.router.put(this.path + "/change-password", this.updatePassword);
+    this.router.put(this.path + "/update-by-admin",[verifyAccessToken, isAdmin], this.updateUserByAdmin);
     this.router.put(
       this.path + "/update-avatar",
       [verifyAccessToken],
@@ -67,6 +67,7 @@ class UserController extends BaseController {
     );
     this.router.get(this.path + "/list", [verifyAccessToken], this.getListUser);
     this.router.put(this.path, [verifyAccessToken], this.updateUser);
+    this.router.delete(this.path, [verifyAccessToken, isAdmin], this.deleteUser);
     // Bạn có thể thêm put, patch, delete sau.
   }
   private updateUser = asyncHandler(
@@ -118,25 +119,69 @@ class UserController extends BaseController {
   );
   private getAllUser = asyncHandler(
     async (request: express.Request, response: express.Response) => {
-      const courses = await prisma.user.findMany({
+      const student = await prisma.user.findMany({
+        where: {
+          role: "STUDENT",
+        },
         select: {
           id: true,
           firstname: true,
           lastname: true,
           role: true,
           email: true,
+          avatar: true,
+          gender: true,
+          phone: true,
+          date_of_birth: true,
+        },
+      });
+      const teacher = await prisma.user.findMany({
+        where: {
+          role: "TEACHER",
+        },
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          role: true,
+          email: true,
+          avatar: true,
+          gender: true,
+          phone: true,
+          date_of_birth: true,
+        },
+      });
+      const admin = await prisma.user.findMany({
+        where: {
+          role: "ADMIN",
+        },
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          role: true,
+          email: true,
+          avatar: true,
+          gender: true,
+          phone: true,
+          date_of_birth: true,
         },
       });
       response.json({
         mess: "Get all users successfully !",
         success: true,
-        data: courses,
+        data: {
+          student,
+          teacher,
+          admin,
+        },
       });
     },
   );
   private addUser = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const requestData = request.body;
+      console.log(requestData);
       const arr = [];
       // Mã hóa mật khẩu cho từng người dùng trước khi thêm vào cơ sở dữ liệu
       for (const user of requestData) {
@@ -190,22 +235,6 @@ class UserController extends BaseController {
           access_token: token,
         });
       } else throw new Error("Password is wrong");
-    },
-  );
-  private logout = asyncHandler(
-    async (request: express.Request, response: express.Response) => {
-      // jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function(err, token) {
-      //   console.log(token);
-      // });
-      // const { role, uid } = request.body;
-      // // console.log(role);
-      // const token = jwt.generateAccessToken("USER", "ưddw");
-      const token = moment().format("MMMM Do YYYY h:mm:ss a");
-      response.json({
-        success: true,
-        mess: "Login successfully !",
-        accessToken: token,
-      });
     },
   );
   private getCurrentUser = asyncHandler(
@@ -460,6 +489,41 @@ class UserController extends BaseController {
   );
   private getStudentInfo = asyncHandler(
     async (request: any, response: express.Response) => {},
+  );
+  private deleteUser = asyncHandler(
+    async (request: any, response: express.Response) => {
+      let arr = []
+      for (const id of request.body) {
+        const deletedUser = await prisma.user.delete({
+          where: {
+            id: id,
+          },
+        });
+        arr.push(deletedUser)
+      }
+      response.json({
+        success: true,
+        mess: "Deleted user successfully !",
+        data: arr,
+      });
+    },
+  );
+  private updateUserByAdmin = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.body;
+      delete request.body.id;
+      const updatedUser = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: request.body,
+      });
+      response.json({
+        success: true,
+        mess: "Updated user successfully !",
+        data: updatedUser,
+      });
+    },
   );
 }
 export default UserController;
