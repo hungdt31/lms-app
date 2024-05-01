@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { MdAddBox } from "react-icons/md";
+import { MdEditSquare } from "react-icons/md";
 import { Textarea } from "@/components/ui/textarea";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -98,8 +98,8 @@ export default function EditCoursePage() {
       <div className="flex gap-7 m-auto flex-col mt-[40px]">
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2 flex gap-3 items-center font-bold underline ">
-            <MdAddBox size={24} />
-            <p>ADD COURSE</p>
+            <MdEditSquare size={24} />
+            <p>EDIT COURSE</p>
           </div>
         </div>
 
