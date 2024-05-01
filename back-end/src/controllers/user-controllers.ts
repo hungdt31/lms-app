@@ -68,6 +68,11 @@ class UserController extends BaseController {
     this.router.get(this.path + "/list", [verifyAccessToken], this.getListUser);
     this.router.put(this.path, [verifyAccessToken], this.updateUser);
     this.router.delete(this.path, [verifyAccessToken, isAdmin], this.deleteUser);
+    this.router.get(
+      this.path + "/teacher-info",
+      [verifyAccessToken, isAdmin],
+      this.getTeacherInfo,
+    );
     // Bạn có thể thêm put, patch, delete sau.
   }
   private updateUser = asyncHandler(
@@ -522,6 +527,20 @@ class UserController extends BaseController {
         success: true,
         mess: "Updated user successfully !",
         data: updatedUser,
+      });
+    },
+  );
+  private getTeacherInfo = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const teacher = await prisma.user.findMany({
+        where: {
+          role: "TEACHER",
+        },
+      });
+      response.json({
+        success: true,
+        mess: "Get teacher info successfully !",
+        data: teacher,
       });
     },
   );

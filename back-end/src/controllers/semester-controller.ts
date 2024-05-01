@@ -91,24 +91,26 @@ class SemesterController extends BaseController {
       [verifyAccessToken],
       this.getQuizAndSubmissionTime,
     );
+    this.router.get(`${this.path}/num-week`, this.getNumberOfWeek);
     // Bạn có thể thêm put, patch, delete sau.
   }
   private createSemester = asyncHandler(
     async (request: any, response: express.Response) => {
       if (!request.body.description) throw new Error("Description is required");
-      const { description } = request.body;
+      const { description, start_date, end_date } = request.body;
       const createdSemester = await prisma.semester.create({
         data: {
           description,
-          start_date: new Date(),
+          start_date: start_date || new Date(),
           // end_date - start_date = 4 months
-          end_date: new Date(new Date().setMonth(new Date().getMonth() + 4)),
+          end_date: end_date || new Date(new Date().setMonth(new Date().getMonth() + 4)),
         },
       });
       if (!createdSemester) throw new Error("Cannot create category");
       response.json({
-        message: "Created new semester",
+        mess: "Created new semester",
         data: createdSemester,
+        success: true
       });
     },
   );
@@ -171,7 +173,7 @@ class SemesterController extends BaseController {
       });
       response.json({
         success: true,
-        message: "Get semester by now",
+        mess: "Get semester by now",
         data: semester,
       });
     },
@@ -1016,6 +1018,29 @@ class SemesterController extends BaseController {
     //   submit,
     //   result
     // },
+  );
+  private getNumberOfWeek = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.query;
+      const semester: any = await prisma.semester.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          start_date: true,
+          end_date: true,
+        },
+      });
+      const num_week = Math.ceil(
+        (Number(semester.end_date) - Number(semester.start_date)) /
+          (60 * 60 * 24 * 7 * 1000),
+      );
+      response.json({
+        success: true,
+        message: "Get number of week",
+        data: num_week
+      });
+    },
   );
 }
 export default SemesterController;

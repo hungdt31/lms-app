@@ -6,5 +6,12 @@ async function GetAllCate() {
     url: "/category",
   });
 }
-const Cate = { GetAllCate };
+async function AddCate(data : any) {
+  return await instance({
+    method: "post",
+    url: "/category",
+    data,
+  });
+}
+const Cate = { GetAllCate, AddCate };
 export default Cate;

@@ -51,7 +51,7 @@ class CloudinaryUploader {
     try {
       const file: CloudinaryFile = req.file as CloudinaryFile;
       if (!file) {
-        return next(new Error("No files provided"));
+        return next();
       }
 
       const resizedBuffer: Buffer = await sharp(file.buffer)

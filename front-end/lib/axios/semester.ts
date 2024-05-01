@@ -22,7 +22,7 @@ async function GetSemesterByNow() {
     url: "/semester/now",
   });
 }
-async function GetDkmhSemester(token : string) {
+async function GetDkmhSemester(token: string) {
   return await instance({
     method: "get",
     url: "/semester/dkmh/now",
@@ -38,7 +38,7 @@ async function GetSchedule(data: any) {
     headers: {
       Authorization: `Bearer ${data?.token}`,
     },
-  })
+  });
 }
 async function GetTKB(data: any) {
   return await instance({
@@ -47,16 +47,39 @@ async function GetTKB(data: any) {
     headers: {
       Authorization: `Bearer ${data?.token}`,
     },
-  })
+  });
 }
-async function GetQuizAndSubmitTime (data: any) {
+async function GetQuizAndSubmitTime(data: any) {
   return await instance({
     method: "get",
     url: `/semester/quiz-submit?type_filter=${data?.type}&id=${data?.id}&date_filter=${data?.date}&name_filter=${data?.name}`,
     headers: {
       Authorization: `Bearer ${data?.token}`,
     },
-  })
+  });
 }
-const Semester = { GetAllSemester, GetCourseResultBySemester, GetSemesterByNow, GetDkmhSemester, GetSchedule, GetTKB, GetQuizAndSubmitTime};
+async function CreateSemester(data: any) {
+  return await instance({
+    method: "post",
+    url: "/semester",
+    data,
+  });
+}
+async function GetNumWeek(id: any) {
+  return await instance({
+    method: "get",
+    url: `/semester/num-week?id=${id}`,
+  });
+}
+const Semester = {
+  GetAllSemester,
+  GetCourseResultBySemester,
+  GetSemesterByNow,
+  GetDkmhSemester,
+  GetSchedule,
+  GetTKB,
+  GetQuizAndSubmitTime,
+  CreateSemester,
+  GetNumWeek,
+};
 export default Semester;

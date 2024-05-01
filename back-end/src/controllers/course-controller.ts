@@ -5,8 +5,9 @@ import prisma from "../../prisma/prisma";
 import {
   courseMulter,
   courseUploadMiddleware,
+  deleteCloudinaryImage,
 } from "../../config/cloudinary/storage";
-import { verifyAccessToken } from "../middlewares/verifyToken";
+import { isAdmin, verifyAccessToken } from "../middlewares/verifyToken";
 export default class CourseController extends BaseController {
   public path = "/course";
 
@@ -42,12 +43,33 @@ export default class CourseController extends BaseController {
     this.router.get(`${this.path}/score-factor`, this.getScoreFactor);
     this.router.get(`${this.path}/quiz`, this.getCourseByQuizId);
     this.router.get(`${this.path}/submission`, this.getCourseBySubmissionId);
+    this.router.get(
+      `${this.path}/admin`,
+      [verifyAccessToken, isAdmin],
+      this.getCourseByAdmin,
+    );
+    this.router.put(
+      `${this.path}/admin`,
+      [verifyAccessToken, isAdmin],
+      courseMulter.single("file"),
+      courseUploadMiddleware,
+      this.updateCourseByAdmin,
+    );
+    this.router.delete(
+      `${this.path}`,
+      [verifyAccessToken, isAdmin],
+      this.deleteCourse,
+    );
     // Bạn có thể thêm put, patch, delete sau.
   }
 
   private getAllCourse = asyncHandler(
-    async (request: express.Request, response: express.Response) => {
-      const courses = await prisma.course.findMany();
+    async (request: any, response: express.Response) => {
+      const courses = await prisma.course.findMany({
+        where: {
+          semesterId: request.query.id,
+        },
+      });
       response.json({
         mess: "Get all course successfully !",
         success: true,
@@ -57,9 +79,45 @@ export default class CourseController extends BaseController {
   );
   private addCourse = asyncHandler(
     async (request: express.Request, response: express.Response) => {
+      // convert schedule array to number array
+      request.body.credit = parseInt(request.body.credit);
+      request.body.quantity = parseInt(request.body.quantity);
+      if (request.body.schedule) {
+        request.body.schedule = request.body.schedule.map((item: any) =>
+          Number(item),
+        );
+      }
+      let teacherId = null;
+      console.log(request.body);
+      if (request.body.teacherId) {
+        teacherId = request.body.teacherId;
+        delete request.body.teacherId;
+      }
       const course = await prisma.course.create({
         data: request.body,
       });
+      if (teacherId) {
+        await prisma.user.update({
+          where: {
+            id: teacherId,
+          },
+          data: {
+            courseIDs: {
+              push: course.id,
+            },
+          },
+        });
+        await prisma.course.update({
+          where: {
+            id: course.id,
+          },
+          data: {
+            usersId: {
+              push: teacherId,
+            },
+          },
+        });
+      }
       response.json({
         mess: "Created new course successfully !",
         success: true,
@@ -426,4 +484,90 @@ export default class CourseController extends BaseController {
       });
     },
   );
+  private getCourseByAdmin = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      const course: any = await prisma.course.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!course) throw new Error("Cannot find course by id !");
+      const teacher: any = await prisma.user.findFirst({
+        where: {
+          courseIDs: {
+            has: id,
+          },
+          role: "TEACHER",
+        },
+        select: {
+          id: true,
+          lastname: true,
+          firstname: true,
+          email: true,
+          avatar: true,
+        },
+      });
+      if (teacher) {
+        course.teacher = teacher;
+      }
+      response.json({
+        success: true,
+        mess: "Get course by admin successfully",
+        data: course,
+      });
+    },
+  );
+  private updateCourseByAdmin = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      req.body.credit = parseInt(req.body.credit);
+      req.body.quantity = parseInt(req.body.quantity);
+      if (req.body.schedule) {
+        req.body.schedule = req.body.schedule.map((item: any) =>
+          Number(item),
+        );
+      }
+      // console.log(req.body);
+      const course: any = await prisma.course.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (req.body.image) {
+        await deleteCloudinaryImage(course.public_id);
+      }
+      const updatedCourse = await prisma.course.update({
+        where: {
+          id,
+        },
+        data: req.body,
+      });
+      response.json({
+        success: true,
+        mess: "Update course by admin successfully",
+        data: updatedCourse,
+      });
+    },
+  );
+  private deleteCourse = asyncHandler(
+    async (req: any, response: express.Response) => {
+      const { id } = req.query;
+      const course: any = await prisma.course.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!course) throw new Error("Cannot find course by id !");
+      if (course.image && course.public_id) await deleteCloudinaryImage(course.public_id);
+      await prisma.course.delete({
+        where: {
+          id,
+        },
+      });
+      response.json({
+        success: true,
+        mess: "Delete course successfully",
+      });
+    })
 }

@@ -131,6 +131,15 @@ async function UpdateUserByAdmin (token: string, data: any) {
     data
   });
 }
+async function GetTeacherList(token: string) {
+  return await instance({
+    method: "get",
+    url: "/user/teacher-info",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+}
 const User = {
   Login,
   GetCurrentUser,
@@ -145,6 +154,7 @@ const User = {
   UpdateUser,
   AddUser,
   DeleteUser,
-  UpdateUserByAdmin
+  UpdateUserByAdmin,
+  GetTeacherList,
 };
 export default User;

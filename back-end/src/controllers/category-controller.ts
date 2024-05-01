@@ -14,8 +14,8 @@ class CategoryController extends BaseController {
   public initializeRoutes() {
     this.router.post(
       this.path,
-      cateMulter.single("file"),
-      cateUploadMiddleware,
+      // cateMulter.single("file"),
+      // cateUploadMiddleware,
       this.createCategory,
     );
     this.router.get(this.path, this.getAllCategory);
@@ -24,13 +24,15 @@ class CategoryController extends BaseController {
   private createCategory = asyncHandler(
     async (request: any, response: express.Response) => {
       if (!request.body.name) throw new Error("Name is required");
+      console.log(request.body);
       const createdCategory = await prisma.category.create({
         data: request.body,
       });
       if (!createdCategory) throw new Error("Cannot create category");
       response.json({
-        message: "Created new category",
+        mess: "Created new category",
         data: createdCategory,
+        success: true
       });
     },
   );
