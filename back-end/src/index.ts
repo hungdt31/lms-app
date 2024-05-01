@@ -13,6 +13,7 @@ import QuizController from "./controllers/quiz-controller";
 import VideoController from "./controllers/video-controller";
 import GradeController from "./controllers/grade-controller";
 import SubmissionController from "./controllers/submission-controller";
+import PostController from "./controllers/post-controller";
 dotenv.config();
 initializeApp(config.firebaseConfig);
 connection();
@@ -29,7 +30,8 @@ const app = new App(
     new QuizController(),
     new VideoController(),
     new GradeController(),
-    new SubmissionController()
+    new SubmissionController(),
+    new PostController()
   ],
   port,
 );

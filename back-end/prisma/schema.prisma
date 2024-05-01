@@ -53,6 +53,7 @@ model User {
   phone           String?
   email           String      @unique     
   role            Role        @default(STUDENT)
+  posts           Post[]
   updatedAt       String      @default("")
   createdAt       String      @default("")
   courseIDs       String[]    @db.ObjectId
@@ -262,14 +263,14 @@ model DKMH {
 }
 model Forum {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
+  title       String          @default("Forum")
   course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId    String          @db.ObjectId
-  // User        User[]    
   threads     Thread[]        
 }
 model Thread {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?         @default("Thread")
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now())
   forum       Forum           @relation(fields: [forumId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -278,19 +279,22 @@ model Thread {
 }
 model Notification {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
   updatedAt   DateTime        @default(now())
   posts       Post[]          
 }
 model Post {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  sender          String          
+  sender          String
+  userId          String?         @db.ObjectId
+  user            User?           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)          
   receiver        Receiver        @default(ALL)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @default(now())
   title           String?
   thread          Thread?         @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   threadId        String?         @db.ObjectId
-  replyTo         String?         @default("") @db.ObjectId 
+  replyTo         String?         @db.ObjectId 
   notification    Notification?   @relation(fields: [notificationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   notificationId  String?         @db.ObjectId
   content         String

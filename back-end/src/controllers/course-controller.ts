@@ -101,6 +101,12 @@ export default class CourseController extends BaseController {
               videos: true,
             },
           },
+          forum: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
         },
       });
       // if (!course) throw new Error("Cannot find the course !");

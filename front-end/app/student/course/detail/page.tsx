@@ -30,6 +30,7 @@ import DocCard from "@/components/card/docLink";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
+import ForumCard from "@/components/card/forum";
 export default function DetailCourse() {
   const token = new Cookies().get("token");
   const router = useRouter();
@@ -131,7 +132,7 @@ export default function DetailCourse() {
               </div>
             </div>
           </div>
-          <Table className="lg:w-[60%] m-auto">
+          <Table className="lg:w-[60%] m-auto mb-5">
             <TableCaption>A list of your test</TableCaption>
             <TableHeader>
               <TableRow>
@@ -199,7 +200,8 @@ export default function DetailCourse() {
           </Table>
         </div>
       ) : (
-        <div className="flex justify-center mx-7">
+        <div>
+        <div className="flex flex-col items-center justify-center mx-7">
           <Accordion type="single" collapsible className="lg:w-[60%] w-full">
             {data?.data?.VideoSections?.map((el: any, index: any) => (
               <AccordionItem value={`item ${index + 1}`}>
@@ -239,6 +241,18 @@ export default function DetailCourse() {
               </AccordionItem>
             ))}
           </Accordion>
+          <div className="w-[60%] mt-9">
+            {
+              data?.data?.forum?.map((forum: any, idx: any) => (
+                <ForumCard
+                  key={idx}
+                  title={forum?.title}
+                  id={forum?.id}
+                />
+              ))
+            }
+            </div>
+        </div>
         </div>
       )}
     </div>

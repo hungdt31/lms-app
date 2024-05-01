@@ -47,6 +47,12 @@ export type StudentInfo = {
   lastname: string;
   email: string
 };
+export type ThreadInfo = {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+};
 export const columns: ColumnDef<UserInfo>[] = [
   {
     id: "select",
@@ -318,3 +324,87 @@ export const admin_columns: ColumnDef<StudentInfo>[] = [
     }
   },
 ]
+export const thread_columns: ColumnDef<ThreadInfo>[] = [
+  {
+    header: "No.",
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.index + 1}</div>;
+    },
+  },
+  {
+    accessorKey: "title",
+    header: "Title",
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Created At
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const createdAt = row.getValue("createdAt");
+      const formatted = new Date(createdAt as string).toUTCString();
+      return <div className="font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Updated At
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const updatedAt = row.getValue("updatedAt");
+      const formatted = new Date(updatedAt as string).toUTCString();
+      return <div className="font-medium">{formatted}</div>;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const router = useRouter();
+      const thread = row.original;
+      const threadId = thread.id;
+      const cid: string = useSearchParams().get("id") as string;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-8 h-8 p-0">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(
+                  `/student/course/forum/thread?id=${threadId}`,
+                );
+              }}
+            >
+              Go to detail thread
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
