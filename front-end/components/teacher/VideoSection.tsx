@@ -269,7 +269,7 @@ export default function VideoSection(data: any) {
                   return (
                     <a className="card card-side shadow-xl" href={e?.url}>
                       <figure>
-                        <img src={e?.thumbnail} alt="video" />
+                        <img src={e?.thumbnail} alt="video thumbnail" />
                       </figure>
                       <div className="card-body">
                         <h2 className="card-title">{e?.title}</h2>

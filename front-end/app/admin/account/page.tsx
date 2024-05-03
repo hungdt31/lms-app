@@ -4,6 +4,7 @@ import UserQuery from "@/hooks/user";
 import User from "@/lib/axios/user";
 import { Separator } from "@/components/ui/separator";
 import ProfileForm from "@/components/profile-form";
+import { LogOut } from "lucide-react";
 import { RiImageEditFill } from "react-icons/ri";
 import {
   Drawer,
@@ -19,9 +20,15 @@ import { Button } from "@/components/ui/button";
 import Cookies from "universal-cookie";
 import { useState } from "react";
 import { LoginLoading } from "@/components/loading";
+import deleteToken from "@/hooks/deleteToken";
+import { useRouter } from "next/navigation";
+import LoginLooading from "@/components/loading/login";
+import { set } from "date-fns";
 export default function TeacherPage() {
   const cookies = new Cookies();
+  const router = useRouter();
   const query = UserQuery();
+  const [loading, setLoading] = useState<boolean>(false);
   const { data } = query;
   const [avatar, setAvatar] = useState<string>("");
   const mutation = useMutation({
@@ -37,6 +44,21 @@ export default function TeacherPage() {
     <div>
       <h1>Admin Page</h1>
       <div className="h-24 bg-gradient-to-r from-sky-500 via-cyan-400 to-indigo-500 relative -mt-7">
+        {loading ? (
+          <LoginLoading />
+        ) : (
+          <Button
+            className="absolute top-2 right-3"
+            onClick={async () => {
+              setLoading(true);
+              await deleteToken();
+              router.push("/login?admin=true");
+              setLoading(false);
+            }}
+          >
+            <LogOut className="mr-3" /> Log out
+          </Button>
+        )}
         <div className="absolute top-9 left-[35%] flex w-[30%] flex-col justify-center items-center font-mono">
           {data?.data?.avatar ? (
             <img
@@ -107,7 +129,9 @@ export default function TeacherPage() {
               </DrawerContent>
             </Drawer>
           </div>
-          <p className="font-bold text-xl">{data?.data?.firstname} {data?.data?.lastname}</p>
+          <p className="font-bold text-xl">
+            {data?.data?.firstname} {data?.data?.lastname}
+          </p>
           <p className="hidden sm:block">
             Member since {data?.data?.createdAt}
           </p>

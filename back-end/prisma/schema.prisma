@@ -44,6 +44,7 @@ model User {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId
   firstname       String      @default("aaa")
   lastname        String      @default("bbb")
+  mssv            String      @default("SV311204")
   password        String    
   username        String  
   avatar          String?

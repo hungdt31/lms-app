@@ -19,7 +19,7 @@ export default function ForumPage() {
     <div className="px-3">
       <div className="">
         <p className="h-[3px] w-[50px] bg-yellow-500 ml-auto"></p>
-        <h1 className="font-bold text-2xl border-l-2 border-yellow-500 border-r-2 px-3">
+        <h1 className="font-bold text-2xl border-l-2 border-yellow-500 border-r-2 px-3 text-yellow-500">
           {forum?.title}
         </h1>
         <p className="h-[3px] w-[50px] bg-yellow-500"></p>

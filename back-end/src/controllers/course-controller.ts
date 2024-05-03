@@ -141,6 +141,17 @@ export default class CourseController extends BaseController {
           image: true,
           public_id: true,
           course_id: true,
+          credit: true,
+          quantity: true,
+          schedule: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          date: true,
+          time: true,
           DocumentSections: {
             select: {
               id: true,
@@ -569,5 +580,5 @@ export default class CourseController extends BaseController {
         success: true,
         mess: "Delete course successfully",
       });
-    })
+  })
 }

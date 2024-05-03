@@ -162,6 +162,16 @@ export default function ForumPage() {
   return (
     <div>
       <div className="px-3 lg:px-9">
+        <Button
+          className="fixed bottom-5 right-3"
+          onClick={() =>
+            router.push(
+              `/teacher/course/detail/attendance?id=${thread?.courseId}`,
+            )
+          }
+        >
+          Quay lại forum
+        </Button>
         {thread?.posts?.map?.((post: any) => (
           <div
             key={post.id}

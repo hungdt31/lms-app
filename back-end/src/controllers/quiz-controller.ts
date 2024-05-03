@@ -25,6 +25,7 @@ export default class QuizController extends BaseController {
     this.router.get(`${this.path}/result`, this.getResult);
     this.router.delete(`${this.path}/result`, this.deleteQuizResult);
     this.router.get(`${this.path}/all-result`, this.getAllQuizByUser);
+    this.router.get(`${this.path}` + "/info", this.getQuizInfo);
     this.router.post(`${this.path}/start`, this.startQuiz);
     this.router.get(`${this.path}/play`, this.getPlayQuiz);
     this.router.delete(`${this.path}/play/all`, this.deleteAllPlayQuiz);
@@ -522,6 +523,135 @@ export default class QuizController extends BaseController {
         mess: "Your quiz result has been deleted!",
         success: true,
         data: result,
+      });
+    },
+  );
+  private getQuizInfo = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const data = await prisma.quizResult.findMany({
+        where: {
+          quizId: request.query.id,
+        },
+        select: {
+          user: {
+            select: {
+              firstname: true,
+              lastname: true,
+              //them truong mssv nua
+              mssv: true,
+            }
+          },
+          quiz: {
+            select: {
+              typePoint: true,
+            }
+          },
+          history: {
+            select: {
+              isDone: true
+            }
+          },
+          score: true,
+        },
+      });
+      const quiz : any = await prisma.quiz.findFirst({
+        where: {
+          id: request.query.id,
+        },
+        select: {
+          title: true,
+          questions: true,
+          start_date: true,
+          end_date: true,
+        },
+      });
+      if (!data) throw new Error("Can't find your result!");
+      type InfoType = {
+        questions: Array<any>;
+        title: string;
+        start_date: string;
+        end_date: string;
+        attemp: number;
+        average_score: number;
+        max_score: number;
+        min_score: number;
+        result: any[];
+        chart_data: {
+          title: string;
+          value: number;
+        }[];
+      };
+
+      let info : InfoType = {
+        questions: quiz.questions,
+        title: quiz.title,
+        start_date: quiz.start_date,
+        end_date: quiz.end_date,
+        attemp: 0,
+        average_score: 0.0,
+        max_score: 0.0,
+        min_score: 0.0,
+        result: [],
+        chart_data: [
+          {
+            title: "0 - 2",
+            value: 0
+          },
+          {
+            title: "2 - 4",
+            value: 0
+          },
+          {
+            title: "4 - 6",
+            value: 0
+          },
+          {
+            title: "6 - 8",
+            value: 0
+          },
+          {
+            title: "8 - 10",
+            value: 0
+          },
+        ]
+      }
+
+      for (let i = 0; i < data.length; i++) {
+        info.attemp += data[i].history.length;
+        for (let k = 0; k < data[i].history.length; k++) 
+            if (data[i].history[k].isDone == false) info.attemp--;
+        let this_user_score = 0;
+        for (let j = 0; j < data[i].score.length; j++) {
+            info.average_score += data[i].score[j];
+            switch (Math.floor(data[i].score[j]/2.0)) {
+              case 0: info.chart_data[0].value += 1; break;
+              case 1: info.chart_data[1].value += 1; break;
+              case 2: info.chart_data[2].value += 1; break;
+              case 3: info.chart_data[3].value += 1; break;
+              case 4: info.chart_data[4].value += 1; break;
+              case 5: info.chart_data[4].value += 1; break;
+            }
+            if (data[i].quiz.typePoint == "Max" && this_user_score < data[i].score[j]) 
+                this_user_score = data[i].score[j];
+            else if (data[i].quiz.typePoint == "Last" && j == data[i].score.length - 1)
+                this_user_score = data[i].score[j];
+            else if (data[i].quiz.typePoint == "Average") this_user_score += data[i].score[j];
+            if (info.max_score < data[i].score[j]) info.max_score = data[i].score[j];
+            if (info.min_score > data[i].score[j]) info.min_score = data[i].score[j];
+          }
+        if (data[i].quiz.typePoint == "Average") {
+          this_user_score /= data[i].score.length;
+          this_user_score = parseFloat(this_user_score.toFixed(1));
+        }
+        let list = {name: data[i].user.lastname + ' ' + data[i].user.firstname, score_list: data[i].score, final_score: this_user_score, mssv: data[i].user.mssv};
+        info.result.push(list);
+      }
+     
+      info.average_score /= info.attemp;
+      response.json({
+        mess: "Your result has been given!",
+        success: true,
+        data: info,
       });
     },
   );

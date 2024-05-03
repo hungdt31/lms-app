@@ -19,7 +19,7 @@ const nav : any = [
   {
     title: "Dashboard",
     // label: "128",
-    icon: Inbox,
+    icon: Send,
     variant: "default",
     href: "/admin",
   },
@@ -33,16 +33,9 @@ const nav : any = [
   {
     title: "Course",
     // label: "",
-    icon: Send,
+    icon: Inbox,
     variant: "ghost",
     href: "/admin/courses",
-  },
-  {
-    title: "Settings",
-    // label: "23",
-    icon: ArchiveX,
-    variant: "ghost",
-    href: "/admin/settings",
   },
   {
     title: "My account",

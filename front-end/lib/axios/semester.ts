@@ -71,6 +71,25 @@ async function GetNumWeek(id: any) {
     url: `/semester/num-week?id=${id}`,
   });
 }
+async function DeleteDKMH(id: any) {
+  return await instance({
+    method: "delete",
+    url: `/semester/dkmh?id=${id}`
+  })
+}
+async function GetDkmh(id: any) {
+  return await instance({
+    method: "get",
+    url: `/semester/dkmh?id=${id}`
+  })
+}
+async function CreateNewDKMH(data: any) {
+  return await instance({
+    method: "post",
+    url: `/semester/dkmh`,
+    data
+  })
+}
 const Semester = {
   GetAllSemester,
   GetCourseResultBySemester,
@@ -81,5 +100,8 @@ const Semester = {
   GetQuizAndSubmitTime,
   CreateSemester,
   GetNumWeek,
+  DeleteDKMH,
+  GetDkmh,
+  CreateNewDKMH
 };
 export default Semester;

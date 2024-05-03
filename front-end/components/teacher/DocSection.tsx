@@ -257,7 +257,8 @@ export default function DocSection(data: any) {
                           : ""
                       }
                     >
-                      <div
+                      <Link
+                        href={`/teacher/course/detail/quiz?id=${id}&qid=${quiz?.id}`}
                         className="flex items-center mt-3 gap-3 border-2 border-section p-3 rounded-md shadow-lg dark:border-red-500"
                         key={_index}
                       >
@@ -268,7 +269,7 @@ export default function DocSection(data: any) {
                           </div>
                           <div className="text-xs">{quiz?.description}</div>
                         </div>
-                      </div>
+                      </Link>
                       {clickDelete && trigger == index && (
                         <input
                           type="checkbox"

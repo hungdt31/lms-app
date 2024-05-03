@@ -31,7 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import downloadToExcel from "@/components/teacher/xslx";
+import downloadToExcel from "./xslx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -77,22 +77,10 @@ export function DataTable<TData, TValue>({
       {/* input */}
       <div className="flex items-center py-4 gap-3">
         <Input
-          placeholder="Filter First names"
-          value={
-            (table.getColumn("firstname")?.getFilterValue() as string) || ""
-          }
+          placeholder="Search by mssv"
+          value={(table.getColumn("mssv")?.getFilterValue() as string) || ""}
           onChange={(e) => {
-            table.getColumn("firstname")?.setFilterValue(e.target.value);
-          }}
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter Last names"
-          value={
-            (table.getColumn("lastname")?.getFilterValue() as string) || ""
-          }
-          onChange={(e) => {
-            table.getColumn("lastname")?.setFilterValue(e.target.value);
+            table.getColumn("mssv")?.setFilterValue(e.target.value);
           }}
           className="max-w-sm"
         />

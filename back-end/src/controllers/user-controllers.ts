@@ -449,7 +449,7 @@ class UserController extends BaseController {
   private getListUser = asyncHandler(
     async (request: any, response: express.Response) => {
       const { role } = request.user;
-      let list;
+      let list : any = null;
       if (role === "ADMIN") {
         list = await prisma.user.findMany({
           where: {
@@ -467,7 +467,7 @@ class UserController extends BaseController {
         });
       } else if (role === "STUDENT")
         throw new Error("You don't have permission to get list user !");
-      else
+      else {
         list = await prisma.user.findMany({
           where: {
             courseIDs: { has: request.query.id },
@@ -484,7 +484,20 @@ class UserController extends BaseController {
             date_of_birth: true,
           },
         });
-
+        for (const user of list) {
+          const course = await prisma.courseResult.findFirst({
+            where: {
+              userId: user.id,
+              courseId: request.query.id,
+            },
+            select: {
+              score_array: true,
+              average_score: true,
+            },
+          });
+          user.result = course;
+        }
+      }
       response.json({
         mess: "Get users successfully !",
         success: true,

@@ -70,6 +70,8 @@ class SemesterController extends BaseController {
     );
     this.router.get(`${this.path}/now`, this.getSemesterByNow);
     this.router.post(`${this.path}/dkmh`, this.createNewDKMHForSemester);
+    this.router.delete(`${this.path}/dkmh`, this.deleteDKMH);
+    this.router.get(`${this.path}/dkmh`, this.getDKMH);
     this.router.get(
       `${this.path}/dkmh/now`,
       [verifyAccessToken],
@@ -92,6 +94,7 @@ class SemesterController extends BaseController {
       this.getQuizAndSubmissionTime,
     );
     this.router.get(`${this.path}/num-week`, this.getNumberOfWeek);
+
     // Bạn có thể thêm put, patch, delete sau.
   }
   private createSemester = asyncHandler(
@@ -116,7 +119,11 @@ class SemesterController extends BaseController {
   );
   private getAllSemester = asyncHandler(
     async (request: any, response: express.Response) => {
-      const semesters = await prisma.semester.findMany();
+      const semesters = await prisma.semester.findMany({
+        include: {
+          DKMH: true
+        }
+      });
       response.json({
         success: true,
         message: "Get all semesters",
@@ -1039,6 +1046,41 @@ class SemesterController extends BaseController {
         success: true,
         message: "Get number of week",
         data: num_week
+      });
+    },
+  );
+  private deleteDKMH = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.query;
+      const dkmh: any = await prisma.dKMH.delete({
+        where: {
+          id,
+        },
+        select: {
+          title: true,
+          start_date: true,
+          end_date: true,
+        },
+      });
+      response.json({
+        success: true,
+        message: "Delete dkmh successfully!",
+        data: dkmh
+      });
+    },
+  );
+  private getDKMH = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.query;
+      const dkmh: any = await prisma.dKMH.findMany({
+        where: {
+          semesterId: id
+        }
+      })
+      response.json({
+        success: true,
+        message: "Get dkmh successfully!",
+        data: dkmh
       });
     },
   );

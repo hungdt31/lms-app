@@ -6,7 +6,12 @@ import { ChevronLeft, ChevronRight, BookText, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 export default function DetailCourse({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -83,11 +88,29 @@ export default function DetailCourse({
         <h1 className="font-bold text-xl p-5 text-center">
           {data?.data?.title} - {data?.data?.course_id}
         </h1>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Lịch dạy học</AccordionTrigger>
+            <AccordionContent>
+              <p>Tuần học: [{data?.data?.schedule.join(", ")}]</p>
+              <p>Ngày trong tuần: {data?.data?.date}</p>
+              <p>Thời gian: {data?.data?.time}</p>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Thông tin khác</AccordionTrigger>
+            <AccordionContent>
+              <p>Số tín chỉ: {data?.data?.credit}</p>
+              <p>
+                Tham gia: {data?.data?.usersId?.length} / {data?.data?.quantity}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         <blockquote className="mt-6 border-l-2 pl-6 italic border-nav-text shadow-md py-3">
           " {data?.data?.description} "
         </blockquote>
       </div>
-
       {children}
     </div>
   );

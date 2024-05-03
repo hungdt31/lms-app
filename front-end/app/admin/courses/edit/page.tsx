@@ -203,7 +203,7 @@ export default function AddCoursePage() {
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2 flex gap-3 items-center font-bold underline ">
             <MdAddBox size={24} />
-            <p>ADD COURSE</p>
+            <p>EDIT COURSE</p>
           </div>
         </div>
 

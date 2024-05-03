@@ -1,37 +1,37 @@
 import instance from "@/axios";
-async function GetQuiz(id : any) {
+async function GetQuiz(id: any) {
   return await instance({
     method: "get",
     url: `/quiz?id=${id}`,
   });
 }
-async function MarkQuiz(data : any) {
+async function MarkQuiz(data: any) {
   return await instance({
     method: "post",
     url: `/quiz/result`,
-    data
+    data,
   });
 }
-async function GetResult(id : string) {
+async function GetResult(id: string) {
   return await instance({
     method: "get",
-    url: `/quiz/result?id=${id}`
-  })
+    url: `/quiz/result?id=${id}`,
+  });
 }
-async function CreateQuiz(data : any) {
+async function CreateQuiz(data: any) {
   return await instance({
     method: "post",
     url: `/quiz`,
-    data
+    data,
   });
 }
 async function GetAllQuizResultByUser(data: any) {
   return await instance({
     method: "get",
     url: `/quiz/all-result?uid=${data?.uid}&cid=${data?.cid}`,
-  })
+  });
 }
-async function GetQuizPlay(id: any, uid : any) {
+async function GetQuizPlay(id: any, uid: any) {
   return await instance({
     method: "get",
     url: `/quiz/play?id=${id}&uid=${uid}`,
@@ -40,28 +40,45 @@ async function GetQuizPlay(id: any, uid : any) {
 async function StartQuiz(id: any, uid: any) {
   const data = {
     id,
-    uid
-  }
+    uid,
+  };
   return await instance({
     method: "post",
     url: `/quiz/start`,
-    data
+    data,
   });
 }
-async function GetQuizByUser(data : any) {
+async function GetQuizByUser(data: any) {
   return await instance({
     method: "get",
     url: `/quiz/user?id=${data?.id}`,
     headers: {
-      Authorization: `Bearer ${data?.token}`
-    }
+      Authorization: `Bearer ${data?.token}`,
+    },
   });
 }
-async function GetHistoryPlayQuiz (id : any) {
+async function GetHistoryPlayQuiz(id: any) {
   return await instance({
     method: "get",
     url: `/quiz/history?id=${id}`,
   });
 }
-const Quiz = { GetQuiz, MarkQuiz, GetResult, CreateQuiz, GetAllQuizResultByUser, GetQuizPlay, StartQuiz, GetQuizByUser, GetHistoryPlayQuiz };
+async function GetQuizInfo(id: any) {
+  return await instance({
+    method: "get",
+    url: `/quiz/info?id=${id}`,
+  });
+}
+const Quiz = {
+  GetQuiz,
+  MarkQuiz,
+  GetResult,
+  CreateQuiz,
+  GetAllQuizResultByUser,
+  GetQuizPlay,
+  StartQuiz,
+  GetQuizByUser,
+  GetHistoryPlayQuiz,
+  GetQuizInfo,
+};
 export default Quiz;

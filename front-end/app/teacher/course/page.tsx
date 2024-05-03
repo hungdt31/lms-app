@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import TimeConvert from "@/helpers/TimeConvert";
 import { CourseFilterQuery } from "@/hooks/course";
 import { Layers } from "lucide-react";
@@ -12,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FastForward } from "lucide-react";
 import SemesterQuery from "@/hooks/semester";
 import { Button } from "@/components/ui/button";
 import UserQuery from "@/hooks/user";
@@ -66,7 +66,7 @@ export default function TeacherPage() {
       <Card className="px-7">
         <CardHeader>
           <Button className="badge badge-primary p-5" variant="secondary">
-            <Layers className="mr-3" /> <strong>Khóa học</strong>
+            <Layers className="mr-3" /> <strong>Khóa học <Badge>{mutation.data?.data?.length}</Badge></strong>
           </Button>
         </CardHeader>
         <CardContent>
@@ -95,7 +95,6 @@ export default function TeacherPage() {
           )}
         </CardContent>
         <CardFooter>
-          Total: {mutation.data?.data?.length}
         </CardFooter>
       </Card>
     </div>

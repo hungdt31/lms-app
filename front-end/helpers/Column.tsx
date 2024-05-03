@@ -27,6 +27,10 @@ export type UserInfo = {
   date_of_birth: string;
   email: string;
   phone: string;
+  result: {
+    average_score: number;
+    score_array: Array<number>;
+  }
 };
 export type CouseInfo = {
   id: string;
@@ -53,48 +57,39 @@ export type ThreadInfo = {
   createdAt: string;
   updatedAt: string;
 };
+export type QuizInfo = {
+  id: string;
+  mssv: string;
+  name: string;
+  score_list: Array<number>;
+  final_score: string
+};
 export const columns: ColumnDef<UserInfo>[] = [
-  {
-    id: "select",
-    header: ({ table }) => {
-      return (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value);
-          }}
-        />
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-          }}
-        />
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() === "asc");
-          }}
-        >
-          Person ID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "id",
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => {
+  //     return (
+  //       <Checkbox
+  //         checked={table.getIsAllPageRowsSelected()}
+  //         onCheckedChange={(value) => {
+  //           table.toggleAllPageRowsSelected(!!value);
+  //         }}
+  //       />
+  //     );
+  //   },
+  //   cell: ({ row }) => {
+  //     return (
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => {
+  //           row.toggleSelected(!!value);
+  //         }}
+  //       />
+  //     );
+  //   },
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "firstname",
     header: "First name",
@@ -123,6 +118,29 @@ export const columns: ColumnDef<UserInfo>[] = [
   {
     accessorKey: "phone",
     header: "Phone",
+  },
+  {
+    accessorKey: "result.score_array",
+    header: "Score array",
+    cell: ({ row }) => {
+      return <div className="font-medium">[{row?.original?.result?.score_array?.join(", ")}]</div>;
+    },
+  },
+  {
+    accessorKey: "result.average_score",
+    header: ({ column }) => {
+      return (
+        <div
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+          className="flex items-center"
+        >
+          Average score
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -406,5 +424,50 @@ export const thread_columns: ColumnDef<ThreadInfo>[] = [
         </DropdownMenu>
       );
     },
+  },
+];
+export const quiz_columns: ColumnDef<QuizInfo>[] = [
+  {
+    header: "No.",
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.index + 1}</div>;
+    },
+  },
+  {
+    accessorKey: "mssv",
+    header: "MSSV",
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => {
+      return <div className="font-mono">{row.original.name}</div>;
+    }
+  },
+  {
+    accessorKey: "score_list",
+    header: "Score list",
+    cell: ({ row }) => {
+      return <div className="font-medium">[{row.original.score_list?.join(", ")}]</div>;
+    }
+  },
+  {
+    accessorKey: "final_score",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Final score
+          <ArrowUpDown className="ml-3 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="font-bold">{row.original.final_score}</div>;
+    }
   },
 ];

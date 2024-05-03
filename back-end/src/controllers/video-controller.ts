@@ -28,6 +28,7 @@ class VideoController extends BaseController {
       const { video_link } = request.body;
       const metadata = await urlMetadata(video_link);
       const { title, description, image, url, provider, icon } = metadata;
+      console.log(metadata);
       const video = await prisma.video.create({
         data: {
           title,
