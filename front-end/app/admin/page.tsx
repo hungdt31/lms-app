@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import JoditReact from "jodit-react-ts";
+//import JoditReact from "jodit-react-ts";
 import {
   Accordion,
   AccordionContent,
@@ -476,7 +476,7 @@ export default function AdminPage() {
                                 <FormItem>
                                   <Label>Content: </Label>
                                   <FormControl>
-                                    <div className="mt-3">
+                                    {/* <div className="mt-3">
                                       <JoditReact
                                         onChange={(content) =>
                                           form.setValue("content", content)
@@ -484,7 +484,7 @@ export default function AdminPage() {
                                         defaultValue={form.getValues("content")}
                                         config={config}
                                       />
-                                    </div>
+                                    </div> */}
                                   </FormControl>
                                   <FormDescription>
                                     This is your public content.
@@ -610,7 +610,7 @@ export default function AdminPage() {
                                       <FormItem>
                                         <Label>Content: </Label>
                                         <FormControl>
-                                          <div className="mt-3">
+                                          {/* <div className="mt-3">
                                             <JoditReact
                                               onChange={(content) =>
                                                 form.setValue(
@@ -623,7 +623,7 @@ export default function AdminPage() {
                                               )}
                                               config={config}
                                             />
-                                          </div>
+                                          </div> */}
                                         </FormControl>
                                         <FormDescription>
                                           This is your public content.

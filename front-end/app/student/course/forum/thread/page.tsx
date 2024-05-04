@@ -59,7 +59,7 @@ export default function ForumPage() {
   };
   const fetchData = async () => {
     const res = await Post.GetThread(id);
-    console.log(res);
+    //console.log(res);
     setThread(res?.data);
   };
   const handleSubmit = () => {
