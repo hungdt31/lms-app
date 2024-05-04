@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import dynamic from "next/dynamic";
 //import JoditReact from "jodit-react-ts";
 import {
   Accordion,
@@ -65,6 +66,7 @@ const formSchema2 = z.object({
   name: z.string().min(1, { message: "Title is required" }),
 });
 export default function AdminPage() {
+  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const [editId, setEditId] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [addtion, setAddtion] = useState<any>(null);
@@ -476,7 +478,7 @@ export default function AdminPage() {
                                 <FormItem>
                                   <Label>Content: </Label>
                                   <FormControl>
-                                    {/* <div className="mt-3">
+                                    <div className="mt-3">
                                       <JoditReact
                                         onChange={(content) =>
                                           form.setValue("content", content)
@@ -484,7 +486,7 @@ export default function AdminPage() {
                                         defaultValue={form.getValues("content")}
                                         config={config}
                                       />
-                                    </div> */}
+                                    </div>
                                   </FormControl>
                                   <FormDescription>
                                     This is your public content.
@@ -610,7 +612,7 @@ export default function AdminPage() {
                                       <FormItem>
                                         <Label>Content: </Label>
                                         <FormControl>
-                                          {/* <div className="mt-3">
+                                          <div className="mt-3">
                                             <JoditReact
                                               onChange={(content) =>
                                                 form.setValue(
@@ -623,7 +625,7 @@ export default function AdminPage() {
                                               )}
                                               config={config}
                                             />
-                                          </div> */}
+                                          </div>
                                         </FormControl>
                                         <FormDescription>
                                           This is your public content.
