@@ -12,7 +12,7 @@ import TimeConvert from "@/helpers/TimeConvert";
 export default function Notice() {
   const [data, setData] = useState<any>([]);
   const fetchData = async () => {
-    const res = await Post.GetAllNofitication();
+    const res = await Post.GetNotificationByRole("STUDENT");
     console.log(res);
     setData(res?.data);
   };

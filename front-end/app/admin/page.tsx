@@ -51,8 +51,9 @@ import Post from "@/lib/axios/post";
 import { Label } from "@/components/ui/label";
 import Cookies from "universal-cookie";
 import { toast } from "@/components/ui/use-toast";
-import { set } from "date-fns";
+import admin_page from "./admin_page.jpg";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -226,484 +227,492 @@ export default function AdminPage() {
       });
   };
   return (
-    <div>
-      <div>
-        <h1 className="text-3xl font-bold text-main dark:text-white text-center font-mono relative">
-          Notification
-          <div className="badge badge-primary badge-outline absolute top-0">
-            Posts {totalPost}
-          </div>
-        </h1>
+    <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+      <div className="p-7">
+        <div>
+          <h1 className="text-3xl font-bold text-main dark:text-white text-center font-mono relative">
+            Notification
+            <div className="badge badge-primary badge-outline absolute top-0">
+              Posts {totalPost}
+            </div>
+          </h1>
 
-        <div className="mt-5 flex items-center gap-3 flex-wrap justify-center">
-          <Popover>
-            <PopoverTrigger asChild>
+          <div className="mt-5 flex items-center gap-3 flex-wrap justify-center">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="rounded-full flex items-center gap-3"
+                >
+                  <CircleFadingPlus /> Thêm mục thông báo
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <Form {...form2}>
+                  <form
+                    onSubmit={form2.handleSubmit(addNotification)}
+                    className="space-y-8"
+                  >
+                    <FormField
+                      control={form2.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex items-center gap-3 my-5">
+                            <Label>Name: </Label>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                className="w-[250px]"
+                                {...field}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormDescription>
+                            This is your public title.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      className="mt-5 rounded-full"
+                      variant={"secondary"}
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+                  </form>
+                </Form>
+              </PopoverContent>
+            </Popover>
+            {deleteNoti ? (
               <Button
-                variant="outline"
+                variant={"destructive"}
+                onClick={() => {
+                  deleteNotification();
+                  setDeleteNoti(false);
+                }}
                 className="rounded-full flex items-center gap-3"
               >
-                <CircleFadingPlus /> Thêm mục thông báo
+                <Check />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <Form {...form2}>
-                <form
-                  onSubmit={form2.handleSubmit(addNotification)}
-                  className="space-y-8"
-                >
-                  <FormField
-                    control={form2.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center gap-3 my-5">
-                          <Label>Name: </Label>
-                          <FormControl>
-                            <Input
-                              type="text"
-                              className="w-[250px]"
-                              {...field}
-                            />
-                          </FormControl>
-                        </div>
-                        <FormDescription>
-                          This is your public title.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    className="mt-5 rounded-full"
-                    variant={"secondary"}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-                </form>
-              </Form>
-            </PopoverContent>
-          </Popover>
-          {deleteNoti ? (
-            <Button
-              variant={"destructive"}
-              onClick={() => {
-                deleteNotification();
-                setDeleteNoti(false);
-              }}
-              className="rounded-full flex items-center gap-3"
-            >
-              <Check />
-            </Button>
-          ) : (
-            <Button
-              variant={"destructive"}
-              onClick={() => {
-                setDeleteNoti(true);
-              }}
-              className="rounded-full flex items-center gap-3"
-            >
-              <X />
-              Xóa mục thông báo
-            </Button>
-          )}
+            ) : (
+              <Button
+                variant={"destructive"}
+                onClick={() => {
+                  setDeleteNoti(true);
+                }}
+                className="rounded-full flex items-center gap-3"
+              >
+                <X />
+                Xóa mục thông báo
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-      <div></div>
-      <Accordion type="single" collapsible className="w-full">
-        {nofitication?.map((item: any, index: any) => {
-          return (
-            <AccordionItem key={index} value={`index-${index + 1}`}>
-              <AccordionTrigger>
-                <p className="font-bold text-xl">
-                  {item.name}{" "}
-                  {deleteNoti && <input type="checkbox" value={item?.id} />}
-                </p>
-              </AccordionTrigger>
-              <AccordionContent>
-                <p>
-                  <a className="font-bold">Chỉnh sửa lần cuối: </a>
-                  <>{TimeConvert(item.updatedAt)}</>
-                </p>
+        <div></div>
+        <Accordion type="single" collapsible className="w-full">
+          {nofitication?.map((item: any, index: any) => {
+            return (
+              <AccordionItem key={index} value={`index-${index + 1}`}>
+                <AccordionTrigger>
+                  <p className="font-bold text-xl">
+                    {item.name}{" "}
+                    {deleteNoti && <input type="checkbox" value={item?.id} />}
+                  </p>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p>
+                    <a className="font-bold">Chỉnh sửa lần cuối: </a>
+                    <>{TimeConvert(item.updatedAt)}</>
+                  </p>
 
-                {addtion ? (
-                  <Button
-                    className="my-3"
-                    onClick={() => {
-                      setAddtion(false);
-                      setTriggerId(null);
-                    }}
-                  >
-                    Hủy
-                  </Button>
-                ) : (
-                  <div className="flex gap-3 items-center mt-3">
+                  {addtion ? (
                     <Button
+                      className="my-3"
                       onClick={() => {
-                        setTrigger(index);
-                        setAddtion(true);
-                        setTriggerId(item.id);
+                        setAddtion(false);
+                        setTriggerId(null);
                       }}
                     >
-                      Thêm
+                      Hủy
                     </Button>
-                    {deletion ? (
+                  ) : (
+                    <div className="flex gap-3 items-center mt-3">
                       <Button
-                        variant={"destructive"}
-                        onClick={() => {
-                          deletePost(item.id);
-                        }}
-                      >
-                        <Check />
-                      </Button>
-                    ) : (
-                      <Button
-                        variant={"destructive"}
                         onClick={() => {
                           setTrigger(index);
-                          setDeletion(true);
+                          setAddtion(true);
                           setTriggerId(item.id);
                         }}
                       >
-                        Xóa
+                        Thêm
                       </Button>
-                    )}
-                  </div>
-                )}
-
-                {addtion && trigger == index ? (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Send Notification</CardTitle>
-                      <CardDescription>Submit to save changed</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Form {...form}>
-                        <form
-                          onSubmit={form.handleSubmit(onSubmit)}
-                          className="space-y-8"
+                      {deletion ? (
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => {
+                            deletePost(item.id);
+                          }}
                         >
-                          <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                              <FormItem>
-                                <div className="flex items-center gap-3 my-5">
-                                  <Label>Title: </Label>
-                                  <FormControl>
-                                    <Input
-                                      type="text"
-                                      className="w-[250px]"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                </div>
-                                <FormDescription>
-                                  This is your public title.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="sender"
-                            render={({ field }) => (
-                              <FormItem>
-                                <div className="flex items-center gap-3 my-5">
-                                  <Label>From: </Label>
-                                  <FormControl>
-                                    <Input
-                                      type="text"
-                                      className="w-[250px]"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                </div>
-                                <FormDescription>
-                                  This is your public display name.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="receiver"
-                            render={({ field }) => (
-                              <FormItem>
-                                <div className="flex items-center gap-3 my-5">
-                                  <Label>Receive: </Label>
-                                  <FormControl>
-                                    <Select
-                                      value={field.value}
-                                      onValueChange={(e) => field.onChange(e)}
-                                    >
-                                      <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Select a object" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectGroup>
-                                          <SelectItem value="ALL">
-                                            All
-                                          </SelectItem>
-                                          <SelectItem value="TEACHER">
-                                            Teacher
-                                          </SelectItem>
-                                          <SelectItem value="STUDENT">
-                                            Student
-                                          </SelectItem>
-                                        </SelectGroup>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                </div>
-                                <FormDescription>
-                                  About the receivers.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="content"
-                            render={({ field }) => (
-                              <FormItem>
-                                <Label>Content: </Label>
-                                <FormControl>
-                                  <div className="mt-3">
-                                    <JoditReact
-                                      onChange={(content) =>
-                                        form.setValue("content", content)
-                                      }
-                                      defaultValue={form.getValues("content")}
-                                      config={config}
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormDescription>
-                                  This is your public content.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button
-                            className="mt-5 rounded-full"
-                            variant={"secondary"}
-                            type="submit"
-                          >
-                            Submit
-                          </Button>
-                        </form>
-                      </Form>
-                    </CardContent>
-                    <CardFooter></CardFooter>
-                  </Card>
-                ) : (
-                  <div>
-                    {item?.posts?.map((post: any) =>
-                      editId === post.id ? (
-                        <Card className="mt-5">
-                          <CardHeader>
-                            <CardTitle>Edit post</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <Form {...form}>
-                              <form
-                                onSubmit={form.handleSubmit(updatePost)}
-                                className="space-y-8"
-                              >
-                                <FormField
-                                  control={form.control}
-                                  name="title"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <div className="flex items-center gap-3 my-5">
-                                        <Label>Title: </Label>
-                                        <FormControl>
-                                          <Input
-                                            type="text"
-                                            className="w-[250px]"
-                                            {...field}
-                                          />
-                                        </FormControl>
-                                      </div>
-                                      <FormDescription>
-                                        This is your public title.
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="sender"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <div className="flex items-center gap-3 my-5">
-                                        <Label>From: </Label>
-                                        <FormControl>
-                                          <Input
-                                            type="text"
-                                            className="w-[250px]"
-                                            {...field}
-                                          />
-                                        </FormControl>
-                                      </div>
-                                      <FormDescription>
-                                        This is your public display name.
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="receiver"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <div className="flex items-center gap-3 my-5">
-                                        <Label>Receive: </Label>
-                                        <FormControl>
-                                          <Select
-                                            value={field.value}
-                                            onValueChange={(e) =>
-                                              field.onChange(e)
-                                            }
-                                          >
-                                            <SelectTrigger className="w-[180px]">
-                                              <SelectValue placeholder="Select a object" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                              <SelectGroup>
-                                                <SelectItem value="ALL">
-                                                  All
-                                                </SelectItem>
-                                                <SelectItem value="TEACHER">
-                                                  Teacher
-                                                </SelectItem>
-                                                <SelectItem value="STUDENT">
-                                                  Student
-                                                </SelectItem>
-                                              </SelectGroup>
-                                            </SelectContent>
-                                          </Select>
-                                        </FormControl>
-                                      </div>
-                                      <FormDescription>
-                                        About the receivers.
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="content"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <Label>Content: </Label>
-                                      <FormControl>
-                                        <div className="mt-3">
-                                          <JoditReact
-                                            onChange={(content) =>
-                                              form.setValue("content", content)
-                                            }
-                                            defaultValue={form.getValues(
-                                              "content",
-                                            )}
-                                            config={config}
-                                          />
-                                        </div>
-                                      </FormControl>
-                                      <FormDescription>
-                                        This is your public content.
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button
-                                  className="mt-5 rounded-full mr-3"
-                                  variant={"secondary"}
-                                  onClick={() => {
-                                    setEditId(null);
-                                    form.reset(defaultValues);
-                                  }}
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  className="mt-5 rounded-full"
-                                  type="submit"
-                                >
-                                  Submit
-                                </Button>
-                              </form>
-                            </Form>
-                          </CardContent>
-                          <CardFooter></CardFooter>
-                        </Card>
+                          <Check />
+                        </Button>
                       ) : (
-                        <div
-                          key={post.id}
-                          className="p-5 bg-gray-100 dark:bg-gray-800 rounded-lg my-2 shadow-md"
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => {
+                            setTrigger(index);
+                            setDeletion(true);
+                            setTriggerId(item.id);
+                          }}
                         >
-                          <div className="flex items-center justify-between">
-                            <h1 className="text-main dark:text-white font-bold text-lg flex items-center gap-3">
-                              {post.title}{" "}
-                              <Badge
-                                variant={
-                                  post.receiver === "ALL"
-                                    ? "default"
-                                    : post.receiver === "TEACHER"
-                                      ? "secondary"
-                                      : "outline"
-                                }
-                              >
-                                {post.receiver}
-                              </Badge>
-                            </h1>
-                            <FilePenLine
-                              onClick={() => {
-                                form.reset({
-                                  title: post.title,
-                                  content: post.content,
-                                  sender: post.sender,
-                                  receiver: post.receiver,
-                                });
-                                setEditId(post.id);
-                              }}
+                          Xóa
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  {addtion && trigger == index ? (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Send Notification</CardTitle>
+                        <CardDescription>
+                          Submit to save changed
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-8"
+                          >
+                            <FormField
+                              control={form.control}
+                              name="title"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <div className="flex items-center gap-3 my-5">
+                                    <Label>Title: </Label>
+                                    <FormControl>
+                                      <Input
+                                        type="text"
+                                        className="w-[250px]"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                  </div>
+                                  <FormDescription>
+                                    This is your public title.
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
                             />
-                          </div>
-                          <p className="text-gray-500">
-                            Bởi <a className="text-cyan-700">{post.sender}</a> -{" "}
-                            {TimeConvert(post.createdAt)}
-                          </p>
-                          <p className="text-gray-500">
-                            Chỉnh sửa - {TimeConvert(post.updatedAt)}
-                          </p>
+                            <FormField
+                              control={form.control}
+                              name="sender"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <div className="flex items-center gap-3 my-5">
+                                    <Label>From: </Label>
+                                    <FormControl>
+                                      <Input
+                                        type="text"
+                                        className="w-[250px]"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                  </div>
+                                  <FormDescription>
+                                    This is your public display name.
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="receiver"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <div className="flex items-center gap-3 my-5">
+                                    <Label>Receive: </Label>
+                                    <FormControl>
+                                      <Select
+                                        value={field.value}
+                                        onValueChange={(e) => field.onChange(e)}
+                                      >
+                                        <SelectTrigger className="w-[180px]">
+                                          <SelectValue placeholder="Select a object" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectGroup>
+                                            <SelectItem value="ALL">
+                                              All
+                                            </SelectItem>
+                                            <SelectItem value="TEACHER">
+                                              Teacher
+                                            </SelectItem>
+                                            <SelectItem value="STUDENT">
+                                              Student
+                                            </SelectItem>
+                                          </SelectGroup>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormControl>
+                                  </div>
+                                  <FormDescription>
+                                    About the receivers.
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="content"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <Label>Content: </Label>
+                                  <FormControl>
+                                    <div className="mt-3">
+                                      <JoditReact
+                                        onChange={(content) =>
+                                          form.setValue("content", content)
+                                        }
+                                        defaultValue={form.getValues("content")}
+                                        config={config}
+                                      />
+                                    </div>
+                                  </FormControl>
+                                  <FormDescription>
+                                    This is your public content.
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button
+                              className="mt-5 rounded-full"
+                              variant={"secondary"}
+                              type="submit"
+                            >
+                              Submit
+                            </Button>
+                          </form>
+                        </Form>
+                      </CardContent>
+                      <CardFooter></CardFooter>
+                    </Card>
+                  ) : (
+                    <div>
+                      {item?.posts?.map((post: any) =>
+                        editId === post.id ? (
+                          <Card className="mt-5">
+                            <CardHeader>
+                              <CardTitle>Edit post</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <Form {...form}>
+                                <form
+                                  onSubmit={form.handleSubmit(updatePost)}
+                                  className="space-y-8"
+                                >
+                                  <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <div className="flex items-center gap-3 my-5">
+                                          <Label>Title: </Label>
+                                          <FormControl>
+                                            <Input
+                                              type="text"
+                                              className="w-[250px]"
+                                              {...field}
+                                            />
+                                          </FormControl>
+                                        </div>
+                                        <FormDescription>
+                                          This is your public title.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="sender"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <div className="flex items-center gap-3 my-5">
+                                          <Label>From: </Label>
+                                          <FormControl>
+                                            <Input
+                                              type="text"
+                                              className="w-[250px]"
+                                              {...field}
+                                            />
+                                          </FormControl>
+                                        </div>
+                                        <FormDescription>
+                                          This is your public display name.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="receiver"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <div className="flex items-center gap-3 my-5">
+                                          <Label>Receive: </Label>
+                                          <FormControl>
+                                            <Select
+                                              value={field.value}
+                                              onValueChange={(e) =>
+                                                field.onChange(e)
+                                              }
+                                            >
+                                              <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Select a object" />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectGroup>
+                                                  <SelectItem value="ALL">
+                                                    All
+                                                  </SelectItem>
+                                                  <SelectItem value="TEACHER">
+                                                    Teacher
+                                                  </SelectItem>
+                                                  <SelectItem value="STUDENT">
+                                                    Student
+                                                  </SelectItem>
+                                                </SelectGroup>
+                                              </SelectContent>
+                                            </Select>
+                                          </FormControl>
+                                        </div>
+                                        <FormDescription>
+                                          About the receivers.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="content"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <Label>Content: </Label>
+                                        <FormControl>
+                                          <div className="mt-3">
+                                            <JoditReact
+                                              onChange={(content) =>
+                                                form.setValue(
+                                                  "content",
+                                                  content,
+                                                )
+                                              }
+                                              defaultValue={form.getValues(
+                                                "content",
+                                              )}
+                                              config={config}
+                                            />
+                                          </div>
+                                        </FormControl>
+                                        <FormDescription>
+                                          This is your public content.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <Button
+                                    className="mt-5 rounded-full mr-3"
+                                    variant={"secondary"}
+                                    onClick={() => {
+                                      setEditId(null);
+                                      form.reset(defaultValues);
+                                    }}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    className="mt-5 rounded-full"
+                                    type="submit"
+                                  >
+                                    Submit
+                                  </Button>
+                                </form>
+                              </Form>
+                            </CardContent>
+                            <CardFooter></CardFooter>
+                          </Card>
+                        ) : (
                           <div
-                            dangerouslySetInnerHTML={{ __html: post.content }}
-                            className="mt-5"
-                          />
-                          {trigger === index && deletion && (
-                            <div className="flex justify-end">
-                              <input type="checkbox" value={post?.id} />
+                            key={post.id}
+                            className="p-5 bg-gray-100 dark:bg-gray-800 rounded-lg my-2 shadow-md"
+                          >
+                            <div className="flex items-center justify-between">
+                              <h1 className="text-main dark:text-white font-bold text-lg flex items-center gap-3">
+                                {post.title}{" "}
+                                <Badge
+                                  variant={
+                                    post.receiver === "ALL"
+                                      ? "default"
+                                      : post.receiver === "TEACHER"
+                                        ? "secondary"
+                                        : "outline"
+                                  }
+                                >
+                                  {post.receiver}
+                                </Badge>
+                              </h1>
+                              <FilePenLine
+                                onClick={() => {
+                                  form.reset({
+                                    title: post.title,
+                                    content: post.content,
+                                    sender: post.sender,
+                                    receiver: post.receiver,
+                                  });
+                                  setEditId(post.id);
+                                }}
+                              />
                             </div>
-                          )}
-                        </div>
-                      ),
-                    )}
-                  </div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
+                            <p className="text-gray-500">
+                              Bởi <a className="text-cyan-700">{post.sender}</a>{" "}
+                              - {TimeConvert(post.createdAt)}
+                            </p>
+                            <p className="text-gray-500">
+                              Chỉnh sửa - {TimeConvert(post.updatedAt)}
+                            </p>
+                            <div
+                              dangerouslySetInnerHTML={{ __html: post.content }}
+                              className="mt-5"
+                            />
+                            {trigger === index && deletion && (
+                              <div className="flex justify-end">
+                                <input type="checkbox" value={post?.id} />
+                              </div>
+                            )}
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      </div>
+      <Image className="w-full shadow-lg" alt="admin image" src={admin_page} />
     </div>
   );
 }

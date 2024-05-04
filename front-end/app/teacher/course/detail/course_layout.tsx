@@ -90,7 +90,7 @@ export default function DetailCourse({
         </h1>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
-            <AccordionTrigger>Lịch dạy học</AccordionTrigger>
+            <AccordionTrigger className="font-bold">Lịch dạy học</AccordionTrigger>
             <AccordionContent>
               <p>Tuần học: [{data?.data?.schedule.join(", ")}]</p>
               <p>Ngày trong tuần: {data?.data?.date}</p>
@@ -98,7 +98,7 @@ export default function DetailCourse({
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>Thông tin khác</AccordionTrigger>
+            <AccordionTrigger className="font-bold">Thông tin khác</AccordionTrigger>
             <AccordionContent>
               <p>Số tín chỉ: {data?.data?.credit}</p>
               <p>

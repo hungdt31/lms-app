@@ -46,6 +46,7 @@ export type CouseInfo = {
 };
 export type StudentInfo = {
   id: string;
+  mssv: string;
   avatar: string;
   firstname: string;
   lastname: string;
@@ -293,6 +294,17 @@ export const admin_columns: ColumnDef<StudentInfo>[] = [
     cell: ({ row }) => {
       return <div className="font-medium">{row.index + 1}</div>;
     },
+  },
+  {
+    accessorKey: "mssv",
+    header: "MSSV",
+    cell: ({ row }) => {
+      if (row.getIsSelected()) {
+        return <Input type="text" className="font-medium" defaultValue={row.original.mssv} onChange={(e) => row.original.mssv = e.target.value}/>;
+      } else {
+        return <div className="font-medium">{row.original.mssv}</div>;
+      }
+    }
   },
   {
     header: "Avatar",

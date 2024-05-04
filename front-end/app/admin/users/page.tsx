@@ -171,7 +171,7 @@ export default function AdminPage() {
   //console.log(users);
 
   return (
-    <div className="py-5">
+    <div className="p-7">
       <div className="flex items-center gap-3">
         <Drawer>
           <DrawerTrigger>

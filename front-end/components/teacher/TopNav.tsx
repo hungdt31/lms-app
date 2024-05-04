@@ -50,7 +50,10 @@ export default function TopNav() {
               <Link href={"/teacher/course"}>Quản lý khóa học</Link>
             </li>
             <li>
-              <Link href={"/teacher"}>Profile</Link>
+              <Link href={"/teacher/profile"}>Profile</Link>
+            </li>
+            <li>
+              <Link href={"/teacher"}>Notice</Link>
             </li>
             <li>
               <Button
@@ -76,7 +79,10 @@ export default function TopNav() {
             <Link href={"/teacher/course"}>Quản lý khóa học</Link>
           </li>
           <li>
-            <Link href={"/teacher"}>Profile</Link>
+            <Link href={"/teacher/profile"}>Profile</Link>
+          </li>
+          <li>
+            <Link href={"/teacher"}>Notice</Link>
           </li>
           <li>
             <Button

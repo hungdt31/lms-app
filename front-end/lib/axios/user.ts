@@ -140,6 +140,24 @@ async function GetTeacherList(token: string) {
     },
   });
 }
+async function GetUserByCourseId(id : any, token : any) {
+  return await instance({
+    method: "get",
+    url: `/user/course?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+}
+async function GetUserNotInCourse(id : any, token : any) {
+  return await instance({
+    method: "get",
+    url: `/user/not-in-course?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+}
 const User = {
   Login,
   GetCurrentUser,
@@ -156,5 +174,7 @@ const User = {
   DeleteUser,
   UpdateUserByAdmin,
   GetTeacherList,
+  GetUserByCourseId,
+  GetUserNotInCourse
 };
 export default User;

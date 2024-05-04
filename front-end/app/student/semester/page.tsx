@@ -239,7 +239,7 @@ export default function TeacherPage() {
                     <td>Môn học</td>
                     <td>Số tín chỉ</td>
                     <td>Tuần học</td>
-                    <td>Ngày học</td>
+                    <td>Giờ học</td>
                   </tr>
                 </thead>
                 <tbody>

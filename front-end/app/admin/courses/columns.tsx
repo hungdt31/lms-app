@@ -88,10 +88,20 @@ export const columns = (
               <Link
                 href={{
                   pathname: "/admin/courses/edit",
-                  query: { id: id },
+                  query: { id},
                 }}
               >
-                Edit course
+                Edit course info
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href={{
+                  pathname: "/admin/courses/members",
+                  query: { id },
+                }}
+              >
+                Edit course members
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem

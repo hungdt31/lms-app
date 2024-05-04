@@ -126,6 +126,26 @@ async function DeleteCourseByAdmin (id : any, token : any){
     },
   });
 }
+async function MoveUserOutOfCourse (id: any, data : any, token: any) {
+  return await instance({
+    method: "delete",
+    url: `/course/move?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    data
+  });
+}
+async function AddManyUserToCourse (id: any, data : any, token: any) {
+  return await instance({
+    method: "put",
+    url: `/course/add?id=${id}`,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    data
+  });
+}
 const Course = {
   GetAllCourse,
   GetAllSubscribedCourse,
@@ -138,6 +158,8 @@ const Course = {
   GetScoreFactor,
   GetDetailCourseByAdmin,
   UpdateCourseByAdmin,
-  DeleteCourseByAdmin
+  DeleteCourseByAdmin,
+  MoveUserOutOfCourse,
+  AddManyUserToCourse
 };
 export default Course;

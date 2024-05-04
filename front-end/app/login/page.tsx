@@ -103,7 +103,7 @@ export default function ProfileForm() {
         router.push("/admin");
         router.refresh();
       } else {
-        alert("You are not authorized to enter this site", "default");
+        alert("You are not authorized to enter this site", "destructive");
         setLoading(false);
       }
     } else if (auth?.role == "TEACHER") {
@@ -114,7 +114,7 @@ export default function ProfileForm() {
         router.refresh();
       } else {
         setLoading(false);
-        alert("Your account does not have enough permissions", "default");
+        alert("Your account does not have enough permissions", "destructive");
       }
     } else if (auth?.role == "STUDENT") {
       if (isAdmin == "false") {
@@ -123,7 +123,7 @@ export default function ProfileForm() {
         router.push("/student");
         router.refresh();
       } else {
-        alert("Your account does not have enough permissions", "default");
+        alert("Your account does not have enough permissions", "destructive");
         setLoading(false);
       }
     } else {
@@ -148,7 +148,18 @@ export default function ProfileForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
+                      <Input
+                        placeholder="Enter your email"
+                        {...field}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            // Trigger the button element with a click
+                            const m: any = document.getElementById("myBtn");
+                            m.click();
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -172,6 +183,14 @@ export default function ProfileForm() {
                         placeholder="Enter your password"
                         {...field}
                         type={showPass ? "text" : "password"}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            // Trigger the button element with a click
+                            const m: any = document.getElementById("myBtn");
+                            m.click();
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -192,7 +211,7 @@ export default function ProfileForm() {
                     </Btn>
                   </Link>
                   <div className="flex gap-3">
-                    <Button type="submit" variant="surface">
+                    <Button type="submit" variant="surface" id="myBtn">
                       Submit
                     </Button>
                     <Button
