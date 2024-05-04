@@ -30,12 +30,12 @@ export default function DetailCourse({
     {
       icon: <BookText />,
       title: "Tài liệu",
-      href: `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`,
+      href: `/teacher/course/detail?id=${id}`,
     },
     {
       icon: <Users />,
       title: "Lớp học",
-      href: `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/attendance?id=${id}`,
+      href: `/teacher/course/detail/attendance?id=${id}`,
     },
   ];
   return (
