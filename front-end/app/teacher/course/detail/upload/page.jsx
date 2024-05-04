@@ -1,6 +1,6 @@
 "use client";
 import { z } from "zod";
-import JoditEditor from "jodit-pro-react";
+// import JoditEditor from "jodit-pro-react";
 import LoginLooading from "@/components/loading/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,9 +29,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { CourseQuery } from "@/hooks/course";
 import Docs from "@/lib/axios/document";
 export default function Attendance() {
+  const JoditEditor = dynamic(() => import("jodit-pro-react"), { ssr: false });
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/docs/,
     uploader: {

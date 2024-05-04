@@ -1,6 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import JoditReact from "jodit-react-ts";
+// import JoditReact from "jodit-react-ts";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,9 @@ import formSchema from "@/lib/zod/Submission";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 export default function SubmissionPage() {
+  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const id: string = useSearchParams().get("id") as string;
   const did: string = useSearchParams().get("did") as string;
   const router = useRouter();

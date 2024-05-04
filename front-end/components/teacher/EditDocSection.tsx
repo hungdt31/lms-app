@@ -23,12 +23,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Wrench } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import JoditReact from "jodit-react-ts";
+// import JoditReact from "jodit-react-ts";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import LoginLooading from "../loading/login";
 import Docs from "@/lib/axios/document";
 export default function EditDocSection(data: any) {
   const { qr, id } = data;
+  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [content, setContent] = useState<String>("");
   const form = useForm<z.infer<typeof formSchema>>({

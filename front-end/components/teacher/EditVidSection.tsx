@@ -22,13 +22,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Wrench } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import JoditReact from "jodit-react-ts";
+// import JoditReact from "jodit-react-ts";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Video from "@/lib/axios/video";
 import LoginLooading from "../loading/login";
 
 export default function EditVidSection(data: any) {
   const { qr, id } = data;
+  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [content, setContent] = useState<String>("");
   const form = useForm<z.infer<typeof formSchema>>({

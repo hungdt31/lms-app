@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
-import JoditEditor from "jodit-pro-react";
+// import JoditEditor from "jodit-pro-react";
 import { Button } from "@radix-ui/themes";
+import dynamic from "next/dynamic";
 
 const TextEditor = ({}) => {
+  const JoditEditor = dynamic(() => import("jodit-pro-react"), { ssr: false });
   const editor = useRef(null);
   const [content, setContent] = useState("");
 

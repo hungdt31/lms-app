@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import JoditReact from "jodit-react-ts";
+// import JoditReact from "jodit-react-ts";
 import { Link, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +28,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 export default function ForumPage() {
+  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const token = new Cookies().get("token");
   const [loading, setLoading] = useState<boolean>(false);
   const id: any = useSearchParams().get("id");
