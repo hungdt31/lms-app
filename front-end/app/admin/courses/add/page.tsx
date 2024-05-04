@@ -283,9 +283,9 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cate?.map((el: any) => {
+                          {cate?.map((el: any, index : any) => {
                             return (
-                              <SelectItem value={el?.id}>{el?.name}</SelectItem>
+                              <SelectItem value={el?.id} key={index}>{el?.name}</SelectItem>
                             );
                           })}
                         </SelectContent>
@@ -405,8 +405,8 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select a date" />
                         </SelectTrigger>
                         <SelectContent>
-                          {week?.map((el: any) => {
-                            return <SelectItem value={el}>{el}</SelectItem>;
+                          {week?.map((el: any, index: any) => {
+                            return <SelectItem value={el} key={index}>{el}</SelectItem>;
                           })}
                         </SelectContent>
                       </Select>
@@ -434,9 +434,9 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select study time" />
                         </SelectTrigger>
                         <SelectContent>
-                          {time?.map((el: any) => {
+                          {time?.map((el: any, index: any) => {
                             return (
-                              <SelectItem value={el.value}>
+                              <SelectItem value={el.value} key={index}>
                                 {el.des} ({el.value})
                               </SelectItem>
                             );
@@ -502,9 +502,10 @@ export default function AddCoursePage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {teacherList?.map((el: any) => {
+                      {teacherList?.map((el: any, index: any) => {
                         return (
                           <SelectItem
+                            key={index}
                             value={el?.id}
                             className="flex items-center"
                           >
