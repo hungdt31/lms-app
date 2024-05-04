@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import QueryProvider from "@/lib/react_query/query_provider";
-import StoreProvider from "../../features/admin/AdminProvider";
 import SideNavbar from "@/components/admin/SideNavbar";
 import TopNavbar from "@/components/admin/TopNavbar";
 import { Query } from "@tanstack/react-query";
@@ -26,7 +25,7 @@ export default function RootLayout({
           <SideNavbar />
         </div>
         <div className="w-full">
-          <StoreProvider>{children}</StoreProvider>
+          {children}
         </div>
       </div>
       <Toaster />
