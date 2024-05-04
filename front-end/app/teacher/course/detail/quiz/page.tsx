@@ -94,7 +94,7 @@ export default function QuizPage() {
             </AccordionTrigger>
             <AccordionContent className="flex gap-3 items-center flex-wrap">
               {quiz?.questions?.map((question: any, index: number) => (
-                <AlertDialog>
+                <AlertDialog key={index}>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline">Câu {index + 1}</Button>
                   </AlertDialogTrigger>
