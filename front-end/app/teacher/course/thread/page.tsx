@@ -278,7 +278,7 @@ export default function ForumPage() {
                 </div>
                 <Label>Content</Label>
 
-                <div>
+                <div key="editor1">
                   <JoditReact
                     defaultValue={content}
                     onChange={(content) => {
