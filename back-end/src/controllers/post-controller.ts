@@ -42,6 +42,7 @@ export default class PostController extends BaseController {
     );
     this.router.delete(`${this.path}/forum/thread`, this.deleteThread);
     this.router.delete(`${this.path}/single`, this.deleteSinglePost);
+    this.router.get(`${this.path}`, this.getNotificationByRole);
   }
   /*format create json like the model
    */
@@ -572,4 +573,31 @@ export default class PostController extends BaseController {
       });
     },
   );
+  private getNotificationByRole = asyncHandler(
+    async (request: any, response: express.Response) => {
+      // console.log(request.body);
+      const {role} = request.query
+      const post = await prisma.notification.findMany({
+        include: {
+          posts: {
+            where: {
+              OR: [
+                {
+                  receiver: "ALL"
+                },
+                {
+                  receiver: role
+                }
+              ]
+            }
+          }
+        }
+      });
+      response.json({
+        mess: "Get post successfully!",
+        success: true,
+        data: post,
+      });
+    },
+  )
 }

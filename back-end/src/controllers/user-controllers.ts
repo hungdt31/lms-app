@@ -73,8 +73,61 @@ class UserController extends BaseController {
       [verifyAccessToken, isAdmin],
       this.getTeacherInfo,
     );
+    this.router.get(
+      this.path + "/course",
+      [verifyAccessToken, isAdmin],
+      this.getUserByCourseId
+    )
+    this.router.get(
+      this.path + "/not-in-course",
+      [verifyAccessToken, isAdmin],
+      this.getAllUserNotInCourse
+    )
     // Bạn có thể thêm put, patch, delete sau.
   }
+  private getUserByCourseId = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const { id } = request.query;
+      const users = await prisma.user.findMany({
+        where: {
+          courseIDs: {
+            has: id
+          }
+        },
+        select: {
+          id: true,
+          mssv: true,
+          email: true,
+          role: true,
+          lastname: true,
+          firstname: true,
+          phone: true
+        }
+      })
+      const course = await prisma.course.findFirst({
+        where: {
+          id
+        },
+        select: {
+          title: true,
+          course_id: true,
+          semester: {
+            select: {
+              description: true
+            }
+          }
+        }
+      })
+      response.json({
+        success: true,
+        mess: "Get all user in course successfully !",
+        data: {
+          users,
+          course
+        }
+      });
+    },
+  );
   private updateUser = asyncHandler(
     async (request: any, response: express.Response) => {
       const { _id } = request.user;
@@ -137,6 +190,7 @@ class UserController extends BaseController {
           avatar: true,
           gender: true,
           phone: true,
+          mssv: true,
           date_of_birth: true,
         },
       });
@@ -192,6 +246,10 @@ class UserController extends BaseController {
       for (const user of requestData) {
         // const {avatar} = user
         // arr.push(avatar)
+        const hmacDigest = randomstring.generate({
+          length: 6,
+          charset: "numeric",
+        });
         const time = moment().format("MMMM Do YYYY h:mm:ss a");
         const { email, password, lastname, firstname } = user;
         if (!email || !password)
@@ -203,12 +261,13 @@ class UserController extends BaseController {
         user.username = (firstname[0] + "." + lastname).toLowerCase();
         user.updatedAt = time;
         user.createdAt = time;
+        user.mssv = `SV${hmacDigest}`
       }
       // Thêm người dùng đã mã hóa vào cơ sở dữ liệu
       const createdUsers = await prisma.user.createMany({
         data: requestData,
       });
-
+      
       response.json({
         success: true,
         mess: "Created new user successfully !",
@@ -514,9 +573,27 @@ class UserController extends BaseController {
       for (const id of request.body) {
         const deletedUser = await prisma.user.delete({
           where: {
-            id: id,
+            id,
           },
         });
+        const foundCourse = await prisma.course.findMany({
+          where: {
+            usersId: {
+              has: deletedUser.id
+            }
+          }
+        })
+        for (let i = 0; i < foundCourse?.length; i++) {
+          foundCourse[i].usersId = foundCourse[i].usersId.filter((el) => el != deletedUser.id)
+          await prisma.course.update({
+            where: {
+              id: foundCourse[i].id
+            },
+            data: {
+              usersId: foundCourse[i].usersId
+            }
+          })
+        }
         arr.push(deletedUser)
       }
       response.json({
@@ -554,6 +631,26 @@ class UserController extends BaseController {
         success: true,
         mess: "Get teacher info successfully !",
         data: teacher,
+      });
+    },
+  );
+  private getAllUserNotInCourse = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const {id} = request.query
+      const user = await prisma.user.findMany({
+        where: {
+          NOT: {
+            role: "ADMIN",
+            courseIDs: {
+              has: id
+            }
+          },
+        },
+      });
+      response.json({
+        success: true,
+        mess: "Get all user out of course successfully !",
+        data: user,
       });
     },
   );

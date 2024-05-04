@@ -60,6 +60,16 @@ export default class CourseController extends BaseController {
       [verifyAccessToken, isAdmin],
       this.deleteCourse,
     );
+    this.router.delete(
+      `${this.path}/move`,
+      [verifyAccessToken, isAdmin],
+      this.moveUserOutCourse,
+    );
+    this.router.put(
+      `${this.path}/add`,
+      [verifyAccessToken, isAdmin],
+      this.addManyUserToCourse,
+    );
     // Bạn có thể thêm put, patch, delete sau.
   }
 
@@ -581,4 +591,87 @@ export default class CourseController extends BaseController {
         mess: "Delete course successfully",
       });
   })
+  private moveUserOutCourse = asyncHandler(
+    async (request: any, response: express.Response) => {
+      let courses : any = await prisma.course.findFirst({
+        where: {
+          id: request.query.id
+        },
+        select: {
+          usersId: true
+        }
+      })
+      let {usersId} = courses
+      for (let id of request.body) {
+        let user = await prisma.user.findFirst({
+          where: {
+            id
+          },
+        })
+        const new_courseIDs = user?.courseIDs.filter((el: any) => el != request.query.id)
+        await prisma.user.update({
+          where: {
+            id
+          },
+          data: {
+            courseIDs: new_courseIDs
+          }
+        })
+        usersId = usersId.filter((el : any) => el != id)
+      }
+      await prisma.course.update({
+        where: {
+          id: request.query.id
+        },
+        data: {
+          usersId
+        }
+      })
+      response.json({
+        mess: "Move users out course successfully !",
+        success: true,
+      });
+    },
+  );
+  private addManyUserToCourse = asyncHandler(
+    async (request: any, response: express.Response) => {
+      const course : any = await prisma.course.findFirst({
+        where: {
+          id: request.query.id
+        }
+      })
+      let {usersId} = course
+      const {id} = course
+      console.log(request.body)
+      for (let uid of request.body) {
+        usersId.push(uid)
+        const user = await prisma.user.findFirst({
+          where: {
+            id: uid
+          }
+        })
+        user?.courseIDs.push(id)
+        await prisma.user.update({
+          where: {
+            id: uid
+          },
+          data: {
+            courseIDs: user?.courseIDs
+          }
+        })
+      }
+      await prisma.course.update({
+        where: {
+          id
+        },
+        data: {
+          usersId
+        }
+      })
+      response.json({
+        mess: "Add users to course successfully !",
+        success: true,
+      });
+    },
+  );
 }
