@@ -14,9 +14,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-  <QueryProvider>
-    {children}
-  </QueryProvider>
-  )
+  return <QueryProvider>{children}</QueryProvider>;
 }

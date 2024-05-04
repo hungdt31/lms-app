@@ -17,11 +17,11 @@ export function GetResultQuery() {
     const sol = await Quiz.MarkQuiz(data);
     return sol;
   };
-  const result : any = useMutation({
+  const result: any = useMutation({
     mutationKey: ["resultData"],
-    mutationFn: (data : any) => fetchResultQuiz(data)
-  })
-  return result
+    mutationFn: (data: any) => fetchResultQuiz(data),
+  });
+  return result;
 }
 export function QuizPlayQuery(id: string, uid: string) {
   const fetchQuizPlay = async () => {

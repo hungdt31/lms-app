@@ -47,8 +47,12 @@ export default function TeacherPage() {
             <SelectValue placeholder="Select semester" />
           </SelectTrigger>
           <SelectContent>
-            {data?.data?.map((el: any) => {
-              return <SelectItem value={el}>{el?.description}</SelectItem>;
+            {data?.data?.map((el: any, index: any) => {
+              return (
+                <SelectItem value={el} key={index}>
+                  {el?.description}
+                </SelectItem>
+              );
             })}
           </SelectContent>
         </Select>
@@ -66,7 +70,10 @@ export default function TeacherPage() {
       <Card className="px-7">
         <CardHeader>
           <Button className="badge badge-primary p-5" variant="secondary">
-            <Layers className="mr-3" /> <strong>Khóa học <Badge>{mutation.data?.data?.length}</Badge></strong>
+            <Layers className="mr-3" />{" "}
+            <strong>
+              Khóa học <Badge>{mutation.data?.data?.length}</Badge>
+            </strong>
           </Button>
         </CardHeader>
         <CardContent>
@@ -74,9 +81,12 @@ export default function TeacherPage() {
           {mutation.isError && <p>Something is not good ..</p>}
           {mutation.isSuccess && (
             <div className="flex flex-wrap gap-5 mt-3 justify-center mb-3">
-              {mutation.data?.data?.map((el: any) => {
+              {mutation.data?.data?.map((el: any, index: any) => {
                 return (
-                  <Link href={`/teacher/course/detail?id=${el?.id}`}>
+                  <Link
+                    href={`/teacher/course/detail?id=${el?.id}`}
+                    key={index}
+                  >
                     <div className="card w-96 bg-base-100 shadow-xl image-full ">
                       <figure>
                         <img src={el?.image} alt="....." />
@@ -94,8 +104,7 @@ export default function TeacherPage() {
             </div>
           )}
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </div>
   );

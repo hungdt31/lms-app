@@ -1,6 +1,6 @@
 import xlsx, { IJsonSheet } from "json-as-xlsx";
 
-export default function downloadToExcel(data : any, courseInfo : any) {
+export default function downloadToExcel(data: any, courseInfo: any) {
   let columns: IJsonSheet[] = [
     {
       sheet: `Students and teachers of course`,

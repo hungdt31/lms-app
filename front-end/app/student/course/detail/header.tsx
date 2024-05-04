@@ -39,6 +39,7 @@ export default function Header() {
       <div className="sm:flex justify-center flex-wrap gap-7 m-3 hidden">
         {selection.map((el, _index: any) => (
           <div
+            key={_index}
             className="border-2 rounded-lg text-center px-9 py-3 text-nav-text bg-nav"
             onClick={() =>
               router.push(
@@ -67,6 +68,7 @@ export default function Header() {
               <CardContent className="p-0">
                 {selection.map((el, __index: any) => (
                   <div
+                    key={__index}
                     className="border-b-2 px-5 py-3 cursor-pointer"
                     onClick={() =>
                       router.push(

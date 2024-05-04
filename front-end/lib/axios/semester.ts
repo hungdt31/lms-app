@@ -74,21 +74,21 @@ async function GetNumWeek(id: any) {
 async function DeleteDKMH(id: any) {
   return await instance({
     method: "delete",
-    url: `/semester/dkmh?id=${id}`
-  })
+    url: `/semester/dkmh?id=${id}`,
+  });
 }
 async function GetDkmh(id: any) {
   return await instance({
     method: "get",
-    url: `/semester/dkmh?id=${id}`
-  })
+    url: `/semester/dkmh?id=${id}`,
+  });
 }
 async function CreateNewDKMH(data: any) {
   return await instance({
     method: "post",
     url: `/semester/dkmh`,
-    data
-  })
+    data,
+  });
 }
 const Semester = {
   GetAllSemester,
@@ -102,6 +102,6 @@ const Semester = {
   GetNumWeek,
   DeleteDKMH,
   GetDkmh,
-  CreateNewDKMH
+  CreateNewDKMH,
 };
 export default Semester;

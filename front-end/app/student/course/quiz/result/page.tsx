@@ -56,7 +56,7 @@ export default function ResultPage() {
   }, []);
   return (
     <div>
-      <BreadcrumbNav/>
+      <BreadcrumbNav />
       <div className="flex justify-around sm:flex-row flex-col gap-3 items-center px-2">
         <Card className="min-w-[350px]">
           <CardHeader>
@@ -173,9 +173,11 @@ export default function ResultPage() {
                               <AccordionItem value="item-1">
                                 <AccordionTrigger>Giải thích</AccordionTrigger>
                                 <AccordionContent>
-                                <div
-                              dangerouslySetInnerHTML={{ __html: el?.explain }}
-                            />
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: el?.explain,
+                                    }}
+                                  />
                                 </AccordionContent>
                               </AccordionItem>
                             </Accordion>
@@ -184,6 +186,7 @@ export default function ResultPage() {
                         {el?.options?.map((e: any, _index: any) => {
                           return (
                             <div
+                              key={_index}
                               className={
                                 e == el?.answer
                                   ? "p-3 rounded-md bg-green-700"

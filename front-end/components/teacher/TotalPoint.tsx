@@ -112,7 +112,7 @@ export default function TotalPoint(data: any) {
           timer: 1500,
         });
         fetchGrade();
-        setLoading(false)
+        setLoading(false);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -148,8 +148,10 @@ export default function TotalPoint(data: any) {
             </TableHeader>
             <TableBody>
               <TableRow>
-                {gradeCourse?.score_array?.map((el: any) => (
-                  <TableCell className="font-medium">{el}</TableCell>
+                {gradeCourse?.score_array?.map((el: any, index: any) => (
+                  <TableCell className="font-medium" key={index}>
+                    {el}
+                  </TableCell>
                 ))}
                 <TableCell className="font-bold text-right">
                   {gradeCourse?.average_score.toFixed(1)}
@@ -184,7 +186,7 @@ export default function TotalPoint(data: any) {
                 {fields?.map((filed, index) => {
                   const errorForField = errors?.score_array?.[index]?.score;
                   return (
-                    <div>
+                    <div key={index}>
                       <Label htmlFor={`score_array.${index}.score`}>
                         {scoreFactor?.name_factor[index]}
                       </Label>

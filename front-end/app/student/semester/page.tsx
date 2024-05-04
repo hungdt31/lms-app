@@ -146,8 +146,12 @@ export default function TeacherPage() {
             <SelectValue placeholder="Select semester" />
           </SelectTrigger>
           <SelectContent>
-            {data?.data?.map((el: any) => {
-              return <SelectItem value={el}>{el?.description}</SelectItem>;
+            {data?.data?.map((el: any, index: any) => {
+              return (
+                <SelectItem value={el} key={index}>
+                  {el?.description}
+                </SelectItem>
+              );
             })}
           </SelectContent>
         </Select>
@@ -197,7 +201,7 @@ export default function TeacherPage() {
                         <PopoverContent className="w-80">
                           {el.score_array.map((e: any, index: any) => {
                             return (
-                              <p className="font-mono">
+                              <p className="font-mono" key={index}>
                                 {el?.course.name_factor[index]} (
                                 {el?.course.score_factor[index] * 100}%) : {e}
                               </p>

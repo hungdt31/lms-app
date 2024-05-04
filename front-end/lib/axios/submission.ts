@@ -1,9 +1,9 @@
 import instance from "@/axios";
-async function GetSubmission(id : any) {
+async function GetSubmission(id: any) {
   return await instance({
     method: "get",
     url: `/submission?id=${id}`,
-  })
+  });
 }
 async function CreateSubmission(data: any) {
   const form = new FormData();
@@ -23,10 +23,10 @@ async function CreateSubmission(data: any) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-    data: form
+    data: form,
   });
 }
-async function CreateUserSubmission(data: any, token : any) {
+async function CreateUserSubmission(data: any, token: any) {
   const form = new FormData();
   if (data?.addList) {
     for (const file of data.addList) {
@@ -38,47 +38,47 @@ async function CreateUserSubmission(data: any, token : any) {
     method: "post",
     url: "/submission/result",
     headers: {
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    data : form
+    data: form,
   });
 }
-async function GetAllSubmissionResult(data : any) {
+async function GetAllSubmissionResult(data: any) {
   return await instance({
     method: "get",
     url: `/submission/all-result?courseId=${data?.submissionId}&userId=${data?.userId}`,
   });
 }
-async function GetSubmissionResult(data : any) {
+async function GetSubmissionResult(data: any) {
   return await instance({
     method: "get",
     url: `/submission/result?submissionId=${data?.submissionId}&userId=${data?.userId}`,
   });
 }
-async function UpdateSubmissionResult(data : any) {
+async function UpdateSubmissionResult(data: any) {
   return await instance({
     method: "put",
     url: `/submission/result`,
-    data
+    data,
   });
 }
-async function GetUserSubmission(id : any, token : any) {
+async function GetUserSubmission(id: any, token: any) {
   return await instance({
     method: "get",
     url: `/submission/result/token?id=${id}`,
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 }
-async function UpdateUserSubmission(data : any) {
+async function UpdateUserSubmission(data: any) {
   const form = new FormData();
   if (data?.deleteList) {
     for (const file of data.deleteList) {
-      form.append('deleteList', file.path);
+      form.append("deleteList", file.path);
     }
     for (const file of data.deleteList) {
-      form.append('deleteId', file.id);
+      form.append("deleteId", file.id);
     }
   }
   if (data?.addList) {
@@ -93,8 +93,17 @@ async function UpdateUserSubmission(data : any) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-    data: form
+    data: form,
   });
 }
-const Submission = { GetSubmission, CreateSubmission, GetAllSubmissionResult, GetSubmissionResult, UpdateSubmissionResult, GetUserSubmission, UpdateUserSubmission, CreateUserSubmission}
+const Submission = {
+  GetSubmission,
+  CreateSubmission,
+  GetAllSubmissionResult,
+  GetSubmissionResult,
+  UpdateSubmissionResult,
+  GetUserSubmission,
+  UpdateUserSubmission,
+  CreateUserSubmission,
+};
 export default Submission;

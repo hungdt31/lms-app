@@ -63,7 +63,7 @@ export default function DetailCourse() {
         <div className="flex justify-center mx-7">
           <Accordion type="single" collapsible className="lg:w-[60%] w-full">
             {data?.data?.DocumentSections?.map((el: any, index: any) => (
-              <AccordionItem value={`item ${index + 1}`}>
+              <AccordionItem value={`item ${index + 1}`} key={index}>
                 <AccordionTrigger className="font-bold text-xl">
                   {el?.title}
                 </AccordionTrigger>
@@ -201,58 +201,53 @@ export default function DetailCourse() {
         </div>
       ) : (
         <div>
-        <div className="flex flex-col items-center justify-center mx-7">
-          <Accordion type="single" collapsible className="lg:w-[60%] w-full">
-            {data?.data?.VideoSections?.map((el: any, index: any) => (
-              <AccordionItem value={`item ${index + 1}`}>
-                <AccordionTrigger className="font-bold text-xl">
-                  {el?.title}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: el?.description }}
-                    className="mb-5 text-lg"
-                  />
-                  <div className="flex flex-col gap-5 flex-wrap">
-                    {el?.videos?.map((video: any, idx: any) => (
-                      <Link
-                        href={video?.url}
-                        target="_blank"
-                        className="relative"
-                      >
-                        <div className="flex items-center gap-3 bg-video_card rounded-lg p-3 shadow-md">
-                          <SquarePlay
-                            size={50}
-                            className="text-nav-text"
-                            width={100}
-                          />
-                          <Button className="absolute -bottom-2 -right-2">
-                            {video?.provider}
-                          </Button>
-                          <div>
-                            <p className="font-bold">{video?.title}</p>
-                            <p>{video?.description}</p>
+          <div className="flex flex-col items-center justify-center mx-7">
+            <Accordion type="single" collapsible className="lg:w-[60%] w-full">
+              {data?.data?.VideoSections?.map((el: any, index: any) => (
+                <AccordionItem value={`item ${index + 1}`} key={index}>
+                  <AccordionTrigger className="font-bold text-xl">
+                    {el?.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: el?.description }}
+                      className="mb-5 text-lg"
+                    />
+                    <div className="flex flex-col gap-5 flex-wrap">
+                      {el?.videos?.map((video: any, idx: any) => (
+                        <Link
+                          key={idx}
+                          href={video?.url}
+                          target="_blank"
+                          className="relative"
+                        >
+                          <div className="flex items-center gap-3 bg-video_card rounded-lg p-3 shadow-md">
+                            <SquarePlay
+                              size={50}
+                              className="text-nav-text"
+                              width={100}
+                            />
+                            <Button className="absolute -bottom-2 -right-2">
+                              {video?.provider}
+                            </Button>
+                            <div>
+                              <p className="font-bold">{video?.title}</p>
+                              <p>{video?.description}</p>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-          <div className="w-[60%] mt-9">
-            {
-              data?.data?.forum?.map((forum: any, idx: any) => (
-                <ForumCard
-                  key={idx}
-                  title={forum?.title}
-                  id={forum?.id}
-                />
-              ))
-            }
+                        </Link>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+            <div className="w-[60%] mt-9">
+              {data?.data?.forum?.map((forum: any, idx: any) => (
+                <ForumCard key={idx} title={forum?.title} id={forum?.id} />
+              ))}
             </div>
-        </div>
+          </div>
         </div>
       )}
     </div>

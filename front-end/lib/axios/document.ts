@@ -39,12 +39,18 @@ async function DeleteQuizAndDocumentLink(data: any) {
     data,
   });
 }
-async function UpdateDocumentSection(data: any, id : any) {
+async function UpdateDocumentSection(data: any, id: any) {
   return await instance({
     method: "put",
     url: `/document-section?id=${id}`,
     data,
   });
 }
-const Docs = { CreateNewDocs, UploadPdf, DeleteDocumentSection, DeleteQuizAndDocumentLink, UpdateDocumentSection };
+const Docs = {
+  CreateNewDocs,
+  UploadPdf,
+  DeleteDocumentSection,
+  DeleteQuizAndDocumentLink,
+  UpdateDocumentSection,
+};
 export default Docs;

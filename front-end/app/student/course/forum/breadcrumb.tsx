@@ -34,7 +34,7 @@ export default function BreadcrumbNav() {
           <BreadcrumbLink href="/student/my">Home</BreadcrumbLink>
         </BreadcrumbItem>
         {data?.map((el: any, index: any) => (
-          <div>
+          <div key={index}>
             <BreadcrumbItem key={index} className="flex gap-3 items-center">
               <BreadcrumbSeparator />
               <BreadcrumbLink

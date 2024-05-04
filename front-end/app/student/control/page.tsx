@@ -72,7 +72,7 @@ export default function ControlPage() {
         type: type_filter,
       });
     }, 500); // Delay of 0.5 second
-  
+
     // Cleanup function to clear the timeout if the component unmounts
     return () => clearTimeout(timer);
   }, [name_filter, date_filter, type_filter]);
@@ -131,8 +131,8 @@ export default function ControlPage() {
               <CardContent>
                 {type_filter == "1" ? (
                   <div>
-                    {notice?.map((item: any) => (
-                      <div className="my-3">
+                    {notice?.map((item: any, index: any) => (
+                      <div className="my-3" key={index}>
                         <p className="font-bold">{item?.date}</p>
                         <div>
                           {item?.quiz?.map((el: any, index: number) => (
@@ -196,8 +196,8 @@ export default function ControlPage() {
                   </div>
                 ) : (
                   <div>
-                    {notice?.map((item: any) => (
-                      <div className="my-3">
+                    {notice?.map((item: any, index: any) => (
+                      <div className="my-3" key={index}>
                         <p className="font-bold text-main dark:text-white text-lg mb-3">
                           [{item?.course_id}] {item?.title} -{" "}
                           {item?.course_teacher}
@@ -208,7 +208,10 @@ export default function ControlPage() {
                             <div key={index}>
                               <p className="">{el?.date}</p>
                               {el?.quiz?.map((e: any, index: number) => (
-                                <div className="flex gap-3 items-center p-3">
+                                <div
+                                  className="flex gap-3 items-center p-3"
+                                  key={index}
+                                >
                                   <p className="font-mono">{e?.end_time}</p>
                                   <div className="bg-rose-500 w-[40px] h-[40px] dark:bg-black flex justify-center items-center rounded-sm">
                                     <SquareCheckBig className="dark:text-rose-500" />
@@ -237,7 +240,10 @@ export default function ControlPage() {
                             <div key={index}>
                               <p className="">{el?.date}</p>
                               {el?.submissions?.map((e: any, index: number) => (
-                                <div className="flex gap-3 items-center p-3">
+                                <div
+                                  className="flex gap-3 items-center p-3"
+                                  key={index}
+                                >
                                   <p className="font-mono">{e?.end_time}</p>
                                   <div className="bg-orange-500 w-[40px] h-[40px] dark:bg-black flex justify-center items-center rounded-sm">
                                     <FileUp className="dark:text-orange-500" />
@@ -281,7 +287,7 @@ export default function ControlPage() {
         <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
           {Array.from({ length: 6 }).map((_, index: number) =>
             index % 2 === 0 ? (
-              <li>
+              <li key={index}>
                 <div className="timeline-middle">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -308,8 +314,8 @@ export default function ControlPage() {
                   </Button>
 
                   {schedule?.schedule &&
-                    schedule?.schedule[index]?.map((item: any) => (
-                      <div className="text-sm">
+                    schedule?.schedule[index]?.map((item: any, _index: any) => (
+                      <div className="text-sm" key={_index}>
                         <div className="text-lg font-black">{item?.title}</div>
                         <span>{item?.time}</span>
                       </div>
@@ -318,7 +324,7 @@ export default function ControlPage() {
                 <hr />
               </li>
             ) : (
-              <li>
+              <li key={index}>
                 <hr />
                 <div className="timeline-middle">
                   <svg
@@ -345,8 +351,8 @@ export default function ControlPage() {
                     </time>
                   </Button>
                   {schedule?.schedule &&
-                    schedule?.schedule[index]?.map((item: any) => (
-                      <div className="text-sm">
+                    schedule?.schedule[index]?.map((item: any, index: any) => (
+                      <div className="text-sm" key={index}>
                         <div className="text-lg font-black">{item?.title}</div>
                         <span>{item?.time}</span>
                       </div>

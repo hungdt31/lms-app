@@ -76,7 +76,7 @@ export function DataTable<TData, TValue>({
           />
           <Button
             variant={"destructive"}
-            onClick={async() => {
+            onClick={async () => {
               const idArr: any = [];
               table.getFilteredSelectedRowModel().rows.forEach((row: any) => {
                 idArr.push(row.original.id);
@@ -108,21 +108,19 @@ export function DataTable<TData, TValue>({
         <Table>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row : any ) => (
-                
+              table.getRowModel().rows.map((row: any) => (
                 <TableRow key={row.id}>
                   <Link href={`/teacher/course/thread?id=${row.original.id}`}>
-                  {row.getVisibleCells().map((cell : any ) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                    {row.getVisibleCells().map((cell: any) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
                   </Link>
                 </TableRow>
-                
               ))
             ) : (
               <TableRow>

@@ -30,8 +30,9 @@ export default function StudentPage() {
           </svg>
           <blockquote>
             <p className="text-2xl italic font-medium text-gray-900 dark:text-white">
-              "Nhà trường chỉ cho chúng ta chiếc chìa khóa tri thức, học trong
-              cuộc sống là công việc cả đời."
+              {
+                "Nhà trường chỉ cho chúng ta chiếc chìa khóa tri thức, học trong cuộc sống là công việc cả đời."
+              }
             </p>
           </blockquote>
           <figcaption className="flex items-center justify-center mt-6 space-x-3 rtl:space-x-reverse">

@@ -75,7 +75,7 @@ export const _columns: ColumnDef<Course>[] = [
       return <div></div>;
     },
   },
-  
+
   {
     header: "Người dùng",
     cell: ({ row }) => {
@@ -83,14 +83,20 @@ export const _columns: ColumnDef<Course>[] = [
         <div className="flex items-center gap-3">
           <Avatar>
             <AvatarImage src={row.original.avatar} />
-            <AvatarFallback>{row.original.firstname[0]}{row.original.lastname[0]}</AvatarFallback>
+            <AvatarFallback>
+              {row.original.firstname[0]}
+              {row.original.lastname[0]}
+            </AvatarFallback>
           </Avatar>
           <div>
             <p className="flex items-center gap-3">
-            <h1 className="font-bold">{row.original.firstname} {row.original.lastname}</h1>
-            
+              <h1 className="font-bold">
+                {row.original.firstname} {row.original.lastname}
+              </h1>
             </p>
-            <p className="text-gray-500 text-[12px]">{row.original.mssv} - {row.original.email}</p>
+            <p className="text-gray-500 text-[12px]">
+              {row.original.mssv} - {row.original.email}
+            </p>
           </div>
         </div>
       );
@@ -100,7 +106,13 @@ export const _columns: ColumnDef<Course>[] = [
     accessorKey: "lastname",
     header: "",
     cell: ({ row }) => {
-      return <div><Badge className="text-[10px]" variant={"secondary"}>{row.original.role}</Badge></div>;
+      return (
+        <div>
+          <Badge className="text-[10px]" variant={"secondary"}>
+            {row.original.role}
+          </Badge>
+        </div>
+      );
     },
   },
 ];

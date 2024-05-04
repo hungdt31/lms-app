@@ -89,8 +89,8 @@ export default function Page() {
   useEffect(() => {
     fetchQuiz();
   }, []);
-  if (isPending) return <div>Loading ....</div>;
-  if (error) return <div>Something're wrong !</div>;
+  if (isPending) return <div>{"Loading ...."}</div>;
+  if (error) return <div>{"Something're wrong !"}</div>;
   return (
     <div>
       <BreadcrumbNav />
@@ -161,7 +161,7 @@ export default function Page() {
             <TableBody>
               {quizUser?.history?.map((el: any, index: any) => {
                 return (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell className="font-medium">{index + 1}</TableCell>
                     <TableCell>
                       {el.isDone ? (

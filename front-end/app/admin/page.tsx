@@ -509,7 +509,7 @@ export default function AdminPage() {
                     <div>
                       {item?.posts?.map((post: any) =>
                         editId === post.id ? (
-                          <Card className="mt-5">
+                          <Card className="mt-5" key={post.id}>
                             <CardHeader>
                               <CardTitle>Edit post</CardTitle>
                             </CardHeader>

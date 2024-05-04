@@ -65,16 +65,22 @@ const FormSchema = z.object({
   time: z.string().min(1, {
     message: "Time is required",
   }),
-  credit: z.number().min(1, {
-    message: "Min credit is 1",
-  }).max(4, {
-    message: "Max credit is 4",
-  }),
-  quantity: z.number().min(30, {
-    message: "Min is 30",
-  }).max(100, {
-    message: "Max is 100",
-  }),
+  credit: z
+    .number()
+    .min(1, {
+      message: "Min credit is 1",
+    })
+    .max(4, {
+      message: "Max credit is 4",
+    }),
+  quantity: z
+    .number()
+    .min(30, {
+      message: "Min is 30",
+    })
+    .max(100, {
+      message: "Max is 100",
+    }),
 });
 
 export default function AddCoursePage() {
@@ -139,9 +145,9 @@ export default function AddCoursePage() {
     Promise.all([
       Cate.GetAllCate(),
       User.GetTeacherList(token),
-      Course.GetDetailCourseByAdmin({ id, token })
+      Course.GetDetailCourseByAdmin({ id, token }),
     ])
-      .then(async([cateRes, teacherRes, courseRes]) => {
+      .then(async ([cateRes, teacherRes, courseRes]) => {
         // Handle results
         setCate(cateRes?.data);
         //console.log(teacherRes?.data);
@@ -162,18 +168,15 @@ export default function AddCoursePage() {
           setSchedule(courseRes?.data?.schedule);
           Semester.GetNumWeek(courseRes?.data?.semesterId).then((res) => {
             if (res?.data) {
-              setWeek_array(
-                Array.from({ length: res?.data }, (_, i) => i + 1),
-              );
+              setWeek_array(Array.from({ length: res?.data }, (_, i) => i + 1));
             }
-          })
+          });
         }
       })
       .catch((error) => {
         // handle error
         console.error(error);
       });
-    
   }, [refresh]);
   async function onSubmit(data: any) {
     setLoading(true);
@@ -294,9 +297,11 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cate?.map((el: any) => {
+                          {cate?.map((el: any, index: any) => {
                             return (
-                              <SelectItem value={el?.id}>{el?.name}</SelectItem>
+                              <SelectItem value={el?.id} key={index}>
+                                {el?.name}
+                              </SelectItem>
                             );
                           })}
                         </SelectContent>
@@ -369,8 +374,12 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select a date" />
                         </SelectTrigger>
                         <SelectContent>
-                          {week?.map((el: any) => {
-                            return <SelectItem value={el}>{el}</SelectItem>;
+                          {week?.map((el: any, index: any) => {
+                            return (
+                              <SelectItem value={el} key={index}>
+                                {el}
+                              </SelectItem>
+                            );
                           })}
                         </SelectContent>
                       </Select>
@@ -398,9 +407,9 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select study time" />
                         </SelectTrigger>
                         <SelectContent>
-                          {time?.map((el: any) => {
+                          {time?.map((el: any, index: any) => {
                             return (
-                              <SelectItem value={el.value}>
+                              <SelectItem value={el.value} key={index}>
                                 {el.des} ({el.value})
                               </SelectItem>
                             );
@@ -421,50 +430,65 @@ export default function AddCoursePage() {
                   <div className="grid grid-cols-12 gap-4 items-center">
                     <FormLabel className="col-span-4">Credit</FormLabel>
                     <FormControl>
-                      <Input 
-                      className="col-span-4"
-                      {...field}
-                      type="number"
-                      onChange={(e) => {
-                        field.onChange(parseInt(e.target.value));
-                      }}/>
+                      <Input
+                        className="col-span-4"
+                        {...field}
+                        type="number"
+                        onChange={(e) => {
+                          field.onChange(parseInt(e.target.value));
+                        }}
+                      />
                     </FormControl>
                   </div>
                   <FormMessage className="italic" />
                 </FormItem>
               )}
-            /><FormField
-            control={form.control}
-            name="quantity"
-            render={({ field }) => (
-              <FormItem>
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  <FormLabel className="col-span-4">The numbers of member</FormLabel>
-                  <FormControl>
-                    <Input 
-                    className="col-span-4"
-                    {...field}
-                    type="number"
-                    onChange={(e) => {
-                      field.onChange(parseInt(e.target.value));
-                    }}/>
-                  </FormControl>
-                </div>
-                <FormMessage className="italic" />
-              </FormItem>
+            />
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-12 gap-4 items-center">
+                    <FormLabel className="col-span-4">
+                      The numbers of member
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="col-span-4"
+                        {...field}
+                        type="number"
+                        onChange={(e) => {
+                          field.onChange(parseInt(e.target.value));
+                        }}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage className="italic" />
+                </FormItem>
+              )}
+            />
+            {editImage ? (
+              <div className="flex gap-3 items-center">
+                <Input
+                  type="file"
+                  onChange={(e: any) => setEditImage(e.target.files[0])}
+                />
+                <Button onClick={() => setEditImage(null)}>Cancel</Button>
+              </div>
+            ) : (
+              <div className="relative">
+                <Button
+                  onClick={() => setEditImage(true)}
+                  className="absolute -top-3 -left-3"
+                >
+                  Sửa ảnh
+                </Button>
+                <figure>
+                  <img src={image} alt="Image" />
+                </figure>
+              </div>
             )}
-          />
-            { editImage ? 
-            <div className="flex gap-3 items-center">
-            <Input type="file" onChange={(e: any) => setEditImage(e.target.files[0])} />
-            <Button onClick={() => setEditImage(null)}>Cancel</Button>
-            </div>
-            :
-            <div className="relative">
-            <Button onClick={() => setEditImage(true)} className="absolute -top-3 -left-3">Sửa ảnh</Button>
-            <figure><img src={image} alt="Image" /></figure>
-            </div>
-            }
             <div className="mt-5">
               <FormLabel>Week: [{schedule?.join(", ")}]</FormLabel>
               <div className="flex items-center gap-3 flex-wrap mt-3">
@@ -494,7 +518,9 @@ export default function AddCoursePage() {
               <Link href="/admin/courses">
                 <Button variant="outline">Cancel</Button>
               </Link>
-              <Button variant="outline" onClick={() => setRefresh(!refresh)}>Refresh</Button>
+              <Button variant="outline" onClick={() => setRefresh(!refresh)}>
+                Refresh
+              </Button>
               {!loading && <Button type="submit">Save</Button>}
               {loading && (
                 <Button disabled>

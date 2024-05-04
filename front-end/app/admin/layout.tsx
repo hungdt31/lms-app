@@ -20,16 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <QueryProvider>
-    <div className="min-h-screen w-full flex relative flex-col sm:flex-row">
-      <TopNavbar />
-      <div className="min-w-[80px] relative border-r pl-5 pr-9 pb-10 pt-24 sm:block hidden">
-        <SideNavbar />
+      <div className="min-h-screen w-full flex relative flex-col sm:flex-row">
+        <TopNavbar />
+        <div className="min-w-[80px] relative border-r pl-5 pr-9 pb-10 pt-24 sm:block hidden">
+          <SideNavbar />
+        </div>
+        <div className="w-full">
+          <StoreProvider>{children}</StoreProvider>
+        </div>
       </div>
-      <div className="w-full">
-        <StoreProvider>{children}</StoreProvider>
-      </div>
-    </div>
-    <Toaster/>
+      <Toaster />
     </QueryProvider>
   );
 }

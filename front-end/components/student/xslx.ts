@@ -1,7 +1,7 @@
 import xlsx, { IJsonSheet } from "json-as-xlsx";
 
 export default function downloadToExcel(_data: any) {
-  let data = [..._data]
+  let data = [..._data];
   for (let i = 0; i < data.length; i++) {
     data[i].usersId = data[i].usersId ? "Đã đăng ký" : "Chưa đăng ký";
     data[i].schedule = data[i].schedule.join(", ");

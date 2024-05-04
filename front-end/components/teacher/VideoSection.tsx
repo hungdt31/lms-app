@@ -175,7 +175,9 @@ export default function VideoSection(data: any) {
                 <SquarePlay />
               </SheetTitle>
               <SheetDescription>
-                Make changes to your course here. Click save when you're done.
+                {
+                  "Make changes to your course here. Click save when you're done."
+                }
               </SheetDescription>
             </SheetHeader>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -265,9 +267,13 @@ export default function VideoSection(data: any) {
                   dangerouslySetInnerHTML={{ __html: el?.description }}
                   className="p-3"
                 />
-                {el?.videos?.map((e: any) => {
+                {el?.videos?.map((e: any, index: any) => {
                   return (
-                    <a className="card card-side shadow-xl" href={e?.url}>
+                    <a
+                      className="card card-side shadow-xl"
+                      href={e?.url}
+                      key={index}
+                    >
                       <figure>
                         <img src={e?.thumbnail} alt="video thumbnail" />
                       </figure>

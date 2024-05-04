@@ -74,7 +74,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     size: "sm",
                   }),
                   link.variant === "default" &&
-                  "dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
+                    "dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
                   "justify-start",
                 )}
               >

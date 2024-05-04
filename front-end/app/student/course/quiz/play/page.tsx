@@ -150,14 +150,14 @@ export default function CarouselDemo() {
       <div className="flex justify-center items-start gap-5">
         <div className="flex flex-col gap-3">
           {quiz?.data?.data?.questions.map((el: any, index: any) => (
-            <div className="p-1 min-w-[30%] question-item">
+            <div className="p-1 min-w-[30%] question-item" key={index}>
               <Card className="min-w-[400px]">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <p className="font-bold">Câu {index + 1}:</p>
                     <div className="flex gap-3 items-center">
-                    <input type="checkbox" />
-                    <p className="font-light text-[12px]">Đặt cờ</p>
+                      <input type="checkbox" />
+                      <p className="font-light text-[12px]">Đặt cờ</p>
                     </div>
                   </div>
                   <div dangerouslySetInnerHTML={{ __html: el?.content }} />

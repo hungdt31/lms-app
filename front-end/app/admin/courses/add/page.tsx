@@ -283,9 +283,11 @@ export default function AddCoursePage() {
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cate?.map((el: any, index : any) => {
+                          {cate?.map((el: any, index: any) => {
                             return (
-                              <SelectItem value={el?.id} key={index}>{el?.name}</SelectItem>
+                              <SelectItem value={el?.id} key={index}>
+                                {el?.name}
+                              </SelectItem>
                             );
                           })}
                         </SelectContent>
@@ -406,7 +408,11 @@ export default function AddCoursePage() {
                         </SelectTrigger>
                         <SelectContent>
                           {week?.map((el: any, index: any) => {
-                            return <SelectItem value={el} key={index}>{el}</SelectItem>;
+                            return (
+                              <SelectItem value={el} key={index}>
+                                {el}
+                              </SelectItem>
+                            );
                           })}
                         </SelectContent>
                       </Select>

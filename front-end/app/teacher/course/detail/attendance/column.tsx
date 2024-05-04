@@ -20,13 +20,13 @@ export type Thread = {
   id: string;
   createdAt: string;
   updatedAt: string;
-  last_updated_at : string;
+  last_updated_at: string;
   lastest_user: {
     createdAt: string;
     username: string;
     avatar: string;
-  }
-}
+  };
+};
 
 export const columns: ColumnDef<Thread>[] = [
   {
@@ -60,7 +60,10 @@ export const columns: ColumnDef<Thread>[] = [
     cell: ({ row }) => {
       return (
         <img
-          src={row.original?.lastest_user?.avatar || "https://github.com/vercel.png"}
+          src={
+            row.original?.lastest_user?.avatar ||
+            "https://github.com/vercel.png"
+          }
           className="w-24 lg:w-32 rounded-md object-center"
         />
       );
@@ -72,11 +75,9 @@ export const columns: ColumnDef<Thread>[] = [
     cell: ({ row }) => {
       return (
         <div className="space-y-1">
-          <h4 className="text-sm font-semibold">
-            {row.original.title}
-          </h4>
+          <h4 className="text-sm font-semibold">{row.original.title}</h4>
           <p className="text-sm">
-            {row.original?.lastest_user?.username} – {" "}
+            {row.original?.lastest_user?.username} –{" "}
             {TimeConvert(row.original?.last_updated_at)}.
           </p>
           <div className="flex items-center pt-2">
@@ -94,7 +95,7 @@ export const columns: ColumnDef<Thread>[] = [
     cell: ({ row }) => {
       return <></>;
     },
-  }
+  },
   // {
   //   id: "actions",
   //   enableHiding: false,

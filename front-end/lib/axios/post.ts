@@ -74,7 +74,7 @@ async function DeleteSinglePost(id: any) {
 async function GetThreadBreadcum(id: string) {
   return instance.get(`/post/forum/thread/breadcrumb?id=${id}`);
 }
-async function GetNotificationByRole (role : any) {
+async function GetNotificationByRole(role: any) {
   return instance.get(`/post?role=${role}`);
 }
 const Post = {
@@ -93,6 +93,6 @@ const Post = {
   DeleteThread,
   DeleteSinglePost,
   GetThreadBreadcum,
-  GetNotificationByRole
+  GetNotificationByRole,
 };
 export default Post;

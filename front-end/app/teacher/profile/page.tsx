@@ -107,7 +107,9 @@ export default function TeacherPage() {
               </DrawerContent>
             </Drawer>
           </div>
-          <p className="font-bold text-xl">{data?.data?.firstname} {data?.data?.lastname}</p>
+          <p className="font-bold text-xl">
+            {data?.data?.firstname} {data?.data?.lastname}
+          </p>
           <p className="hidden sm:block">
             Member since {data?.data?.createdAt}
           </p>

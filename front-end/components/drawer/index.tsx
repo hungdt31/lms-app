@@ -52,9 +52,10 @@ export default function TemporaryDrawer() {
         ></label>
 
         <ul className="menu p-4 w-80 min-h-full text-nav-text bg-nav">
-          {nav.map((el) => {
+          {nav.map((el, index: any) => {
             return (
               <Link
+                key={index}
                 href={el.path}
                 className={
                   path.indexOf(el.path) == 0 && el.path != "/student"

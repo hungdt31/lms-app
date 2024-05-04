@@ -14,8 +14,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 export default function SubmissionPage() {
-  const id : string = useSearchParams().get("id") as string;
-  const did : string = useSearchParams().get("did") as string;
+  const id: string = useSearchParams().get("id") as string;
+  const did: string = useSearchParams().get("did") as string;
   const router = useRouter();
   const defaultValues = {
     title: "",
@@ -60,9 +60,11 @@ export default function SubmissionPage() {
       timer: 1500,
     }).then(() => {
       if (rs?.success) {
-        router.push(`${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`);
+        router.push(
+          `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail?id=${id}`,
+        );
       }
-    })
+    });
     setLoading(false);
     console.log(data);
   };

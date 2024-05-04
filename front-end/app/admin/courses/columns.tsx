@@ -88,7 +88,7 @@ export const columns = (
               <Link
                 href={{
                   pathname: "/admin/courses/edit",
-                  query: { id},
+                  query: { id },
                 }}
               >
                 Edit course info

@@ -122,7 +122,7 @@ export default function ForgotPassword() {
       {page?.map((el: any, index: any) => {
         if (index == 0 && el) {
           return (
-            <Form {...form1}>
+            <Form {...form1} key={index}>
               <form
                 onSubmit={form1.handleSubmit(onSubmit1)}
                 className="space-y-8"
@@ -165,7 +165,7 @@ export default function ForgotPassword() {
           );
         } else if (index == 1 && el) {
           return (
-            <div>
+            <div key={index}>
               <p className="mb-5 font-medium">Enter code sent to your email</p>
               <div className="flex justify-center mb-7">
                 <InputOTP maxLength={6} onChange={(e: any) => setOtp(e)}>
@@ -199,7 +199,7 @@ export default function ForgotPassword() {
           );
         } else if (index == 2 && el) {
           return (
-            <Form {...form2}>
+            <Form {...form2} key={index}>
               <form
                 onSubmit={form2.handleSubmit(onSubmit2)}
                 className="space-y-8"

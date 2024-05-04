@@ -78,7 +78,7 @@ export default function ProfileForm() {
     mode: "onChange",
   });
   const user = UserQuery();
-  const {data, error, isPending} = user;
+  const { data, error, isPending } = user;
   const [defaultValues, setDefaultValues] = useState<
     Partial<ProfileFormValues>
   >({});
@@ -127,168 +127,174 @@ export default function ProfileForm() {
 
   return (
     <div className="mt-[150px] flex justify-center p-3">
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormItem>
-              <FormLabel>Email: <a className="font-mono">{data?.data?.email}</a></FormLabel>
-              <FormDescription>
-                This field only is edited by admin
-              </FormDescription>
-            </FormItem>
-        <FormField
-          control={form.control}
-          name="firstname"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastname"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={data?.data?.lastname}
-                  {...field}
-                  defaultValue={field.value}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-3">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="phone"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telephone</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input
-                    type="tel"
-                    placeholder={data?.data?.phone || "none"}
-                    defaultValue={data?.data?.phone}
-                    {...field}
-                  />
+                  <Input {...field} />
                 </FormControl>
                 <FormDescription>
-                  {!data?.data?.phone && <p>Your phone is empty</p>}
+                  This is your public display name. It can be your real name or
+                  a pseudonym. You can only change this once every 30 days.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <FormItem>
+            <FormLabel>
+              Email: <a className="font-mono">{data?.data?.email}</a>
+            </FormLabel>
+            <FormDescription>
+              This field only is edited by admin
+            </FormDescription>
+          </FormItem>
           <FormField
             control={form.control}
-            name="gender"
+            name="firstname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Gender</FormLabel>
+                <FormLabel>First name</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue
-                        placeholder={data?.data?.gender}
-                        {...field}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Undefined">Undefined</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Input {...field} />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-        <FormField
-          control={form.control}
-          name="date_of_birth"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>{data?.data?.date_of_birth ? format(data?.data?.date_of_birth,"PPP") : ""}</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
+          <FormField
+            control={form.control}
+            name="lastname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={data?.data?.lastname}
+                    {...field}
+                    defaultValue={field.value}
                   />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex gap-3">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telephone</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      placeholder={data?.data?.phone || "none"}
+                      defaultValue={data?.data?.phone}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {!data?.data?.phone && <p>Your phone is empty</p>}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue
+                          placeholder={data?.data?.gender}
+                          {...field}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Undefined">Undefined</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="date_of_birth"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date of birth</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>
+                            {data?.data?.date_of_birth
+                              ? format(data?.data?.date_of_birth, "PPP")
+                              : ""}
+                          </span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Your date of birth is used to calculate your age.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {loading ? (
+            <LoginLooading />
+          ) : (
+            <Button type="submit">Update profile</Button>
           )}
-        />
-        {loading ? (
-          <LoginLooading />
-        ) : (
-          <Button type="submit">Update profile</Button>
-        )}
-      </form>
-    </Form>
+        </form>
+      </Form>
     </div>
   );
 }

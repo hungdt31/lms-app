@@ -176,8 +176,12 @@ export default function TeacherPage() {
             <SelectValue placeholder="Select semester" />
           </SelectTrigger>
           <SelectContent>
-            {semes?.data?.data?.map((el: any) => {
-              return <SelectItem value={el}>{el?.description}</SelectItem>;
+            {semes?.data?.data?.map((el: any, index: any) => {
+              return (
+                <SelectItem value={el} key={index}>
+                  {el?.description}
+                </SelectItem>
+              );
             })}
           </SelectContent>
         </Select>
@@ -430,9 +434,9 @@ export default function TeacherPage() {
           <AccordionTrigger>Đăng kí môn học</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-3">
-              {dkmh?.map((el: any) => {
+              {dkmh?.map((el: any, index: any) => {
                 return (
-                  <Alert>
+                  <Alert key={index}>
                     <RocketIcon className="h-4 w-4" />
                     <AlertTitle>
                       <p className="flex justify-between items-center">

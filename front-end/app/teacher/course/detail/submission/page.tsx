@@ -91,8 +91,8 @@ export default function SubmissionPage() {
           `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/stinfo?id=${uid}&cid=${cid}`,
         );
       else {
-        setOpen(false)
-        fetchSubmissionResult()
+        setOpen(false);
+        fetchSubmissionResult();
       }
     });
   };
@@ -125,11 +125,15 @@ export default function SubmissionPage() {
         </CardContent>
         <CardFooter>
           <div className="flex flex-col gap-3">
-            {submission?.files?.map((el: any) => {
+            {submission?.files?.map((el: any, index: any) => {
               return (
-                <div className="flex gap-3 items-center flex-wrap">
+                <div className="flex gap-3 items-center flex-wrap" key={index}>
                   {GetIcon(el?.title)}
-                  <a href={el?.url} target="_blank" className="text-cyan-500 hover:underline">
+                  <a
+                    href={el?.url}
+                    target="_blank"
+                    className="text-cyan-500 hover:underline"
+                  >
                     {el.title}
                   </a>
                   <p className="ml-3 text-xs text-gray-500">
@@ -173,11 +177,18 @@ export default function SubmissionPage() {
           <CardFooter>
             <div className="flex flex-col gap-3">
               <p className="font-bold">Bài nộp</p>
-              {submitResult?.files?.map((el: any) => {
+              {submitResult?.files?.map((el: any, index: any) => {
                 return (
-                  <div className="flex gap-3 items-center flex-wrap">
+                  <div
+                    className="flex gap-3 items-center flex-wrap"
+                    key={index}
+                  >
                     {GetIcon(el?.title)}
-                    <a href={el?.url} target="_blank" className="text-cyan-500 hover:underline">
+                    <a
+                      href={el?.url}
+                      target="_blank"
+                      className="text-cyan-500 hover:underline"
+                    >
                       {el.title}
                     </a>
                     <p className="ml-3 text-xs text-gray-500">

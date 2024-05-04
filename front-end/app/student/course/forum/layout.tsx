@@ -14,10 +14,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <QueryProvider>
-    <div>
-      <Breadcrumb />
-      {children}
-    </div>
-    </QueryProvider>;
+  return (
+    <QueryProvider>
+      <div>
+        <Breadcrumb />
+        {children}
+      </div>
+    </QueryProvider>
+  );
 }

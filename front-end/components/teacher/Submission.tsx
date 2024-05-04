@@ -34,7 +34,7 @@ export default function SubmissionPage(data: any) {
     <div>
       <div>
         <Table>
-          <TableCaption>A list of student's submit</TableCaption>
+          <TableCaption>{"A list of student's submit"}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]"></TableHead>
@@ -77,14 +77,16 @@ export default function SubmissionPage(data: any) {
                       Update
                     </Button>
                   ) : (
-                    <Button 
+                    <Button
                       variant={"secondary"}
                       onClick={() =>
                         router.push(
                           `${process.env.NEXT_PUBLIC_FRONT_END}/teacher/course/detail/submission?sid=${el?.submission?.id}&id=${cid}&uid=${uid}`,
                         )
                       }
-                    >Chấm điểm</Button>
+                    >
+                      Chấm điểm
+                    </Button>
                   )}
                 </TableCell>
               </TableRow>

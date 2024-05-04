@@ -6,7 +6,7 @@ async function GetAllCate() {
     url: "/category",
   });
 }
-async function AddCate(data : any) {
+async function AddCate(data: any) {
   return await instance({
     method: "post",
     url: "/category",

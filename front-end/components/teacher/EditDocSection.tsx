@@ -89,7 +89,7 @@ export default function EditDocSection(data: any) {
         <SheetHeader>
           <SheetTitle>Edit document</SheetTitle>
           <SheetDescription>
-            Make changes to your section here. Click save when you're done.
+            {"Make changes to your section here. Click save when you're done."}
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,6 +1,6 @@
 import instance from "@/axios";
 
-async function GetAllCourse(id : any) {
+async function GetAllCourse(id: any) {
   return await instance({
     method: "get",
     url: `/course?id=${id}`,
@@ -65,7 +65,7 @@ async function AddCourse(data: any) {
   formData.append("date", data.date);
   formData.append("credit", data.credit);
   formData.append("quantity", data.quantity);
-  if (data?.teacherId) formData.append("teacherId", data.teacherId)
+  if (data?.teacherId) formData.append("teacherId", data.teacherId);
   if (data?.schedule) {
     for (let i = 0; i < data?.schedule.length; i++) {
       formData.append("schedule", data?.schedule[i]);
@@ -83,7 +83,7 @@ async function GetScoreFactor(id: any) {
     url: `/course/score-factor?id=${id}`,
   });
 }
-async function GetDetailCourseByAdmin(data : any){
+async function GetDetailCourseByAdmin(data: any) {
   return await instance({
     method: "get",
     url: `/course/admin?id=${data?.id}`,
@@ -92,12 +92,12 @@ async function GetDetailCourseByAdmin(data : any){
     },
   });
 }
-async function UpdateCourseByAdmin (data : any, id : any, token : any){
+async function UpdateCourseByAdmin(data: any, id: any, token: any) {
   const form = new FormData();
   form.append("title", data.title);
   form.append("description", data.description);
   form.append("course_id", data.course_id);
-  if(data?.file) form.append("file", data.file);
+  if (data?.file) form.append("file", data.file);
   form.append("date", data.date);
   form.append("time", data.time);
   form.append("categoryId", data.categoryId);
@@ -114,10 +114,10 @@ async function UpdateCourseByAdmin (data : any, id : any, token : any){
     headers: {
       Authorization: "Bearer " + token,
     },
-    data : form
+    data: form,
   });
 }
-async function DeleteCourseByAdmin (id : any, token : any){
+async function DeleteCourseByAdmin(id: any, token: any) {
   return await instance({
     method: "delete",
     url: `/course?id=${id}`,
@@ -126,24 +126,24 @@ async function DeleteCourseByAdmin (id : any, token : any){
     },
   });
 }
-async function MoveUserOutOfCourse (id: any, data : any, token: any) {
+async function MoveUserOutOfCourse(id: any, data: any, token: any) {
   return await instance({
     method: "delete",
     url: `/course/move?id=${id}`,
     headers: {
       Authorization: "Bearer " + token,
     },
-    data
+    data,
   });
 }
-async function AddManyUserToCourse (id: any, data : any, token: any) {
+async function AddManyUserToCourse(id: any, data: any, token: any) {
   return await instance({
     method: "put",
     url: `/course/add?id=${id}`,
     headers: {
       Authorization: "Bearer " + token,
     },
-    data
+    data,
   });
 }
 const Course = {
@@ -160,6 +160,6 @@ const Course = {
   UpdateCourseByAdmin,
   DeleteCourseByAdmin,
   MoveUserOutOfCourse,
-  AddManyUserToCourse
+  AddManyUserToCourse,
 };
 export default Course;

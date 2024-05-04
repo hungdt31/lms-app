@@ -59,7 +59,7 @@ export default function NavLayout() {
       <div className="flex bg-nav justify-between py-5 items-center shadow-lg px-5 text-nav-text">
         <div className="gap-5 flex items-center">
           <Link href={"/"} className="flex items-center gap-5">
-            <Layers size={50}/>
+            <Layers size={50} />
             <div>
               <p className="font-bold text-2xl">LMS </p>
               <p>
@@ -73,14 +73,18 @@ export default function NavLayout() {
           <TemporaryDrawer />
         </div>
         <div className="sm:flex gap-5 items-center hidden">
-          {nav.map((el) => {
+          {nav.map((el, index: any) => {
             return (
               <Link
+                key={index}
                 href={el.path}
                 className={
-                  (path.indexOf(el.path) == 0 && el.path != "/student" ) || (el?.path2 && path.indexOf(el.path2) == 0 && el.path != "/student") 
+                  (path.indexOf(el.path) == 0 && el.path != "/student") ||
+                  (el?.path2 &&
+                    path.indexOf(el.path2) == 0 &&
+                    el.path != "/student")
                     ? "font-bold"
-                    : "" 
+                    : ""
                 }
               >
                 {el.name}
@@ -108,7 +112,7 @@ export default function NavLayout() {
               </Link>
               <DropdownMenuItem>Notice</DropdownMenuItem>
               <Link href={"/student/semester"}>
-              <DropdownMenuItem>Result</DropdownMenuItem>
+                <DropdownMenuItem>Result</DropdownMenuItem>
               </Link>
               <DropdownMenuItem
                 onClick={async () => {

@@ -1,38 +1,44 @@
 import instance from "@/axios";
-async function CreateVideoSection(data : any) {
+async function CreateVideoSection(data: any) {
   return await instance({
     method: "post",
     url: `/video-section`,
-    data
+    data,
   });
 }
-async function DeleteVideoSection(data : any) {
+async function DeleteVideoSection(data: any) {
   return await instance({
     method: "delete",
     url: `/video-section`,
-    data
+    data,
   });
 }
-async function UploadVideo(data : any) {
+async function UploadVideo(data: any) {
   return await instance({
     method: "post",
     url: `/video-section/add-video`,
-    data
+    data,
   });
 }
-async function DeleteVideo(data : any) {
+async function DeleteVideo(data: any) {
   return await instance({
     method: "delete",
     url: `/video-section/delete-video`,
-    data
+    data,
   });
 }
-async function UpdateVideoSection(data : any, id : any) {
+async function UpdateVideoSection(data: any, id: any) {
   return await instance({
     method: "put",
     url: `/video-section?id=${id}`,
-    data
+    data,
   });
 }
-const Video = { CreateVideoSection, DeleteVideoSection, UploadVideo, DeleteVideo, UpdateVideoSection};
+const Video = {
+  CreateVideoSection,
+  DeleteVideoSection,
+  UploadVideo,
+  DeleteVideo,
+  UpdateVideoSection,
+};
 export default Video;

@@ -220,6 +220,7 @@ export default function DocSection(data: any) {
                 {el?.documentLink?.map((doc: any, _index: any) => {
                   return (
                     <Link
+                      key={_index}
                       target="_blank"
                       href={doc?.url}
                       className={
@@ -251,6 +252,7 @@ export default function DocSection(data: any) {
                 {el?.quiz?.map((quiz: any, _index: any) => {
                   return (
                     <div
+                      key={_index}
                       className={
                         trigger == index && clickDelete
                           ? `flex items-center gap-3`
@@ -283,6 +285,7 @@ export default function DocSection(data: any) {
                 {el?.submissions?.map((submission: any, _index: any) => {
                   return (
                     <Link
+                      key={_index}
                       target="_blank"
                       href={`/teacher/course/detail/submission?sid=${submission?.id}&id=${id}`}
                       className={

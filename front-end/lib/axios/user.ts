@@ -10,11 +10,11 @@ interface UpdateUser {
   old_password: string;
   new_password: string;
 }
-async function AddUser (data: any) {
+async function AddUser(data: any) {
   return await instance({
     method: "post",
     url: "/user",
-    data
+    data,
   });
 }
 async function Login(data: User) {
@@ -82,7 +82,7 @@ async function UpdateAvatar(token: string, avatar: string) {
     data: form,
   });
 }
-async function GetCountPagination(data : any, id: any) {
+async function GetCountPagination(data: any, id: any) {
   return await instance({
     method: "get",
     url: `/user/count?id=${id}`,
@@ -91,44 +91,43 @@ async function GetCountPagination(data : any, id: any) {
     },
   });
 }
-async function GetListUser(token: any, id : any) {
+async function GetListUser(token: any, id: any) {
   return await instance({
     method: "get",
-    url:  `/user/list?id=${id}`,
+    url: `/user/list?id=${id}`,
     headers: {
       Authorization: "Bearer " + token,
     },
   });
-  
 }
-async function UpdateUser(token : string, data: any) {
+async function UpdateUser(token: string, data: any) {
   return await instance({
     method: "put",
     url: "/user",
     headers: {
       Authorization: "Bearer " + token,
     },
-    data
+    data,
   });
 }
-async function DeleteUser(token : string, data: any) {
+async function DeleteUser(token: string, data: any) {
   return await instance({
     method: "delete",
     url: `/user`,
     headers: {
       Authorization: "Bearer " + token,
     },
-    data
+    data,
   });
 }
-async function UpdateUserByAdmin (token: string, data: any) {
+async function UpdateUserByAdmin(token: string, data: any) {
   return await instance({
     method: "put",
     url: "/user/update-by-admin",
     headers: {
       Authorization: "Bearer " + token,
     },
-    data
+    data,
   });
 }
 async function GetTeacherList(token: string) {
@@ -140,7 +139,7 @@ async function GetTeacherList(token: string) {
     },
   });
 }
-async function GetUserByCourseId(id : any, token : any) {
+async function GetUserByCourseId(id: any, token: any) {
   return await instance({
     method: "get",
     url: `/user/course?id=${id}`,
@@ -149,7 +148,7 @@ async function GetUserByCourseId(id : any, token : any) {
     },
   });
 }
-async function GetUserNotInCourse(id : any, token : any) {
+async function GetUserNotInCourse(id: any, token: any) {
   return await instance({
     method: "get",
     url: `/user/not-in-course?id=${id}`,
@@ -175,6 +174,6 @@ const User = {
   UpdateUserByAdmin,
   GetTeacherList,
   GetUserByCourseId,
-  GetUserNotInCourse
+  GetUserNotInCourse,
 };
 export default User;

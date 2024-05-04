@@ -185,9 +185,12 @@ export default function SubmissionPage() {
             </CardContent>
             <CardFooter>
               <div className="flex flex-col gap-3">
-                {info?.files?.map((el: any) => {
+                {info?.files?.map((el: any, index: any) => {
                   return (
-                    <div className="flex gap-3 items-center flex-wrap">
+                    <div
+                      className="flex gap-3 items-center flex-wrap"
+                      key={index}
+                    >
                       {GetIcon(el?.title)}
                       <a
                         href={el?.url}
@@ -267,7 +270,10 @@ export default function SubmissionPage() {
               <p className="my-5">Các tập tin đã nộp</p>
               {fileList?.map((el: any, index: number) => {
                 return (
-                  <div className="flex gap-3 items-center flex-wrap">
+                  <div
+                    className="flex gap-3 items-center flex-wrap"
+                    key={index}
+                  >
                     {GetIcon(el?.title)}
                     <a
                       href={el?.url}
@@ -324,7 +330,7 @@ export default function SubmissionPage() {
                   </div>
                   {addList?.map((el: any, index: number) => {
                     return (
-                      <div className="mt-3 flex gap-3 items-center">
+                      <div className="mt-3 flex gap-3 items-center" key={index}>
                         <p>{el?.name}</p>{" "}
                         <X
                           size={20}
@@ -375,7 +381,7 @@ export default function SubmissionPage() {
               />
               {addList?.map((el: any, index: number) => {
                 return (
-                  <div className="mt-3 flex gap-3 items-center">
+                  <div className="mt-3 flex gap-3 items-center" key={index}>
                     <p>{el?.name}</p>{" "}
                     <X
                       size={20}

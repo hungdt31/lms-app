@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <QueryProvider>
-      <DetailCourse children={children} />
+      <DetailCourse>{children}</DetailCourse>
     </QueryProvider>
   );
 }

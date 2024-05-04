@@ -128,7 +128,7 @@ export default function Attendance() {
       });
     // console.log(data)
   };
-  console.log(mutation)
+  console.log(mutation);
   return (
     <div>
       {mutation?.data?.data && (
@@ -212,7 +212,7 @@ export default function Attendance() {
         <Accordion type="single" collapsible className="w-full">
           {forum?.map((el: any, index: number) => {
             return (
-              <AccordionItem value={`item-${index}`}>
+              <AccordionItem value={`item-${index}`} key={index}>
                 <AccordionTrigger>
                   {el?.title}{" "}
                   {deleteFr && <input type="checkbox" value={el?.id} />}

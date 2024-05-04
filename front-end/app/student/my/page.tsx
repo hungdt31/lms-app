@@ -111,7 +111,7 @@ export default function MyPage() {
       });
       console.log(obj);
     }, 500); // Delay of 0.5 second
-  
+
     // Cleanup function to clear the timeout if the component unmounts
     return () => clearTimeout(timer);
   }, [name_sort, name, cate_id, semester_id, page]);
@@ -149,9 +149,11 @@ export default function MyPage() {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Semester</SelectLabel>
-              {semester?.map((el: any) => {
+              {semester?.map((el: any, index: any) => {
                 return (
-                  <SelectItem value={el?.id}>{el?.description}</SelectItem>
+                  <SelectItem value={el?.id} key={index}>
+                    {el?.description}
+                  </SelectItem>
                 );
               })}
               <SelectItem value="all">All</SelectItem>
@@ -165,8 +167,12 @@ export default function MyPage() {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Category</SelectLabel>
-              {cate?.map((el: any) => {
-                return <SelectItem value={el?.id}>{el?.name}</SelectItem>;
+              {cate?.map((el: any, index: any) => {
+                return (
+                  <SelectItem value={el?.id} key={index}>
+                    {el?.name}
+                  </SelectItem>
+                );
               })}
               <SelectItem value="all">All</SelectItem>
             </SelectGroup>
@@ -198,7 +204,7 @@ export default function MyPage() {
       </div>
       <div className="flex gap-5 px-5 flex-wrap">
         {courseData?.map((el: any, index: number) => {
-          return <MediaCard children={el} />;
+          return <MediaCard key={index}>{el}</MediaCard>;
         })}
       </div>
       <Pagination className="pb-5 pt-7">
@@ -209,7 +215,7 @@ export default function MyPage() {
             />
           </PaginationItem>
           {Array.from({ length: count }, (_, i) => (
-            <PaginationItem>
+            <PaginationItem key={i}>
               {i + 1 == page ? (
                 <Button onClick={() => setPage(i + 1)}>{i + 1}</Button>
               ) : (

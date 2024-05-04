@@ -1,6 +1,6 @@
 import xlsx, { IJsonSheet } from "json-as-xlsx";
 
-export default function downloadToExcel(data : any) {
+export default function downloadToExcel(data: any) {
   let columns: IJsonSheet[] = [
     {
       sheet: "Students",
@@ -11,7 +11,7 @@ export default function downloadToExcel(data : any) {
         { label: "Gender", value: "gender" },
         {
           label: "Date of Birth",
-          value: (row : any) => new Date(row.date_of_birth).toLocaleDateString(),
+          value: (row: any) => new Date(row.date_of_birth).toLocaleDateString(),
         },
       ],
       content: data,
