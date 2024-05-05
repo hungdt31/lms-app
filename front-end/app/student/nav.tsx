@@ -58,7 +58,7 @@ export default function NavLayout() {
       </div>
       <div className="flex bg-nav justify-between py-5 items-center shadow-lg px-5 text-nav-text">
         <div className="gap-5 flex items-center">
-          <Link href={"/"} className="flex items-center gap-5">
+          <Link href={"/student"} className="flex items-center gap-5">
             <Layers size={50} />
             <div>
               <p className="font-bold text-2xl">LMS </p>

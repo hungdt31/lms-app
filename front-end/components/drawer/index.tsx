@@ -26,7 +26,7 @@ export default function TemporaryDrawer() {
     },
     {
       name: "Khóa học",
-      path: "/student/course",
+      path: "/student/dkmh",
       icon: <SiGoogleclassroom />,
     },
     {
@@ -79,7 +79,9 @@ export default function TemporaryDrawer() {
             <div className="flex flex-col justify-center gap-2">
               <div className="flex items-center gap-3">
                 {data?.data?.username}{" "}
-                <LuBellRing size={20} className="cursor-pointer" />
+                <Link href={"/student/semester"}>
+                  <LuBellRing size={20} className="cursor-pointer" />
+                </Link>
               </div>
               <Link href={"/student/profile"}>
                 <p className="font-light underline cursor-pointer">

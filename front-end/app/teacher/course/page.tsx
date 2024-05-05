@@ -67,7 +67,7 @@ export default function TeacherPage() {
           </div>
         )}
       </div>
-      <Card className="px-7">
+      <Card className="px-7 w-full">
         <CardHeader>
           <Button className="badge badge-primary p-5" variant="secondary">
             <Layers className="mr-3" />{" "}
