@@ -97,7 +97,7 @@ export default function CarouselDemo() {
     if (rs?.isSuccess) {
       Swal.fire("Saved!", "", "success");
       router.push(
-        `${process.env.NEXT_PUBLIC_FRONT_END}/student/course/quiz/result?id=${rs?.data?.data?.id}`,
+        `/student/course/quiz/result?id=${rs?.data?.data?.id}`,
       );
     }
   }, [quiz?.isSuccess, quiz?.data, rs?.isSuccess, rs?.data]);
@@ -155,10 +155,6 @@ export default function CarouselDemo() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <p className="font-bold">Câu {index + 1}:</p>
-                    <div className="flex gap-3 items-center">
-                      <input type="checkbox" />
-                      <p className="font-light text-[12px]">Đặt cờ</p>
-                    </div>
                   </div>
                   <div dangerouslySetInnerHTML={{ __html: el?.content }} />
                 </CardHeader>

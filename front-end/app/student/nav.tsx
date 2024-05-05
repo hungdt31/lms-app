@@ -110,7 +110,7 @@ export default function NavLayout() {
               <Link href={"/student/profile"}>
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>Notice</DropdownMenuItem>
+              {/* <DropdownMenuItem>Notice</DropdownMenuItem> */}
               <Link href={"/student/semester"}>
                 <DropdownMenuItem>Result</DropdownMenuItem>
               </Link>

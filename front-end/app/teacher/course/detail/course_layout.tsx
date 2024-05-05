@@ -41,7 +41,7 @@ export default function DetailCourse({
   return (
     <div className="flex gap-7 p-5 relative sm:flex-row flex-col">
       {active.open && (
-        <div className="flex flex-col gap-3 absolute top-0 left-0 z-50 p-3">
+        <div className="flex flex-col gap-3 absolute top-0 left-0 z-40 p-3">
           {LeftNav.map((el: any, _index: any) => {
             return (
               <Link

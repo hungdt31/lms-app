@@ -24,8 +24,8 @@ export default function TopNav() {
   if (error) return "An error has occurred ...";
   return (
     <div className="navbar bg-nav p-3 shadow-lg">
-      <div className="navbar-start text-nav-text">
-        <div className="dropdown lg:hidden">
+      <div className="navbar-start text-nav-text z-50">
+        <div className="dropdown lg:hidden z-50">
           <div tabIndex={0} role="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -47,14 +47,18 @@ export default function TopNav() {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow rounded-box w-52 z-50 bg-nav"
           >
             <li>
+              <Link href={"/teacher"}>Trang chủ</Link>
+            </li>
+            <li>
               <Link href={"/teacher/course"}>Quản lý khóa học</Link>
             </li>
             <li>
-              <Link href={"/teacher/profile"}>Profile</Link>
+              <Link href={"/teacher/schedule"}>Lịch dạy học</Link>
             </li>
             <li>
-              <Link href={"/teacher"}>Notice</Link>
+              <Link href={"/teacher/profile"}>Tài khoản</Link>
             </li>
+
             <li>
               <Button
                 variant={"link"}
@@ -76,13 +80,16 @@ export default function TopNav() {
       <div className="navbar-center hidden lg:flex text-nav-text ">
         <ul className="menu menu-horizontal px-1">
           <li>
+            <Link href={"/teacher"}>Trang chủ</Link>
+          </li>
+          <li>
             <Link href={"/teacher/course"}>Quản lý khóa học</Link>
           </li>
           <li>
-            <Link href={"/teacher/profile"}>Profile</Link>
+            <Link href={"/teacher/profile"}>Tài khoản</Link>
           </li>
           <li>
-            <Link href={"/teacher"}>Notice</Link>
+            <Link href={"/teacher/schedule"}>Lịch dạy học</Link>
           </li>
           <li>
             <Button

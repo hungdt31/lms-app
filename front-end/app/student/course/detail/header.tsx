@@ -33,7 +33,7 @@ export default function Header() {
     },
     [searchParams],
   );
-  const [open, setOpen] = useState<Boolean>(false);
+  const [open, setOpen] = useState<Boolean>(true);
   return (
     <div>
       <div className="sm:flex justify-center flex-wrap gap-7 m-3 hidden">
