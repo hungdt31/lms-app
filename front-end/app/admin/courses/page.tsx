@@ -132,6 +132,11 @@ export default function TeacherPage() {
     setDkmh(dkmh?.data);
   };
   useEffect(() => {
+    if (searchParams.get('id')) {
+      setTrigger(semes?.data?.data?.find((el: any) => el.id == searchParams.get('id')))
+    } else fetchSemesterByNow();
+  } , [searchParams, semes?.data?.data])
+  useEffect(() => {
     setInfo(trigger);
     // console.log(el);
     setFet(trigger?.id);
@@ -140,11 +145,6 @@ export default function TeacherPage() {
   useEffect(() => {
     fetchDKMH(fet);
   }, [fet]);
-  useEffect(() => {
-    if (searchParams.get('id')) {
-      setTrigger(semes?.data?.data?.find((el: any) => el.id == searchParams.get('id')))
-    } else fetchSemesterByNow();
-  } , [searchParams])
   const deleteDKMH = async (id: any) => {
     console.log(id);
     Swal.fire({
