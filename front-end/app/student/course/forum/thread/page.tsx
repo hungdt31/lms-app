@@ -29,8 +29,8 @@ import {
 } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function ForumPage() {
-  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const token = new Cookies().get("token");
   const [loading, setLoading] = useState<boolean>(false);
   const id: any = useSearchParams().get("id");

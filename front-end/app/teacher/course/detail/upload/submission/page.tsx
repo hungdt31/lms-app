@@ -14,8 +14,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function SubmissionPage() {
-  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const id: string = useSearchParams().get("id") as string;
   const did: string = useSearchParams().get("did") as string;
   const router = useRouter();

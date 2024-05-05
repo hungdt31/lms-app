@@ -35,8 +35,8 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 // import JoditReact from "jodit-react-ts";
 import dynamic from "next/dynamic";
+const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function UploadQuiz() {
-  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const router = useRouter();
   const id: string = useSearchParams().get("id") as string;
   const did: string = useSearchParams().get("did") as string;

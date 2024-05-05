@@ -65,8 +65,8 @@ const formSchema = z.object({
 const formSchema2 = z.object({
   name: z.string().min(1, { message: "Title is required" }),
 });
+const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function AdminPage() {
-  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const [editId, setEditId] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [addtion, setAddtion] = useState<any>(null);

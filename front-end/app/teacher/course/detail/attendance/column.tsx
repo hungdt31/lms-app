@@ -74,6 +74,7 @@ export const columns: ColumnDef<Thread>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return (
+        <Link href={`/teacher/course/thread?id=${row.original.id}`}>
         <div className="space-y-1">
           <h4 className="text-sm font-semibold">{row.original.title}</h4>
           <p className="text-sm">
@@ -87,6 +88,7 @@ export const columns: ColumnDef<Thread>[] = [
             </span>
           </div>
         </div>
+        </Link>
       );
     },
   },

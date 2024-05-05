@@ -267,12 +267,12 @@ export default function VideoSection(data: any) {
                   dangerouslySetInnerHTML={{ __html: el?.description }}
                   className="p-3"
                 />
-                {el?.videos?.map((e: any, index: any) => {
+                {el?.videos?.map((e: any, _index: any) => {
                   return (
                     <a
                       className="card card-side shadow-xl"
                       href={e?.url}
-                      key={index}
+                      key={_index}
                     >
                       <figure>
                         <img src={e?.thumbnail} alt="video thumbnail" />
