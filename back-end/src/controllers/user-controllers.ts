@@ -111,6 +111,7 @@ class UserController extends BaseController {
         select: {
           title: true,
           course_id: true,
+          semesterId: true,
           semester: {
             select: {
               description: true
@@ -534,6 +535,7 @@ class UserController extends BaseController {
           },
           select: {
             id: true,
+            mssv: true,
             firstname: true,
             lastname: true,
             role: true,

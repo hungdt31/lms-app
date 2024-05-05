@@ -75,9 +75,19 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       {/* input */}
-      <div className="flex items-center py-4 gap-3">
+      <div className="flex items-center py-4 gap-3 sm:flex-row flex-col">
         <Input
-          placeholder="Filter First names"
+          placeholder="Search mssv"
+          value={
+            (table.getColumn("mssv")?.getFilterValue() as string) || ""
+          }
+          onChange={(e) => {
+            table.getColumn("mssv")?.setFilterValue(e.target.value);
+          }}
+          className="max-w-sm"
+        />
+        <Input
+          placeholder="Search first names"
           value={
             (table.getColumn("firstname")?.getFilterValue() as string) || ""
           }
@@ -87,7 +97,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <Input
-          placeholder="Filter Last names"
+          placeholder="Search last names"
           value={
             (table.getColumn("lastname")?.getFilterValue() as string) || ""
           }
@@ -96,6 +106,7 @@ export function DataTable<TData, TValue>({
           }}
           className="max-w-sm"
         />
+        <div className="flex items-center gap-3">
         <Button onClick={() => downloadToExcel(data)} className="ml-4">
           Export to Excel
         </Button>
@@ -125,6 +136,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
 
       {/* table */}

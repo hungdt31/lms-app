@@ -128,7 +128,7 @@ export default function Attendance() {
       });
     // console.log(data)
   };
-  console.log(mutation);
+  //console.log(mutation);
   return (
     <div>
       {mutation?.data?.data && (

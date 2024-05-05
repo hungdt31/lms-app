@@ -94,6 +94,7 @@ export default function AddCoursePage() {
   const [week_array, setWeek_array] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [refresh, setRefresh] = useState<any>(false);
+  const [semesterId, setSemesterId] = useState<any>("");
   const id: string = useSearchParams().get("id") as string;
   const router = useRouter();
   const [cate, setCate] = useState<any>(null);
@@ -141,17 +142,25 @@ export default function AddCoursePage() {
       value: "18:00 - 20:00",
     },
   ];
+  const fetchCate = async () => {
+    await Cate.GetAllCate().then((res) => {
+      setCate(res?.data);
+    });
+  };
+  useEffect(() => {
+    fetchCate();
+  }, []);
+
   useEffect(() => {
     Promise.all([
-      Cate.GetAllCate(),
       User.GetTeacherList(token),
       Course.GetDetailCourseByAdmin({ id, token }),
     ])
-      .then(async ([cateRes, teacherRes, courseRes]) => {
+      .then(async ([teacherRes, courseRes]) => {
         // Handle results
-        setCate(cateRes?.data);
         //console.log(teacherRes?.data);
-        console.log(courseRes?.data);
+        //console.log(courseRes?.data);
+        setSemesterId(courseRes?.data?.semesterId);
         if (courseRes?.data) {
           form.reset({
             title: courseRes?.data?.title,
@@ -198,7 +207,7 @@ export default function AddCoursePage() {
       }
     });
     setLoading(false);
-    console.log(data);
+    //console.log(data);
   }
   return (
     <div className="py-5">
@@ -221,7 +230,7 @@ export default function AddCoursePage() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-12 gap-4 items-center">
-                    <FormLabel className="col-span-4">
+                    <FormLabel className="sm:col-span-4 col-span-12">
                       <div className="grid grid-cols-12 items-center">
                         <div className="col-span-11">Course Title</div>
                         <div className="col-span-1">
@@ -230,7 +239,7 @@ export default function AddCoursePage() {
                       </div>
                     </FormLabel>
                     <FormControl>
-                      <Input className="col-span-7" {...field} />
+                      <Input className="col-span-10 sm:col-span-7" {...field} />
                     </FormControl>
                   </div>
                   <FormMessage className="italic" />
@@ -293,7 +302,7 @@ export default function AddCoursePage() {
                           field.onChange(value);
                         }}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="col-span-10 sm:col-span-3">
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -318,7 +327,7 @@ export default function AddCoursePage() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-12 gap-4 items-center">
-                    <FormLabel className="col-span-4">
+                    <FormLabel className="sm:col-span-4 col-span-12">
                       <div className="grid grid-cols-12 items-center">
                         <div className="col-span-11">Course ID</div>
                         <div className="col-span-1">
@@ -327,7 +336,7 @@ export default function AddCoursePage() {
                       </div>
                     </FormLabel>
                     <FormControl>
-                      <Input className="col-span-4" {...field} />
+                      <Input className="sm:col-span-4 col-span-10" {...field} />
                     </FormControl>
                   </div>
                   <FormMessage className="italic" />
@@ -340,7 +349,7 @@ export default function AddCoursePage() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-12 gap-4 items-center">
-                    <FormLabel className="col-span-4">
+                    <FormLabel className="col-span-12 sm:col-span-4">
                       <div className="grid grid-cols-12 items-center">
                         <div className="col-span-11">Course Description</div>
                         <div className="col-span-1">
@@ -349,7 +358,10 @@ export default function AddCoursePage() {
                       </div>
                     </FormLabel>
                     <FormControl>
-                      <Textarea className="col-span-8" {...field} />
+                      <Textarea
+                        className="sm:col-span-8 col-span-12"
+                        {...field}
+                      />
                     </FormControl>
                   </div>
                   <FormMessage className="italic" />
@@ -450,7 +462,7 @@ export default function AddCoursePage() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-12 gap-4 items-center">
-                    <FormLabel className="col-span-4">
+                    <FormLabel className="sm:col-span-4 col-span-12">
                       The numbers of member
                     </FormLabel>
                     <FormControl>
@@ -515,12 +527,10 @@ export default function AddCoursePage() {
               </div>
             </div>
             <div className="flex w-full justify-end gap-4">
-              <Link href="/admin/courses">
+              <Link href={`/admin/courses?id=${semesterId}`}>
                 <Button variant="outline">Cancel</Button>
               </Link>
-              <Button variant="outline" onClick={() => setRefresh(!refresh)}>
-                Refresh
-              </Button>
+
               {!loading && <Button type="submit">Save</Button>}
               {loading && (
                 <Button disabled>
@@ -531,6 +541,13 @@ export default function AddCoursePage() {
           </form>
         </Form>
       </div>
+      <Button
+        variant="outline"
+        onClick={() => setRefresh(!refresh)}
+        className="mt-5"
+      >
+        Refresh
+      </Button>
     </div>
   );
 }

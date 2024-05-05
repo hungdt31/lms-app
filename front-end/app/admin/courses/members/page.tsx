@@ -1,4 +1,5 @@
 "use client";
+import { ChevronLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import User from "@/lib/axios/user";
 import { useEffect, useState } from "react";
@@ -7,12 +8,16 @@ import columns from "./column";
 import { DataTable } from "./data-table";
 import _columns from "./_column";
 import _DataTable from "./_data-table";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 export default function MemberPage() {
   const cookies = new Cookies();
   const token: any = cookies.get("token");
   const [users, setUsers] = useState<any>(null);
   const [addition, setAddition] = useState<any>(false);
   const [users_not, setUsers_not] = useState<any>(null);
+  const [semesterId, setSemesterId] = useState<any>(null);
   const id: any = useSearchParams().get("id");
   const obj = {
     id,
@@ -22,6 +27,7 @@ export default function MemberPage() {
     const rs: any = await User.GetUserByCourseId(id, token);
     //console.log(rs?.data);
     setUsers(rs?.data);
+    setSemesterId(rs?.data?.course.semesterId);
   };
   const fetchUsersNotInCourse = async () => {
     const rs: any = await User.GetUserNotInCourse(id, token);
@@ -34,6 +40,12 @@ export default function MemberPage() {
   }, []);
   return (
     <div>
+      <Link href={`/admin/courses?id=${semesterId}`}>
+        <Button>
+          <ChevronLeft />
+          Trở về
+        </Button>
+      </Link>
       {!addition && users && (
         <DataTable
           columns={columns}

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,9 +51,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useSearchParams } from "next/navigation";
 import Course from "@/lib/axios/course";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import { usePathname } from "next/navigation";
 import Semester from "@/lib/axios/semester";
 const FormSchema = z
   .object({
@@ -98,9 +102,26 @@ export default function TeacherPage() {
   const [trigger, setTrigger] = useState<any>(null);
   const [course, setCourse] = useState<any>(null);
   const semes = SemesterQuery();
-  console.log(semes);
+  // console.log(semes);
   const [info, setInfo] = useState<any>(null);
   const [fet, setFet] = useState<any>(null);
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+ 
+      return params.toString()
+    },
+    [searchParams]
+  )
+  const fetchSemesterByNow = async () => {
+    const semes = await Semester.GetSemesterByNow();
+    // console.log(semes);
+    router.push(pathname + '?' + createQueryString('id', semes?.data.id))
+  }
   const fetchCourse = async (id: any) => {
     const course = await Course.GetAllCourse(id);
     setCourse(course?.data);
@@ -119,6 +140,14 @@ export default function TeacherPage() {
   useEffect(() => {
     fetchDKMH(fet);
   }, [fet]);
+  useEffect(() => {
+    if(!searchParams.get("id")) fetchSemesterByNow();
+  }, [searchParams]);
+  useEffect(() => {
+    if (searchParams.get('id')) {
+      setTrigger(semes?.data?.data?.find((el: any) => el.id == searchParams.get('id')))
+    }
+  } , [searchParams])
   const deleteDKMH = async (id: any) => {
     console.log(id);
     Swal.fire({
@@ -169,8 +198,9 @@ export default function TeacherPage() {
       <div className="flex gap-5 items-center mt-5 lg:flex-row flex-col">
         <Select
           onValueChange={(el: any) => {
-            setTrigger(el);
+            router.push(pathname + '?' + createQueryString('id', el?.id))
           }}
+          value={trigger}
         >
           <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="Select semester" />

@@ -146,14 +146,27 @@ export default function ProfileForm() {
               </FormItem>
             )}
           />
-          <FormItem>
-            <FormLabel>
-              Email: <a className="font-mono">{data?.data?.email}</a>
-            </FormLabel>
-            <FormDescription>
-              This field only is edited by admin
-            </FormDescription>
-          </FormItem>
+          <div className="flex items-center gap-11 flex-wrap">
+            <FormItem>
+              <FormLabel>
+                Email: <a className="font-mono">{data?.data?.email}</a>
+              </FormLabel>
+              <FormDescription>
+                This field only is edited by admin
+              </FormDescription>
+            </FormItem>
+            {data?.data?.role == "STUDENT" && (
+              <FormItem>
+                <FormLabel>
+                  Mã số sinh viên:{" "}
+                  <a className="font-mono">{data?.data?.mssv}</a>
+                </FormLabel>
+                <FormDescription>
+                  This field only is edited by admin
+                </FormDescription>
+              </FormItem>
+            )}
+          </div>
           <FormField
             control={form.control}
             name="firstname"

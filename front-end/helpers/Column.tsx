@@ -21,6 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 export type UserInfo = {
   id: string;
+  mssv: string,
   firstname: string;
   lastname: string;
   gender: string;
@@ -91,6 +92,10 @@ export const columns: ColumnDef<UserInfo>[] = [
   //   enableSorting: false,
   //   enableHiding: false,
   // },
+  {
+    accessorKey: "mssv",
+    header: "MSSV",
+  },
   {
     accessorKey: "firstname",
     header: "First name",

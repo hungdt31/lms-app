@@ -25,6 +25,7 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const path = usePathname();
+  //console.log(path);
   return (
     <TooltipProvider>
       <div
@@ -40,7 +41,13 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     href={link.href}
                     className={cn(
                       buttonVariants({
-                        variant: path === link.href ? "default" : "ghost",
+                        variant:
+                          link.href == path
+                            ? "default"
+                            : link.href != "/admin" &&
+                                path.indexOf(link.href) != -1
+                              ? "default"
+                              : "ghost",
                         size: "icon",
                       }),
                       "h-9 w-9",
@@ -70,7 +77,12 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 href={link.href}
                 className={cn(
                   buttonVariants({
-                    variant: path === link.href ? "default" : "ghost",
+                    variant:
+                      link.href == path
+                        ? "default"
+                        : link.href != "/admin" && path.indexOf(link.href) != -1
+                          ? "default"
+                          : "ghost",
                     size: "sm",
                   }),
                   link.variant === "default" &&
