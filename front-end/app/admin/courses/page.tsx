@@ -141,12 +141,9 @@ export default function TeacherPage() {
     fetchDKMH(fet);
   }, [fet]);
   useEffect(() => {
-    if(!searchParams.get("id")) fetchSemesterByNow();
-  }, [searchParams]);
-  useEffect(() => {
     if (searchParams.get('id')) {
       setTrigger(semes?.data?.data?.find((el: any) => el.id == searchParams.get('id')))
-    }
+    } else fetchSemesterByNow();
   } , [searchParams])
   const deleteDKMH = async (id: any) => {
     console.log(id);
