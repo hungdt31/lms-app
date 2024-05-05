@@ -19,7 +19,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ children }) => {
     <Link
       href={`course/detail?id=${id}&index=0`}
       key={index}
-      className="h-[350px] rounded-lg p-5 lg:w-[30%] sm:w-[45%] relative w-[100%] shadow-xl border-gray-600"
+      className="h-[350px] rounded-lg p-5 lg:w-[30%] sm:w-[45%] relative w-[100%] shadow-xl border-gray-600 z-0"
     >
       <div className="top-[55%] absolute">
         <b>

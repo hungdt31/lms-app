@@ -27,10 +27,9 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import Video from "@/lib/axios/video";
 import LoginLooading from "../loading/login";
-
+const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function EditVidSection(data: any) {
   const { qr, id } = data;
-  const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [content, setContent] = useState<String>("");
   const form = useForm<z.infer<typeof formSchema>>({
