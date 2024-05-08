@@ -12,7 +12,9 @@ export async function POST(request: Request) {
     path: "/",
     // 7 giờ
     expires: new Date(Date.now() + 1000 * 60 * 60 * 7),
-    sameSite: "strict",
+    sameSite: "none",
+    httpOnly: false,
+    secure: true,
   });
   return response;
 }
