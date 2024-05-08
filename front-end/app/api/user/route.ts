@@ -10,6 +10,8 @@ export async function POST(request: Request) {
     name: "token",
     value: body,
     path: "/",
+    // 7 giờ
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 7),
     sameSite: "strict",
   });
   return response;
