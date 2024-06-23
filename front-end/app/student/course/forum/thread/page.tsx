@@ -27,9 +27,9 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+import TextEditor from "@/components/text-editor";
+
 export default function ForumPage() {
   const token = new Cookies().get("token");
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,22 +43,6 @@ export default function ForumPage() {
   const [editId, setEditId] = useState<any>(null);
   const router = useRouter();
   const userQuery = UserQuery();
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-      zIndex: 1001,
-    },
-  };
   const fetchData = async () => {
     const res = await Post.GetThread(id);
     //console.log(res);
@@ -269,12 +253,11 @@ export default function ForumPage() {
                 <Label>Content</Label>
 
                 <div>
-                  <JoditReact
-                    defaultValue={content}
+                  <TextEditor
+                    defaultContent={content}
                     onChange={(content) => {
                       setContent(content);
                     }}
-                    config={config}
                   />
                 </div>
               </CardContent>
@@ -323,12 +306,11 @@ export default function ForumPage() {
                 <Label>Content</Label>
 
                 <div>
-                  <JoditReact
-                    defaultValue={content}
+                  <TextEditor
+                    defaultContent={content}
                     onChange={(content) => {
                       setContent(content);
                     }}
-                    config={config}
                   />
                 </div>
               </CardContent>

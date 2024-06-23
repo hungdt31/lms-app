@@ -103,7 +103,6 @@ export const columns: ColumnDef<Course>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const id = row.original.id;
-      const token = new Cookies().get("token");
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

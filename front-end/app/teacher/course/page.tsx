@@ -32,7 +32,7 @@ export default function TeacherPage() {
   const user = UserQuery();
   // console.log(mutation);
   return (
-    <div className="flex justify-center flex-col items-center gap-5">
+    <div className="flex justify-center flex-col items-center gap-5 lg:mx-14 mx-5 mb-5">
       <div className="flex gap-5 items-center mt-5 lg:flex-row flex-col">
         <Select
           onValueChange={(el: any) => {

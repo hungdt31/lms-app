@@ -9,12 +9,11 @@ export default function TopNavbar() {
   const pathname = usePathname();
   const [show, setShow] = React.useState<boolean>(false);
   return (
-    <div className="sm:hidden shadow-lg bg-nav">
+    <div className="sm:hidden bg-nav">
       <div className="p-5 flex justify-between items-center">
         <LayoutList onClick={() => setShow(!show)} className="text-nav-text" />
         <ToggleTheme />
       </div>
-      <hr />
       <div className="flex gap-3 flex-wrap font-bold text-nav-text">
         {show &&
           nav.map((item: any) => {
@@ -22,7 +21,7 @@ export default function TopNavbar() {
               <Link
                 href={item.href}
                 key={item.title}
-                className={pathname === item.href ? "underline" : ""}
+                className={pathname === item.href ? "nav-button" : ""}
               >
                 <div key={item.title} className="p-3">
                   <div className="flex items-center">

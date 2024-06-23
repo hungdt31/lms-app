@@ -6,7 +6,6 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
-  SheetClose,
 } from "@/components/ui/sheet";
 import Swal from "sweetalert2";
 import formSchema from "@/lib/zod/UploadDocumentSection";
@@ -18,26 +17,25 @@ import {
 } from "@/components/ui/tooltip";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Wrench } from "lucide-react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-// import JoditReact from "jodit-react-ts";
-import dynamic from "next/dynamic";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import TextEditor from "@/components/text-editor";
 import { useState } from "react";
-import LoginLooading from "../loading/login";
+import { LoginLoading } from "@/components/loading";
 import Docs from "@/lib/axios/document";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+
 export default function EditDocSection(data: any) {
   const { qr, id } = data;
   const [loading, setLoading] = useState<boolean>(false);
-  const [content, setContent] = useState<String>("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       content: "",
+      courseId: id,
     },
   });
   const {
@@ -47,7 +45,7 @@ export default function EditDocSection(data: any) {
   } = form;
   const onSubmit = async (data: any) => {
     setLoading(true);
-    const rs: any = await Docs.UpdateDocumentSection(data, id);
+    const rs: any = await Docs.UpdateDocumentSection(data);
     Swal.fire({
       title: "Info about deleting video section",
       text: rs.mess,
@@ -55,21 +53,7 @@ export default function EditDocSection(data: any) {
     });
     qr.refetch();
     setLoading(false);
-  };
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-    },
+    // console.log(data);
   };
   return (
     <Sheet>
@@ -106,11 +90,9 @@ export default function EditDocSection(data: any) {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Content</Label>
             </div>
-            <JoditReact
-              onChange={(content) => {
-                form.setValue("content", content);
-              }}
-              config={config}
+            <TextEditor
+              defaultContent={"<p>Write your content here...</p>"} // default content
+              onChange={(content) => form.setValue("content", content)}
             />
             <p className="text-red-500 text-[14px]">
               {errors?.content?.message}
@@ -118,7 +100,7 @@ export default function EditDocSection(data: any) {
           </div>
           <SheetFooter>
             {loading ? (
-              <LoginLooading />
+              <LoginLoading />
             ) : (
               <Button type="submit">Save changes</Button>
             )}

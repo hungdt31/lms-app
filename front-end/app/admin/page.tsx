@@ -52,9 +52,9 @@ import Post from "@/lib/axios/post";
 import { Label } from "@/components/ui/label";
 import Cookies from "universal-cookie";
 import { toast } from "@/components/ui/use-toast";
-import admin_page from "./admin_page.jpg";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+// import Image from "next/image";
+import TextEditor from "@/components/text-editor";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -65,7 +65,7 @@ const formSchema = z.object({
 const formSchema2 = z.object({
   name: z.string().min(1, { message: "Title is required" }),
 });
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+// const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
 export default function AdminPage() {
   const [editId, setEditId] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
@@ -85,11 +85,11 @@ export default function AdminPage() {
   const token = new Cookies().get("token");
   const userData = UserQuery();
   const [value, setValue] = useState<string>();
-  const config = {
-    style: {
-      color: "black",
-    },
-  };
+  // const config = {
+  //   style: {
+  //     color: "black",
+  //   },
+  // };
   useEffect(() => {
     if (userData) {
       setUser(userData?.data?.data);
@@ -229,7 +229,7 @@ export default function AdminPage() {
       });
   };
   return (
-    <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+    <div className="">
       <div className="p-7">
         <div>
           <h1 className="text-3xl font-bold text-main dark:text-white text-center font-mono relative">
@@ -479,12 +479,18 @@ export default function AdminPage() {
                                   <Label>Content: </Label>
                                   <FormControl>
                                     <div className="mt-3">
-                                      <JoditReact
+                                      {/* <JoditReact
                                         onChange={(content) =>
                                           form.setValue("content", content)
                                         }
                                         defaultValue={form.getValues("content")}
                                         config={config}
+                                      /> */}
+                                      <TextEditor 
+                                        onChange={(content) =>
+                                          form.setValue("content", content)
+                                        }
+                                        defaultContent={form.getValues("content")}
                                       />
                                     </div>
                                   </FormControl>
@@ -613,7 +619,7 @@ export default function AdminPage() {
                                         <Label>Content: </Label>
                                         <FormControl>
                                           <div className="mt-3">
-                                            <JoditReact
+                                            {/* <JoditReact
                                               onChange={(content) =>
                                                 form.setValue(
                                                   "content",
@@ -624,6 +630,15 @@ export default function AdminPage() {
                                                 "content",
                                               )}
                                               config={config}
+                                            /> */}
+                                            <TextEditor
+                                              onChange={(content) =>
+                                                form.setValue(
+                                                  "content",
+                                                  content,
+                                                )
+                                              }
+                                              defaultContent={form.getValues("content")}
                                             />
                                           </div>
                                         </FormControl>
@@ -714,7 +729,6 @@ export default function AdminPage() {
           })}
         </Accordion>
       </div>
-      <Image className="w-full shadow-lg" alt="admin image" src={admin_page} />
     </div>
   );
 }

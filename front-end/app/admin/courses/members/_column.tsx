@@ -1,19 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
-import Swal from "sweetalert2";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Course from "@/lib/axios/course";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Cookies from "universal-cookie";
-import { Button } from "@/components/ui/button";
-import { MoreVertical } from "lucide-react";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 export type Course = {
@@ -90,9 +78,9 @@ export const _columns: ColumnDef<Course>[] = [
           </Avatar>
           <div>
             <p className="flex items-center gap-3">
-              <h1 className="font-bold">
+              <p className="font-bold">
                 {row.original.firstname} {row.original.lastname}
-              </h1>
+              </p>
             </p>
             <p className="text-gray-500 text-[12px]">
               {row.original.mssv} - {row.original.email}

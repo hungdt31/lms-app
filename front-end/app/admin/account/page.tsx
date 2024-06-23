@@ -42,7 +42,7 @@ export default function TeacherPage() {
   };
   return (
     <div>
-      <h1>Admin Page</h1>
+      <p>Admin Page</p>
       <div className="h-24 bg-gradient-to-r from-sky-500 via-cyan-400 to-indigo-500 relative -mt-7">
         {loading ? (
           <LoginLoading />

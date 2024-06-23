@@ -13,8 +13,8 @@ import formSchema from "@/lib/zod/Submission";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+import TextEditor from "@/components/text-editor";
+
 export default function SubmissionPage() {
   const id: string = useSearchParams().get("id") as string;
   const did: string = useSearchParams().get("did") as string;
@@ -36,21 +36,6 @@ export default function SubmissionPage() {
     handleSubmit,
     formState: { errors },
   } = form;
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-    },
-  };
   const onSubmit = async (data: any) => {
     setLoading(true);
     data.documentSectionId = did;
@@ -123,11 +108,7 @@ export default function SubmissionPage() {
             )}
           </div>
           <Label className="p-3 font-bold">Mô tả</Label>
-          <JoditReact
-            onChange={(content) => form.setValue("description", content)}
-            config={config}
-            defaultValue="Hello world"
-          />
+          <TextEditor onChange={(content) => form.setValue("description", content)}/>
           {errors?.description && (
             <p className="text-xs text-red-500 text-[14px] ml-3">
               {errors?.description?.message}
@@ -141,6 +122,7 @@ export default function SubmissionPage() {
             Submit
           </Button>
         )}
+        
       </form>
     </div>
   );

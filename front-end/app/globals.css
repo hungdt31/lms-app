@@ -104,8 +104,66 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
+  }
+  h1 {
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+  h4 {
+    @apply text-lg;
+  }
+  hr {
+    @apply my-3;
+    @apply border-t-2;
+  }
+  ul > li {
+    @apply list-disc;
+    @apply ml-4;
+  }
+  ol > li {
+    @apply list-decimal;
+    @apply ml-4;
+  }
+  pre {
+    @apply bg-muted;
+    @apply p-4;
+    @apply rounded-lg;
+  }
+  blockquote {
+    @apply border-l-2;
+    @apply border-primary;
+    @apply px-4;
+    @apply my-4;
+    @apply bg-muted;
+    @apply py-2;
+  }
+  code {
+    @apply px-2;
+    @apply bg-muted;
+    @apply rounded-md;
+  }
+  .nav-button {
+    @apply border-background;
+    @apply border-r-4;
+    @apply border-l-2;
+    @apply border-t-2;
+    @apply px-2;
+    border-top-left-radius: var(--radius);
+  }
 }
+

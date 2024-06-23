@@ -35,7 +35,7 @@ export default function TeacherPage() {
   };
   return (
     <div>
-      <h1>Teacher Page</h1>
+      <p>Teacher Page</p>
       <div className="h-24 bg-gradient-to-r from-sky-500 via-cyan-400 to-indigo-500 relative -mt-7">
         <div className="absolute top-9 left-[35%] flex w-[30%] flex-col justify-center items-center font-mono">
           {data?.data?.avatar ? (

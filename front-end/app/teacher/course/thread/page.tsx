@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Post from "@/lib/axios/post";
-import { Car, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TimeConvert from "@/helpers/TimeConvert";
 import Cookies from "universal-cookie";
@@ -28,8 +28,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+import TextEditor from "@/components/text-editor";
+
 export default function ForumPage() {
   const token = new Cookies().get("token");
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,22 +43,6 @@ export default function ForumPage() {
   const [editId, setEditId] = useState<any>(null);
   const router = useRouter();
   const userQuery = UserQuery();
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-      zIndex: 1001,
-    },
-  };
   const fetchData = async () => {
     const res = await Post.GetThread(id);
     console.log(res);
@@ -96,6 +80,7 @@ export default function ForumPage() {
           Swal.fire("Error!", "Something're wrong", "error");
         }
         setLoading(false);
+        setOpen(false);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -156,107 +141,113 @@ export default function ForumPage() {
           Swal.fire("Error!", "Something're wrong", "error");
         }
         setLoading(false);
+        setEdit(false);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
     });
   };
   return (
-    <div>
+    <div className="py-7">
       <div className="px-3 lg:px-9">
-        <Button
-          className="fixed bottom-5 right-3"
-          onClick={() =>
-            router.push(
-              `/teacher/course/detail/attendance?id=${thread?.courseId}`,
-            )
-          }
-        >
-          Quay lại forum
-        </Button>
-        {thread?.posts?.map?.((post: any) => (
-          <div
-            key={post.id}
-            className={
-              post?.user?.role == "STUDENT"
-                ? "chat chat-end"
-                : "chat chat-start"
+        {!edit && (
+          <Button
+            className="fixed bottom-5 right-3"
+            onClick={() =>
+              router.push(
+                `/teacher/course/detail/attendance?id=${thread?.courseId}`,
+              )
             }
           >
-            <div className="chat-image avatar ">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="w-10 rounded-full">
-                      <img alt="Avatar" src={post?.user?.avatar} />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{post?.user?.role}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="chat-header">
-              {post?.user?.username}
-              <time className="text-xs opacity-50 ml-3">
-                {TimeConvert(post?.createdAt)}
-              </time>
-            </div>
-            <div className="chat-bubble bg-nav text-nav-text">
-              <p className="font-bold text-xl underline">{post?.title}</p>
-              <div dangerouslySetInnerHTML={{ __html: post?.content }} />
-            </div>
-            <div className="chat-footer opacity-50">
-              Delivered{" "}
-              {user?.id == post?.user?.id ? (
-                <div className="inline-block">
-                  <p
-                    className="ml-3 hover:underline inline-block"
-                    onClick={() => recallPost(post?.id)}
-                  >
-                    Thu hồi
-                  </p>
-                  <p
-                    className="ml-3 hover:underline inline-block"
-                    onClick={() => {
-                      setTitle(post?.title);
-                      setContent(post?.content);
-                      setEditId(post?.id);
-                      setEdit(true);
-                    }}
-                  >
-                    Chỉnh sửa
-                  </p>
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              className="bottom-[80px] right-3 fixed"
-              onClick={() => setOpen(true)}
+            Quay lại forum
+          </Button>
+        )}
+        {!edit &&
+          thread?.posts?.map?.((post: any) => (
+            <div
+              key={post.id}
+              className={
+                post?.user?.role == "STUDENT"
+                  ? "chat chat-end"
+                  : "chat chat-start"
+              }
             >
-              <Plus />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create a new post</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+              <div className="chat-image avatar ">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-10 rounded-full">
+                        <img alt="Avatar" src={post?.user?.avatar} />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{post?.user?.role}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div className="chat-header">
+                {post?.user?.username}
+                <time className="text-xs opacity-50 ml-3">
+                  {TimeConvert(post?.createdAt)}
+                </time>
+              </div>
+              <div className="chat-bubble bg-nav text-nav-text">
+                <p className="font-bold text-xl underline">{post?.title}</p>
+                <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+              </div>
+              <div className="chat-footer opacity-50">
+                Delivered{" "}
+                {user?.id == post?.user?.id ? (
+                  <div className="inline-block">
+                    <p
+                      className="ml-3 hover:underline inline-block"
+                      onClick={() => recallPost(post?.id)}
+                    >
+                      Thu hồi
+                    </p>
+                    <p
+                      className="ml-3 hover:underline inline-block"
+                      onClick={() => {
+                        setTitle(post?.title);
+                        setContent(post?.content);
+                        setEditId(post?.id);
+                        setEdit(true);
+                      }}
+                    >
+                      Chỉnh sửa
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ))}
+      </div>
+      {!edit && !open && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                className="bottom-[80px] right-3 fixed"
+                onClick={() => setOpen(true)}
+              >
+                <Plus />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create a new post</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
 
       {open && (
         <>
-          <div className="bg-gray-700 opacity-60 w-screen h-screen fixed top-0"></div>
-          <div className="z-50 fixed flex justify-center top-0 w-full h-full items-center">
-            <Card>
+          {/* <div className="bg-gray-700 opacity-60 w-screen h-screen fixed top-0"></div> */}
+          <div className="z-50 flex justify-center items-center mt-3">
+            <Card className="lg:w-[80%] w-[95%]">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -279,13 +270,7 @@ export default function ForumPage() {
                 <Label>Content</Label>
 
                 <div key="editor1">
-                  <JoditReact
-                    defaultValue={content}
-                    onChange={(content) => {
-                      setContent(content);
-                    }}
-                    config={config}
-                  />
+                  <TextEditor onChange={(content) => setContent(content)} />
                 </div>
               </CardContent>
               <CardFooter>
@@ -301,9 +286,9 @@ export default function ForumPage() {
       )}
       {edit && (
         <>
-          <div className="bg-gray-700 opacity-60 w-screen h-screen fixed top-0"></div>
-          <div className="z-50 fixed flex justify-center top-0 w-full h-full items-center">
-            <Card>
+          {/* <div className="bg-gray-700 opacity-60 w-screen h-screen fixed top-0"></div> */}
+          <div className="z-50 flex justify-center top-0 w-full h-full items-center scroll-smooth">
+            <Card className="lg:w-[80%] w-[95%]">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -333,12 +318,9 @@ export default function ForumPage() {
                 <Label>Content</Label>
 
                 <div>
-                  <JoditReact
-                    defaultValue={content}
-                    onChange={(content) => {
-                      setContent(content);
-                    }}
-                    config={config}
+                  <TextEditor
+                    onChange={(content) => setContent(content)}
+                    defaultContent={content}
                   />
                 </div>
               </CardContent>

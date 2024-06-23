@@ -1,7 +1,7 @@
 import instance from "@/axios";
 type DocsType = {
   title: string;
-  content: string;
+  content?: string;
   courseId: string;
 };
 async function CreateNewDocs(data: DocsType) {
@@ -39,11 +39,14 @@ async function DeleteQuizAndDocumentLink(data: any) {
     data,
   });
 }
-async function UpdateDocumentSection(data: any, id: any) {
+async function UpdateDocumentSection(data: DocsType) {
   return await instance({
     method: "put",
-    url: `/document-section?id=${id}`,
-    data,
+    url: `/document-section?id=${data.courseId}`,
+    data: {
+      title: data.title,
+      content: data.content,
+    },
   });
 }
 const Docs = {

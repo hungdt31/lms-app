@@ -1,6 +1,6 @@
 "use client";
 import { z } from "zod";
-// import JoditEditor from "jodit-pro-react";
+import TextEditor from "@/components/text-editor";
 import LoginLooading from "@/components/loading/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,30 +29,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { CourseQuery } from "@/hooks/course";
 import Docs from "@/lib/axios/document";
 export default function Attendance() {
-  const JoditEditor = dynamic(() => import("jodit-pro-react"), { ssr: false });
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-      height: 580,
-    },
-    style: {
-      background: "white",
-      color: "black",
-    },
-  };
-  const editor = useRef(null);
-  const [content, setContent] = useState("");
-  const id = useSearchParams().get("id");
+  const id = useSearchParams().get("id") ?? "";
   const { data } = CourseQuery(id);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -61,16 +41,17 @@ export default function Attendance() {
     defaultValues: {
       title: "",
       content: "",
+      courseId: id
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    values.courseId = id;
-    console.log(values);
-    const rs = await Docs.CreateNewDocs(values);
-    console.log(rs);
+    // values.courseId = id;
+    // console.log(values);
+    const rs : any = await Docs.CreateNewDocs(values);
+    // console.log(rs);
     setLoading(false);
     if (rs.success) {
       Swal.fire({
@@ -139,16 +120,10 @@ export default function Attendance() {
                   </FormItem>
                 )}
               />
-              <JoditEditor
-                ref={editor}
-                value={content}
-                config={config}
-                tabIndex={1} // tabIndex of textarea
-                onBlur={(newContent) => {
-                  setContent(newContent);
-                  form.setValue("content", newContent);
-                }} // preferred to use only this option to update the content for performance reasons
-                onChange={(newContent) => {}}
+              <TextEditor
+                onChange={(content) => {
+                  form.setValue("content", content);
+                }}
               />
               {loading ? (
                 <LoginLooading />
