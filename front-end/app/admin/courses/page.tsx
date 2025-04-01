@@ -105,23 +105,23 @@ export default function TeacherPage() {
   // console.log(semes);
   const [info, setInfo] = useState<any>(null);
   const [fet, setFet] = useState<any>(null);
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
- 
-      return params.toString()
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
     },
-    [searchParams]
-  )
+    [searchParams],
+  );
   const fetchSemesterByNow = async () => {
     const semes = await Semester.GetSemesterByNow();
     // console.log(semes);
-    router.push(pathname + '?' + createQueryString('id', semes?.data.id))
-  }
+    router.push(pathname + "?" + createQueryString("id", semes?.data.id));
+  };
   const fetchCourse = async (id: any) => {
     const course = await Course.GetAllCourse(id);
     setCourse(course?.data);
@@ -132,10 +132,12 @@ export default function TeacherPage() {
     setDkmh(dkmh?.data);
   };
   useEffect(() => {
-    if (searchParams.get('id')) {
-      setTrigger(semes?.data?.data?.find((el: any) => el.id == searchParams.get('id')))
+    if (searchParams.get("id")) {
+      setTrigger(
+        semes?.data?.data?.find((el: any) => el.id == searchParams.get("id")),
+      );
     } else fetchSemesterByNow();
-  } , [searchParams, semes?.data?.data])
+  }, [searchParams, semes?.data?.data]);
   useEffect(() => {
     setInfo(trigger);
     // console.log(el);
@@ -195,7 +197,7 @@ export default function TeacherPage() {
       <div className="flex gap-5 items-center mt-5 lg:flex-row flex-col">
         <Select
           onValueChange={(el: any) => {
-            router.push(pathname + '?' + createQueryString('id', el?.id))
+            router.push(pathname + "?" + createQueryString("id", el?.id));
           }}
           value={trigger}
         >

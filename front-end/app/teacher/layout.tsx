@@ -19,7 +19,6 @@ export default function RootLayout({
     <QueryProvider>
       <div>
         <TopNav />
-
         {children}
       </div>
     </QueryProvider>

@@ -2,8 +2,8 @@ import StarterKit from "@tiptap/starter-kit";
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
-import TextAlign from '@tiptap/extension-text-align'
-import Image from '@tiptap/extension-image'
+import TextAlign from "@tiptap/extension-text-align";
+import Image from "@tiptap/extension-image";
 import { Button } from "@/components/ui/button";
 import { EditorProvider, useCurrentEditor } from "@tiptap/react";
 import { Buttons } from "@/components/text-editor/buttons";
@@ -14,7 +14,7 @@ const MenuBar = () => {
   if (!editor) {
     return null;
   }
-  let buttons : ButtonProps[] = [];
+  let buttons: ButtonProps[] = [];
   for (const button of Buttons) {
     buttons.push(button(editor));
   }
@@ -33,7 +33,7 @@ const MenuBar = () => {
           </Button>
         ))}
       </div>
-      <hr/>
+      <hr />
     </div>
   );
 };
@@ -42,7 +42,7 @@ const extensions = [
   Image.configure({}),
   TextStyle.configure({}),
   TextAlign.configure({
-    types: ['heading', 'paragraph'],
+    types: ["heading", "paragraph"],
   }),
   StarterKit.configure({
     bulletList: {
@@ -82,14 +82,13 @@ export default function TextEditor({
         slotBefore={<MenuBar />}
         extensions={extensions}
         content={defaultContent || content}
-        onUpdate={({editor}) => {
+        onUpdate={({ editor }) => {
           onChange(editor.getHTML());
         }}
         onBeforeCreate={({ editor }) => {
           defaultContent ? onChange(defaultContent) : onChange(content);
         }}
-      >
-      </EditorProvider>
+      ></EditorProvider>
     </div>
   );
 }

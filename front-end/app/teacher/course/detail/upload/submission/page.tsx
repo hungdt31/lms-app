@@ -108,7 +108,9 @@ export default function SubmissionPage() {
             )}
           </div>
           <Label className="p-3 font-bold">Mô tả</Label>
-          <TextEditor onChange={(content) => form.setValue("description", content)}/>
+          <TextEditor
+            onChange={(content) => form.setValue("description", content)}
+          />
           {errors?.description && (
             <p className="text-xs text-red-500 text-[14px] ml-3">
               {errors?.description?.message}
@@ -122,7 +124,6 @@ export default function SubmissionPage() {
             Submit
           </Button>
         )}
-        
       </form>
     </div>
   );

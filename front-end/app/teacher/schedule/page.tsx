@@ -1,5 +1,5 @@
 "use client";
-import "./styles.css"
+import "./styles.css";
 import { SquareCheckBig, FileUp } from "lucide-react";
 import Semester from "@/lib/axios/semester";
 import { useEffect, useState } from "react";
@@ -39,67 +39,67 @@ export default function ControlPage() {
   return (
     <div className="gap-5 grid lg:grid-cols-2 grid-cols-1 lg:px-3 p-5">
       <div className="flex justify-center items-center flex-col">
-        <p className="font-bold text-2xl mb-5">Thời khóa biểu {semester?.description}</p>
-      <div className="overflow-x-auto rounded-lg shadow-sm border-l-2 border-r-2 border-nav">
-              <table className="table table-sm table-pin-rows table-pin-cols text-lg ">
-                <thead>
-                  <tr>
-                    <td></td>
-                    <td>Môn học</td>
-                    <td>Số tín chỉ</td>
-                    <td>Tuần học</td>
-                    <td>Giờ học</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tkb?.map((el: any, index: any) => {
-                    if (el?.length === 0) {
-                      return (
-                        <tr key={index}>
-                          <td colSpan={5} className="font-bold">
+        <p className="font-bold text-2xl mb-5">
+          Thời khóa biểu {semester?.description}
+        </p>
+        <div className="overflow-x-auto rounded-lg shadow-sm border-l-2 border-r-2 border-nav">
+          <table className="table table-sm table-pin-rows table-pin-cols text-lg ">
+            <thead>
+              <tr>
+                <td></td>
+                <td>Môn học</td>
+                <td>Số tín chỉ</td>
+                <td>Tuần học</td>
+                <td>Giờ học</td>
+              </tr>
+            </thead>
+            <tbody>
+              {tkb?.map((el: any, index: any) => {
+                if (el?.length === 0) {
+                  return (
+                    <tr key={index}>
+                      <td colSpan={5} className="font-bold">
+                        {week[index]}
+                      </td>
+                    </tr>
+                  );
+                } else {
+                  return el?.map((e: any, i: number) => {
+                    return (
+                      <tr key={`${index}-${i}`}>
+                        {i === 0 && (
+                          <td
+                            rowSpan={el.length}
+                            className="border-r-2 font-bold border-nav"
+                          >
                             {week[index]}
                           </td>
-                        </tr>
-                      );
-                    } else {
-                      return el?.map((e: any, i: number) => {
-                        return (
-                          <tr key={`${index}-${i}`}>
-                            {i === 0 && (
-                              <td
-                                rowSpan={el.length}
-                                className="border-r-2 font-bold border-nav"
-                              >
-                                {week[index]}
-                              </td>
-                            )}
-                            <td className="border-r-2 border-nav">
-                              {e?.title} ({e?.course_id})
-                            </td>
-                            <td className="border-r-2 border-nav">
-                              {e?.credit}
-                            </td>
-                            <td className="border-r-2 border-nav">
-                              {e?.schedule.join(", ")}
-                            </td>
-                            <td>{e?.time}</td>
-                          </tr>
-                        );
-                      });
-                    }
-                  })}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                </tfoot>
-              </table>
-      </div>
+                        )}
+                        <td className="border-r-2 border-nav">
+                          {e?.title} ({e?.course_id})
+                        </td>
+                        <td className="border-r-2 border-nav">{e?.credit}</td>
+                        <td className="border-r-2 border-nav">
+                          {e?.schedule.join(", ")}
+                        </td>
+                        <td>{e?.time}</td>
+                      </tr>
+                    );
+                  });
+                }
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
       <div className="flex flex-col gap-3 items-center pb-5">
         <p>

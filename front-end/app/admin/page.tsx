@@ -486,11 +486,13 @@ export default function AdminPage() {
                                         defaultValue={form.getValues("content")}
                                         config={config}
                                       /> */}
-                                      <TextEditor 
+                                      <TextEditor
                                         onChange={(content) =>
                                           form.setValue("content", content)
                                         }
-                                        defaultContent={form.getValues("content")}
+                                        defaultContent={form.getValues(
+                                          "content",
+                                        )}
                                       />
                                     </div>
                                   </FormControl>
@@ -638,7 +640,9 @@ export default function AdminPage() {
                                                   content,
                                                 )
                                               }
-                                              defaultContent={form.getValues("content")}
+                                              defaultContent={form.getValues(
+                                                "content",
+                                              )}
                                             />
                                           </div>
                                         </FormControl>

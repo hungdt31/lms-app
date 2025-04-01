@@ -41,7 +41,7 @@ export default function Attendance() {
     defaultValues: {
       title: "",
       content: "",
-      courseId: id
+      courseId: id,
     },
   });
 
@@ -50,7 +50,7 @@ export default function Attendance() {
     setLoading(true);
     // values.courseId = id;
     // console.log(values);
-    const rs : any = await Docs.CreateNewDocs(values);
+    const rs: any = await Docs.CreateNewDocs(values);
     // console.log(rs);
     setLoading(false);
     if (rs.success) {

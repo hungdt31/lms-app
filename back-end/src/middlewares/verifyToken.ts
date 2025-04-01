@@ -13,7 +13,7 @@ const verifyAccessToken = asyncHandler(
   ) => {
     if (request?.headers?.authorization?.startsWith("Bearer")) {
       const token = request.headers.authorization.split(" ")[1];
-      console.log(token);
+      // console.log(token);
       const JWT_SECRET: any = process.env.JWT_SECRET;
       jwt.verify(token, JWT_SECRET, (err: any, decode: any) => {
         if (err)
@@ -21,7 +21,7 @@ const verifyAccessToken = asyncHandler(
             success: false,
             mess: "Invalid access token",
           });
-        console.log(decode);
+        // console.log(decode);
         (request as any).user = decode as UserToken;
         next();
       });

@@ -96,9 +96,7 @@ export default function CarouselDemo() {
     }
     if (rs?.isSuccess) {
       Swal.fire("Saved!", "", "success");
-      router.push(
-        `/student/course/quiz/result?id=${rs?.data?.data?.id}`,
-      );
+      router.push(`/student/course/quiz/result?id=${rs?.data?.data?.id}`);
     }
   }, [quiz?.isSuccess, quiz?.data, rs?.isSuccess, rs?.data]);
 

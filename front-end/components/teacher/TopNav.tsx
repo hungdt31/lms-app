@@ -3,17 +3,17 @@ import { BlockLoading } from "../loading";
 import UserQuery from "@/hooks/user";
 import UserAvatar from "../common/UserAvatar";
 import Link from "next/link";
-import Image from "next/image";
+import { GraduationCap } from "lucide-react";
 import ToggleTheme from "../toggle-theme";
 import deleteToken from "@/hooks/deleteToken";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import { use } from "react";
+
 export default function TopNav() {
   const router = useRouter();
   const path = usePathname();
-  console.log(path);
+  // console.log(path);
   const { data, isPending, error } = UserQuery();
   if (isPending)
     return (
@@ -73,7 +73,7 @@ export default function TopNav() {
           </ul>
         </div>
         <div className="hidden lg:block">
-          <Image src="/favicon.ico" alt="Logo" width={50} height={50} />
+          <GraduationCap size={50} />
         </div>
         <a className="btn btn-ghost text-xl text-nav-text ">LMS</a>
       </div>

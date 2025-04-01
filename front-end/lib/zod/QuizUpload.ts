@@ -26,12 +26,10 @@ const formSchema = z.object({
           message: "There must be 4 options.",
         }),
       explain: z.string(),
-      answer: z
-        .string()
-        .min(1, {
-          message:
-            "The answer is invalid because input is empty or radio isn't checked.",
-        }),
+      answer: z.string().min(1, {
+        message:
+          "The answer is invalid because input is empty or radio isn't checked.",
+      }),
     }),
   ),
 });

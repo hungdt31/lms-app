@@ -242,7 +242,7 @@ export default function DetailCourse() {
                 </AccordionItem>
               ))}
             </Accordion>
-            <hr/>
+            <hr />
             <h3>Forum</h3>
             <div className="w-[60%] my-9 flex flex-col gap-3">
               {data?.data?.forum?.map((forum: any, idx: any) => (

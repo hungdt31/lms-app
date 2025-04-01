@@ -241,7 +241,7 @@ class UserController extends BaseController {
   private addUser = asyncHandler(
     async (request: express.Request, response: express.Response) => {
       const requestData = request.body;
-      console.log(requestData);
+      // console.log(requestData);
       const arr = [];
       // Mã hóa mật khẩu cho từng người dùng trước khi thêm vào cơ sở dữ liệu
       for (const user of requestData) {

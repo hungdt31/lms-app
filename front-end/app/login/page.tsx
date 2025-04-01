@@ -132,90 +132,159 @@ export default function ProfileForm() {
     }
   }
   return (
-    <div className="flex justify-center pt-8">
-      <Card className="sm:w-[60%] w-[80%] lg:w-1/3">
-        <CardHeader>
-          <CardTitle>Login {isAdmin == "true" ? "as admin" : ""}</CardTitle>
-          <CardDescription>Come to us today ☀️</CardDescription>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-2">
+          <div className="flex justify-center mb-6">
+            {/* You can add your logo here */}
+            <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold border-2">
+              LMS
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold text-center">
+            Welcome Back
+          </CardTitle>
+          <CardDescription className="text-center">
+            {isAdmin == "true"
+              ? "Login to admin dashboard"
+              : "Login to your account"}
+          </CardDescription>
         </CardHeader>
+
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-medium">Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter your email"
-                        {...field}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            event.preventDefault();
-                            // Trigger the button element with a click
-                            const m: any = document.getElementById("myBtn");
-                            m.click();
-                          }
-                        }}
-                      />
+                      <div className="relative">
+                        <Input
+                          disabled={loading}
+                          className="pl-10 h-11"
+                          placeholder="Enter your email"
+                          {...field}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              const m: any = document.getElementById("myBtn");
+                              m.click();
+                            }
+                          }}
+                        />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                          <svg
+                            className="w-5 h-5 opacity-70"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                            />
+                          </svg>
+                        </span>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-5">
-                      Password{" "}
-                      <p
-                        onClick={() => setShowPass((state: Boolean) => !state)}
-                      >
-                        {showPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
-                      </p>
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-medium">
+                      Password
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter your password"
-                        {...field}
-                        type={showPass ? "text" : "password"}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            event.preventDefault();
-                            // Trigger the button element with a click
-                            const m: any = document.getElementById("myBtn");
-                            m.click();
+                      <div className="relative">
+                        <Input
+                          disabled={loading}
+                          className="pl-10 h-11"
+                          placeholder="Enter your password"
+                          {...field}
+                          type={showPass ? "text" : "password"}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              const m: any = document.getElementById("myBtn");
+                              m.click();
+                            }
+                          }}
+                        />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                          <svg
+                            className="w-5 h-5 opacity-70"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                            />
+                          </svg>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowPass((state: Boolean) => !state)
                           }
-                        }}
-                      />
+                          className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+                        >
+                          {showPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Link href={"/change-password"}>
-                <Btn variant={"link"}>Change Password</Btn>
-              </Link>
+
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/change-password"
+                  className="text-sm hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               {loading ? (
-                <LoginLooading />
+                <div className="py-2">
+                  <LoginLooading />
+                </div>
               ) : (
-                <div className="flex justify-between">
-                  <Link href={"/"}>
-                    <Btn variant={"link"}>
-                      <ArrowLeftIcon />
-                      <p className="text-[14px] ml-[2px]">Home</p>
-                    </Btn>
-                  </Link>
-                  <div className="flex gap-3">
-                    <Button type="submit" variant="surface" id="myBtn">
-                      Submit
-                    </Button>
+                <div className="space-y-4">
+                  <Button type="submit" id="myBtn" className="w-full h-11">
+                    Sign in
+                  </Button>
+
+                  <div className="flex items-center justify-between">
+                    <Link href="/">
+                      <Btn
+                        variant="outline"
+                        className="flex items-center gap-2"
+                      >
+                        <ArrowLeftIcon />
+                        Home
+                      </Btn>
+                    </Link>
                     <Button
-                      variant="surface"
+                      variant="soft"
                       onClick={() => {
                         form.trigger(["email", "password"]);
                         form.reset();

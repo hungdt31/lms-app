@@ -13,7 +13,7 @@ import Cookies from "universal-cookie";
 import ToggleTheme from "@/components/toggle-theme";
 import Link from "next/link";
 import Image from "next/image";
-import icon from "./favicon.ico";
+import icon from "./favicon.png";
 import deleteToken from "@/hooks/deleteToken";
 import { verifyJwtToken } from "@/lib/auth";
 

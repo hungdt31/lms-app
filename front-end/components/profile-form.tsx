@@ -84,7 +84,7 @@ export default function ProfileForm() {
   >({});
   const fetchUser = async () => {
     const res = await User.GetCurrentUser(token);
-    console.log(res.data);
+    // console.log(res.data);
     setDefaultValues({
       username: res.data.username,
       firstname: res.data.firstname,
@@ -113,7 +113,7 @@ export default function ProfileForm() {
       data.date_of_birth = data.date_of_birth.toISOString();
     }
     const rs: any = await User.UpdateUser(token, data);
-    console.log(rs);
+    // console.log(rs);
     Swal.fire({
       title: rs?.success ? "Success" : "Error",
       text: rs?.mess,
@@ -122,190 +122,230 @@ export default function ProfileForm() {
     });
     setLoading(false);
 
-    console.log(data);
+    // console.log(data);
   };
 
   return (
-    <div className="mt-[150px] flex justify-center p-3">
+    <div className="max-w-3xl mx-auto mt-[100px] p-6 rounded-lg shadow-md">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Basic Info Section */}
+          <div className="p-4  rounded-md">
+            <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="border-gray-200 focus:ring-2"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-sm text-gray-500">
+                      This is your public display name. It can be your real name
+                      or a pseudonym.
+                    </FormDescription>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">Telephone</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        className="border-gray-200 focus:ring-2"
+                        placeholder={
+                          data?.data?.phone || "Enter your phone number"
+                        }
+                        defaultValue={data?.data?.phone}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-sm text-gray-500">
+                      {!data?.data?.phone && <p>Your phone is empty</p>}
+                    </FormDescription>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Account Info Section */}
+          <div className="p-4 rounded-md">
+            <h3 className="text-lg font-semibold mb-4">Account Information</h3>
+            <div className="flex flex-col space-y-4">
               <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name. It can be your real name or
-                  a pseudonym. You can only change this once every 30 days.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex items-center gap-11 flex-wrap">
-            <FormItem>
-              <FormLabel>
-                Email: <a className="font-mono">{data?.data?.email}</a>
-              </FormLabel>
-              <FormDescription>
-                This field only is edited by admin
-              </FormDescription>
-            </FormItem>
-            {data?.data?.role == "STUDENT" && (
-              <FormItem>
-                <FormLabel>
-                  Mã số sinh viên:{" "}
-                  <a className="font-mono">{data?.data?.mssv}</a>
+                <FormLabel className="font-medium">
+                  Email:{" "}
+                  <span className="font-mono text-blue-600">
+                    {data?.data?.email}
+                  </span>
                 </FormLabel>
-                <FormDescription>
+                <FormDescription className="text-sm text-gray-500">
                   This field only is edited by admin
                 </FormDescription>
               </FormItem>
-            )}
-          </div>
-          <FormField
-            control={form.control}
-            name="firstname"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastname"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={data?.data?.lastname}
-                    {...field}
-                    defaultValue={field.value}
-                  />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex gap-3">
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
+              {data?.data?.role == "STUDENT" && (
                 <FormItem>
-                  <FormLabel>Telephone</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder={data?.data?.phone || "none"}
-                      defaultValue={data?.data?.phone}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {!data?.data?.phone && <p>Your phone is empty</p>}
+                  <FormLabel className="font-medium">
+                    Student ID:{" "}
+                    <span className="font-mono text-blue-600">
+                      {data?.data?.mssv}
+                    </span>
+                  </FormLabel>
+                  <FormDescription className="text-sm text-gray-500">
+                    This field only is edited by admin
                   </FormDescription>
-                  <FormMessage />
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue
-                          placeholder={data?.data?.gender}
-                          {...field}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="Female">Female</SelectItem>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Undefined">Undefined</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            </div>
           </div>
-          <FormField
-            control={form.control}
-            name="date_of_birth"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date of birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
+
+          {/* Personal Info Section */}
+          <div className="p-4 rounded-md">
+            <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              <FormField
+                control={form.control}
+                name="firstname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">First name</FormLabel>
                     <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>
-                            {data?.data?.date_of_birth
-                              ? format(data?.data?.date_of_birth, "PPP")
-                              : ""}
-                          </span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
+                      <Input
+                        className="border-gray-200 focus:ring-2"
+                        {...field}
+                      />
                     </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>
-                  Your date of birth is used to calculate your age.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">Last name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="border-gray-200 focus:ring-2"
+                        placeholder={data?.data?.lastname}
+                        {...field}
+                        defaultValue={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">Gender</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full border-gray-200">
+                          <SelectValue
+                            placeholder={data?.data?.gender || "Select gender"}
+                            {...field}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="Female">Female</SelectItem>
+                            <SelectItem value="Male">Male</SelectItem>
+                            <SelectItem value="Undefined">Undefined</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date_of_birth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-medium">Date of birth</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full",
+                              !field.value && "text-gray-500",
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>
+                                {data?.data?.date_of_birth
+                                  ? format(data?.data?.date_of_birth, "PPP")
+                                  : "Pick a date"}
+                              </span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription className="text-sm text-gray-500">
+                      Your date of birth is used to calculate your age.
+                    </FormDescription>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-4">
+            {loading ? (
+              <LoginLooading />
+            ) : (
+              <Button
+                type="submit"
+                className="px-6 py-2 rounded-md transition-colors"
+              >
+                Update Profile
+              </Button>
             )}
-          />
-          {loading ? (
-            <LoginLooading />
-          ) : (
-            <Button type="submit">Update profile</Button>
-          )}
+          </div>
         </form>
       </Form>
     </div>

@@ -98,7 +98,7 @@ export default class CourseController extends BaseController {
         );
       }
       let teacherId = null;
-      console.log(request.body);
+      // console.log(request.body);
       if (request.body.teacherId) {
         teacherId = request.body.teacherId;
         delete request.body.teacherId;
@@ -272,7 +272,7 @@ export default class CourseController extends BaseController {
   private getAllCourseWithUserId = asyncHandler(
     async (req: any, response: express.Response) => {
       const { _id } = req.user;
-      console.log(req.query);
+      // console.log(req.query);
       const take = Number(process.env.TAKE);
       const { cate_id, semester_id, name, name_sort } = req.query;
       let page = Number(req.query.page);

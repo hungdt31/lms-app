@@ -12,7 +12,7 @@ import ChangePassword from "./change_password";
 import ForgotPassword from "./forgot-password";
 export default function TabsDemo() {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen pt-11">
       <Tabs defaultValue="account" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account">Change password</TabsTrigger>

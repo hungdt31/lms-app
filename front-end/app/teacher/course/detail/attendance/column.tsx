@@ -75,19 +75,19 @@ export const columns: ColumnDef<Thread>[] = [
     cell: ({ row }) => {
       return (
         <Link href={`/teacher/course/thread?id=${row.original.id}`}>
-        <div className="space-y-1">
-          <h4 className="text-sm font-semibold">{row.original.title}</h4>
-          <p className="text-sm">
-            {row.original?.lastest_user?.username} –{" "}
-            {TimeConvert(row.original?.last_updated_at)}.
-          </p>
-          <div className="flex items-center pt-2">
-            <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />{" "}
-            <span className="text-xs text-muted-foreground">
-              Joined {TimeConvert(row.original.createdAt)}
-            </span>
+          <div className="space-y-1">
+            <h4 className="text-sm font-semibold">{row.original.title}</h4>
+            <p className="text-sm">
+              {row.original?.lastest_user?.username} –{" "}
+              {TimeConvert(row.original?.last_updated_at)}.
+            </p>
+            <div className="flex items-center pt-2">
+              <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />{" "}
+              <span className="text-xs text-muted-foreground">
+                Joined {TimeConvert(row.original.createdAt)}
+              </span>
+            </div>
           </div>
-        </div>
         </Link>
       );
     },

@@ -78,9 +78,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4 gap-3 sm:flex-row flex-col">
         <Input
           placeholder="Search mssv"
-          value={
-            (table.getColumn("mssv")?.getFilterValue() as string) || ""
-          }
+          value={(table.getColumn("mssv")?.getFilterValue() as string) || ""}
           onChange={(e) => {
             table.getColumn("mssv")?.setFilterValue(e.target.value);
           }}
@@ -107,35 +105,35 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <div className="flex items-center gap-3">
-        <Button onClick={() => downloadToExcel(data)} className="ml-4">
-          Export to Excel
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="outline" className="ml-4">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value: boolean) => {
-                      column.toggleVisibility(!!value);
-                    }}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <Button onClick={() => downloadToExcel(data)} className="ml-4">
+            Export to Excel
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="outline" className="ml-4">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value: boolean) => {
+                        column.toggleVisibility(!!value);
+                      }}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

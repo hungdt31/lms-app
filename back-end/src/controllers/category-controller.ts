@@ -24,7 +24,7 @@ class CategoryController extends BaseController {
   private createCategory = asyncHandler(
     async (request: any, response: express.Response) => {
       if (!request.body.name) throw new Error("Name is required");
-      console.log(request.body);
+      // console.log(request.body);
       const createdCategory = await prisma.category.create({
         data: request.body,
       });

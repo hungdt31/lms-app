@@ -24,9 +24,7 @@ export default function RootLayout({
         <div className="min-w-[80px] relative border-r pl-5 pr-9 pb-10 pt-24 sm:block hidden">
           <SideNavbar />
         </div>
-        <div className="w-full">
-          {children}
-        </div>
+        <div className="w-full">{children}</div>
       </div>
       <Toaster />
     </QueryProvider>
