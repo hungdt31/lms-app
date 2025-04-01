@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 
 export default function ProfileForm() {
   // ...
@@ -135,11 +136,18 @@ export default function ProfileForm() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
+          <Link href="/">
+            <Btn
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <ArrowLeftIcon />
+              Home
+            </Btn>
+          </Link>
           <div className="flex justify-center mb-6">
             {/* You can add your logo here */}
-            <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold border-2">
-              LMS
-            </div>
+            <GraduationCap size={50} />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             Welcome Back
@@ -269,29 +277,21 @@ export default function ProfileForm() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <Button type="submit" id="myBtn" className="w-full h-11">
-                    Sign in
-                  </Button>
-
-                  <div className="flex items-center justify-between">
-                    <Link href="/">
-                      <Btn
-                        variant="outline"
-                        className="flex items-center gap-2"
-                      >
-                        <ArrowLeftIcon />
-                        Home
-                      </Btn>
-                    </Link>
-                    <Button
-                      variant="soft"
+                  <div className="flex items-center justify-center gap-3">
+                    <Btn
+                      type="button"
+                      variant={"secondary"}
+                      className="min-w-[100px]"
                       onClick={() => {
                         form.trigger(["email", "password"]);
                         form.reset();
                       }}
                     >
                       Clear
-                    </Button>
+                    </Btn>
+                    <Btn type="submit" id="myBtn" className="min-w-[100px]">
+                      Sign in
+                    </Btn>
                   </div>
                 </div>
               )}
