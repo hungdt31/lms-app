@@ -58,7 +58,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       {/* input */}
-      <div className="flex items-center py-4 gap-3 sm:flex-row flex-col">
+      <div className="flex items-center py-4 gap-3 sm:flex-row flex-col xl:min-w-[700px]">
         <div className="flex items-center gap-3">
           <Input
             placeholder="Tìm tên môn học"

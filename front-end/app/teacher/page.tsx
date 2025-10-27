@@ -71,7 +71,7 @@ export default function StudentPage() {
           </figcaption>
         </figure>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center pb-9">
         <h1 className="text-main dark:text-white text-2xl font-bold p-5 pt-9">
           Bảng tin
         </h1>

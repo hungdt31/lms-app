@@ -44,12 +44,19 @@ export const columns = (
     accessorKey: "Courses",
     enableHiding: false,
     cell: ({ row }) => {
+      const id = row.original.id;
       return (
         <div>
-          <Button className="p-0 text-lg font-bold capitalize" variant="link">
-            {row.original.title}
-          </Button>
-          <div></div>
+          <Link
+            href={{
+              pathname: "/admin/courses/edit",
+              query: { id },
+            }}
+          >
+            <Button className="p-0 text-lg font-bold capitalize" variant="link">
+              {row.original.title}
+            </Button>
+          </Link>
           <div className="text-xs capitalize">{row.original.course_id}</div>
           <div>{row.original.description}</div>
         </div>

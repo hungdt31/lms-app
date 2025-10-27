@@ -234,9 +234,9 @@ export default function AdminPage() {
         <div>
           <h1 className="text-3xl font-bold text-main dark:text-white text-center font-mono relative">
             Notification
-            <div className="badge badge-primary badge-outline absolute top-0">
+            {/* <div className="badge badge-primary badge-outline absolute top-0">
               Posts {totalPost}
-            </div>
+            </div> */}
           </h1>
 
           <div className="mt-5 flex items-center gap-3 flex-wrap justify-center">
