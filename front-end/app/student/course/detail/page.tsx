@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { SquarePlay } from "lucide-react";
 import Grade from "@/lib/axios/result";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { FileUp, FileQuestion } from "lucide-react";
 import {
   Accordion,
@@ -41,17 +42,22 @@ export default function DetailCourse() {
   const { data: resultResp, isLoading: resultLoading } = CourseScoreAndSubmitQuery(course_id);
   const result = resultResp?.data;
   return (
-    <div>
-      <div className="flex items-center flex-col">
+    <div className="pb-24 lg:pb-16">
+      <div className="flex items-center flex-col mt-2 mb-4">
         {isLoading ? (
           <>
-            <div className="h-7 w-48 rounded-md bg-gray-200 animate-pulse" />
-            <p className="pl-11 font-mono h-4 w-32 mt-2 rounded bg-gray-100 animate-pulse" />
+            <div className="h-8 w-56 rounded-md bg-gray-200 animate-pulse" />
+            <p className="h-4 w-36 mt-2 rounded bg-gray-100 animate-pulse" />
           </>
         ) : (
           <>
-            <div className="font-bold text-3xl">{data?.data?.title}</div>
-            <p className="pl-11 font-mono">__ {data?.data?.course_id} __</p>
+            <div className="font-bold text-3xl tracking-tight text-foreground">
+              {data?.data?.title}
+            </div>
+            <div className="h-1 w-20 bg-primary rounded mt-1" />
+            <p className="font-mono text-sm text-muted-foreground mt-2">
+              Mã học phần: {data?.data?.course_id}
+            </p>
           </>
         )}
       </div>
@@ -59,63 +65,76 @@ export default function DetailCourse() {
       <br />
       <br />
       {index == "0" ? (
-        <div className="flex justify-center mx-7">
-          <Accordion type="single" collapsible className="lg:w-[60%] w-full">
-            {isLoading
-              ? Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="mb-4">
-                    <div className="h-10 w-full rounded bg-gray-100 animate-pulse" />
-                    <div className="mt-3 h-24 w-full rounded bg-gray-50 animate-pulse" />
-                  </div>
-                ))
-              : data?.data?.DocumentSections?.map((el: any, index: any) => (
-              <AccordionItem value={`item ${index + 1}`} key={index}>
-                <AccordionTrigger className="font-bold text-xl">
-                  {el?.title}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: el?.content }}
-                    className="mb-5 text-lg"
-                  />
-                  <div className="flex flex-col gap-5 flex-wrap">
-                    <div className="flex flex-col gap-3 w-[100%]">
-                      {el?.documentLink?.map((DocLink: any, idx: any) => (
-                        <DocCard
-                          key={idx}
-                          title={DocLink?.title}
-                          url={DocLink?.url}
-                          description={DocLink?.description}
-                        />
-                      ))}
+        <div className="flex justify-center mx-4">
+          <div className="lg:w-[60%] w-full rounded-xl shadow-sm">
+            <Accordion type="single" collapsible className="w-full">
+              {isLoading
+                ? Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="mb-4">
+                      <div className="h-10 w-full rounded bg-gray-100 animate-pulse" />
+                      <div className="mt-3 h-24 w-full rounded bg-gray-50 animate-pulse" />
                     </div>
-                    <br />
-                    <div className="flex flex-col gap-3 w-[100%]">
-                      {el?.quiz?.map((q: any, idx: number) => (
-                        <QuizCard
-                          key={idx}
-                          title={q?.title}
-                          description={q?.description}
-                          id={q?.id}
+                  ))
+                : (data?.data?.DocumentSections?.length
+                    ? data?.data?.DocumentSections
+                    : [])?.map((el: any, index: any) => (
+                    <AccordionItem value={`item ${index + 1}`} key={index}>
+                      <AccordionTrigger className="font-bold text-xl">
+                        {el?.title}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: el?.content }}
+                          className="mb-5 text-lg"
                         />
-                      ))}
-                    </div>
-                    <br />
-                    <div className="flex flex-col gap-3 w-[100%]">
-                      {el?.submissions?.map((submission: any, idx: any) => (
-                        <SubmissionCard
-                          key={idx}
-                          title={submission?.title}
-                          createdAt={submission?.createdAt}
-                          id={submission?.id}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                        <div className="flex flex-col gap-5 flex-wrap">
+                          <div className="flex flex-col gap-3 w-[100%]">
+                            {el?.documentLink?.length
+                              ? el?.documentLink?.map((DocLink: any, idx: any) => (
+                                  <DocCard
+                                    key={idx}
+                                    title={DocLink?.title}
+                                    url={DocLink?.url}
+                                    description={DocLink?.description}
+                                  />
+                                ))
+                              : <p className="text-sm text-muted-foreground">Không có tài liệu</p>}
+                          </div>
+                          <br />
+                          <div className="flex flex-col gap-3 w-[100%]">
+                            {el?.quiz?.length
+                              ? el?.quiz?.map((q: any, idx: number) => (
+                                  <QuizCard
+                                    key={idx}
+                                    title={q?.title}
+                                    description={q?.description}
+                                    id={q?.id}
+                                  />
+                                ))
+                              : <p className="text-sm text-muted-foreground">Không có bài trắc nghiệm</p>}
+                          </div>
+                          <br />
+                          <div className="flex flex-col gap-3 w-[100%]">
+                            {el?.submissions?.length
+                              ? el?.submissions?.map((submission: any, idx: any) => (
+                                  <SubmissionCard
+                                    key={idx}
+                                    title={submission?.title}
+                                    createdAt={submission?.createdAt}
+                                    id={submission?.id}
+                                  />
+                                ))
+                              : <p className="text-sm text-muted-foreground">Không có bài nộp</p>}
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+              {!isLoading && (!data?.data?.DocumentSections || data?.data?.DocumentSections?.length === 0) && (
+                <div className="w-full py-10 text-center text-muted-foreground">Không có nội dung</div>
+              )}
+            </Accordion>
+          </div>
         </div>
       ) : index == "1" ? (
         <div>
@@ -207,8 +226,8 @@ export default function DetailCourse() {
         </div>
       ) : (
         <div>
-          <div className="flex flex-col items-center justify-center mx-7">
-            <Accordion type="single" collapsible className="lg:w-[60%] w-full">
+          <div className="flex flex-col items-center justify-center mx-4">
+            <Accordion type="single" collapsible className="lg:w-[60%] w-full rounded-xl shadow-sm">
               {data?.data?.VideoSections?.map((el: any, index: any) => (
                 <AccordionItem value={`item ${index + 1}`} key={index}>
                   <AccordionTrigger className="font-bold text-xl">
@@ -219,27 +238,28 @@ export default function DetailCourse() {
                       dangerouslySetInnerHTML={{ __html: el?.description }}
                       className="mb-5 text-lg"
                     />
-                    <div className="flex flex-col gap-5 flex-wrap">
+                    <div className="flex flex-col gap-4 flex-wrap">
                       {el?.videos?.map((video: any, idx: any) => (
                         <Link
                           key={idx}
                           href={video?.url}
                           target="_blank"
-                          className="relative"
+                          rel="noopener noreferrer"
+                          className="group"
                         >
-                          <div className="flex items-center gap-3 bg-video_card rounded-lg p-3 shadow-md">
-                            <SquarePlay
-                              size={50}
-                              className="text-nav-text"
-                              width={100}
-                            />
-                            <Button className="absolute -bottom-2 -right-2">
-                              {video?.provider}
-                            </Button>
-                            <div>
-                              <p className="font-bold">{video?.title}</p>
-                              <p>{video?.description}</p>
+                          <div className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:bg-accent/40">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                              <SquarePlay size={28} />
                             </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold truncate">{video?.title}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                {video?.description}
+                              </p>
+                            </div>
+                            <Badge variant="secondary" className="shrink-0">
+                              {video?.provider}
+                            </Badge>
                           </div>
                         </Link>
                       ))}
@@ -250,10 +270,12 @@ export default function DetailCourse() {
             </Accordion>
             <hr />
             <h3>Forum</h3>
-            <div className="w-[60%] my-9 flex flex-col gap-3">
-              {data?.data?.forum?.map((forum: any, idx: any) => (
-                <ForumCard key={idx} title={forum?.title} id={forum?.id} />
-              ))}
+            <div className="lg:w-[60%] w-full my-9 flex flex-col gap-3">
+              {data?.data?.forum?.length
+                ? data?.data?.forum?.map((forum: any, idx: any) => (
+                    <ForumCard key={idx} title={forum?.title} id={forum?.id} />
+                  ))
+                : <p className="text-sm text-muted-foreground text-center">Chưa có chủ đề</p>}
             </div>
           </div>
         </div>

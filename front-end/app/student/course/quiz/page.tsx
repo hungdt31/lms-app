@@ -89,37 +89,77 @@ export default function Page() {
   useEffect(() => {
     fetchQuiz();
   }, []);
-  if (isPending) return <div>{"Loading ...."}</div>;
+  if (isPending)
+    return (
+      <div className="pb-16">
+        <BreadcrumbNav />
+        <div className="flex justify-center pb-5">
+          <div className="p-5 flex flex-col gap-5 lg:w-[60%] w-[90%]">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
+              <div className="flex-1">
+                <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                <div className="h-1 w-20 bg-gray-200 dark:bg-gray-700 rounded mt-2 animate-pulse" />
+              </div>
+            </div>
+            <div className="rounded-xl border p-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="h-4 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                <div className="h-4 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+              <div className="mt-4 h-16 w-full bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            </div>
+            <div className="h-6 w-72 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <div className="rounded-md border">
+              <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 animate-pulse" />
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-12 w-full bg-gray-50 dark:bg-gray-900 border-t animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   if (error) return <div>{"Something're wrong !"}</div>;
   return (
-    <div>
+    <div className="pb-16">
       <BreadcrumbNav />
       <div className="flex justify-center pb-5">
-        <div className="p-5 flex flex-col gap-5 border-2 shadow-lg lg:w-[70%] rounded-md w-[80%]">
-          <h1 className="font-bold text-2xl flex items-center gap-3 text-rose-700">
-            <div className="w-[50px] h-[50px] flex justify-center items-center dark:bg-black bg-rose-700 text-white dark:text-rose-700 rounded-lg">
+        <div className="p-5 flex flex-col gap-5 rounded-xl shadow-sm lg:w-[60%] w-[90%]">
+          <h1 className="font-bold text-2xl flex items-center gap-3 text-primary">
+            <div className="w-[50px] h-[50px] flex justify-center items-center bg-primary text-primary-foreground rounded-xl">
               <SquareCheckBig />
             </div>
-            <p>{data?.data?.title}</p>
+            <div>
+              <p className="leading-tight">{data?.data?.title}</p>
+              <div className="h-1 w-20 bg-primary rounded mt-1" />
+            </div>
           </h1>
-          <Card className="">
+          <Card className="rounded-xl">
             <CardHeader>
-              <CardDescription>
-                <p>
-                  <strong>Opened:</strong> {TimeConvert(data?.data?.start_date)}
-                </p>
-              </CardDescription>
-              <CardDescription>
-                <p>
-                  <strong>Closed:</strong> {TimeConvert(data?.data?.end_date)}
-                </p>
-              </CardDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardDescription>
+                  <p>
+                    <strong>Opened:</strong> {TimeConvert(data?.data?.start_date)}
+                  </p>
+                </CardDescription>
+                <CardDescription>
+                  <p>
+                    <strong>Closed:</strong> {TimeConvert(data?.data?.end_date)}
+                  </p>
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent>
               <p>{quizUser?.description}</p>
             </CardContent>
           </Card>
-          <p className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <p>
               <strong className="font-light">Attempts allowed: </strong>
               {data?.data?.attempts ? data?.data?.attempts : "không giới hạn"}
@@ -132,7 +172,7 @@ export default function Page() {
               <strong className="font-light">Cách tính điểm: </strong>
               {data?.data?.typePoint}
             </p>
-          </p>
+          </div>
           {time &&
           !isNaN(time.hours) &&
           !isNaN(time.minutes) &&
@@ -159,7 +199,7 @@ export default function Page() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {quizUser?.history?.map((el: any, index: any) => {
+              {quizUser?.history?.length ? quizUser?.history?.map((el: any, index: any) => {
                 return (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{index + 1}</TableCell>
@@ -196,10 +236,16 @@ export default function Page() {
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              }) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-muted-foreground">
+                    Chưa có lịch sử làm bài
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
-          <div className="flex justify-around">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {quiz ? (
               <Button
                 onClick={() => {
@@ -207,9 +253,10 @@ export default function Page() {
                 }}
                 className="min-w-[100px]"
               >
-                Tiến tục làm bài
+                Tiếp tục làm bài
               </Button>
             ) : (
+              isAttend && (
               <Button
                 onClick={async () => {
                   const rs: any = await Quiz.StartQuiz(
@@ -225,8 +272,11 @@ export default function Page() {
               >
                 Bắt đầu
               </Button>
+              )
             )}
-            {isAttend ? <p></p> : <p>Quiz đã hết hạn hoặc chưa mở</p>}
+            {isAttend ? <p></p> : (
+              <p className="text-sm text-muted-foreground">Quiz đã hết hạn hoặc chưa mở</p>
+            )}
 
             <p className="text-center font-bold text-xl">
               Điểm cuối cùng:{" "}

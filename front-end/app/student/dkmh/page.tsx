@@ -1,17 +1,26 @@
 "use client";
 import Semester from "@/lib/axios/semester";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Cookies from "universal-cookie";
 import TimeConvert from "@/helpers/TimeConvert";
 import DataTable from "@/components/student/DataTable";
+import { SearchX } from "lucide-react";
 import { semester_columns } from "@/helpers/Column";
+import { BlockLoading } from "@/components/loading";
 export default function Page() {
   const [dkmh, setDkmh] = useState<any>(null);
-  const token: string = new Cookies().get("token") as string;
+  const [loading, setLoading] = useState<boolean>(false);
+  const token: string = useMemo(() => new Cookies().get("token") as string, []);
   const fetchCourseSemester = async () => {
-    const semester = await Semester.GetDkmhSemester(token);
-    setDkmh(semester?.data);
-    // console.log(semester?.data);
+    setLoading(true);
+    try {
+      const semester = await Semester.GetDkmhSemester(token);
+      setDkmh(semester?.data ?? null);
+    } catch (_e) {
+      setDkmh(null);
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     fetchCourseSemester();
@@ -44,13 +53,22 @@ export default function Page() {
           </div>
         </div>
       )}
-      {dkmh && (
+      {loading ? (
+        <div className="w-full py-16 flex items-center justify-center">
+          <BlockLoading />
+        </div>
+      ) : dkmh?.semester?.courses && dkmh?.semester?.courses?.length > 0 ? (
         <div className="flex justify-center lg:mx-0 mx-3">
           <DataTable
             columns={semester_columns}
             data={dkmh?.semester?.courses}
             fetch={fetchCourseSemester}
           />
+        </div>
+      ) : (
+        <div className="w-full py-16 flex flex-col items-center justify-center text-muted-foreground">
+          <SearchX className="h-8 w-8 mb-2" />
+          <p className="font-medium">Không có dữ liệu đăng ký môn học</p>
         </div>
       )}
     </div>

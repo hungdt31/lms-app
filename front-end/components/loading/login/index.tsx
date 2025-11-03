@@ -19,7 +19,7 @@ export default function LoginLooading({ label = "Đang xử lý...", size = "md"
   return (
     <div role="status" aria-live="polite" className="flex items-center gap-3">
       {/* Outer gradient ring */}
-      <div className={`relative ${ringSizeMap[size]} animate-spin-slow`}>
+      <div className={`relative ${ringSizeMap[size]} animate-spin`}>
         <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 via-violet-500 to-fuchsia-500 opacity-80" />
         <div className="absolute inset-[3px] rounded-full bg-background dark:bg-neutral-900" />
         {/* Inner spinner */}

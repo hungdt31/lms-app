@@ -145,9 +145,24 @@ export default function ForumPage() {
       }
     });
   };
+  // derive stats
+  const totalMessages = thread?.posts?.length || 0;
+  const participantCount = thread?.posts
+    ? new Set(thread.posts.map((p: any) => p?.user?.id)).size
+    : 0;
   return (
-    <div>
-      <div className="px-3 lg:px-9">
+    <div className="pb-16">
+      <div className="mx-auto lg:w-[60%] w-[90%] px-3">
+        <div className="mb-4">
+          <h1 className="font-bold text-2xl tracking-tight text-foreground">
+            {thread?.title}
+          </h1>
+          <div className="h-1 w-20 bg-primary rounded mt-1" />
+          <div className="mt-2 text-sm text-muted-foreground flex items-center gap-4">
+            <span>Tổng tin nhắn: <strong>{totalMessages}</strong></span>
+            <span>Thành viên tham gia: <strong>{participantCount}</strong></span>
+          </div>
+        </div>
         {thread?.posts?.map?.((post: any) => (
           <div
             key={post.id}
@@ -214,7 +229,7 @@ export default function ForumPage() {
         <Tooltip>
           <TooltipTrigger>
             <Button
-              className="bottom-[80px] right-3 fixed"
+              className="fixed bottom-20 right-6 rounded-full shadow-lg"
               onClick={() => setOpen(true)}
             >
               <Plus />

@@ -21,7 +21,7 @@ import ProfileForm from "@/components/profile-form";
 export default function DetailCourse() {
   const cookies = new Cookies();
   const query = UserQuery();
-  const { data } = query;
+  const { data, isLoading } = query;
   const [avatar, setAvatar] = useState<string>("");
   const mutation = useMutation({
     mutationFn: (avatar: string) => {
@@ -36,16 +36,20 @@ export default function DetailCourse() {
     <div className="pb-7">
       <div className="h-24 bg-gradient-to-r from-sky-500 via-cyan-400 to-indigo-500 relative -mt-7">
         <div className="absolute top-9 left-[35%] flex w-[30%] flex-col justify-center items-center font-mono">
-          {data?.data?.avatar ? (
+          {isLoading ? (
+            <div className="w-[120px] h-[120px] rounded-full bg-white/60 animate-pulse" />
+          ) : data?.data?.avatar ? (
             <img
               className="w-[120px] h-[120px] p-1 rounded-full ring-2 ring-white dark:ring-main"
               src={data?.data?.avatar}
-              alt="Bordered avatar"
+              alt="User avatar"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="relative w-[100px] h-[100px] overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 flex items-center justify-center">
               <p className="font-xl font-bold">
-                {data?.data?.firstname[0]} {data?.data?.lastname[0]}
+                {data?.data?.firstname?.[0]} {data?.data?.lastname?.[0]}
               </p>
             </div>
           )}
@@ -89,7 +93,10 @@ export default function DetailCourse() {
 
                   <DrawerFooter>
                     {mutation.isPending ? (
-                      <LoginLoading />
+                      <div className="inline-flex items-center text-sm opacity-80">
+                        <span className="mr-2 h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        Updating...
+                      </div>
                     ) : (
                       <div className="flex justify-between">
                         <DrawerClose>
@@ -105,15 +112,33 @@ export default function DetailCourse() {
               </DrawerContent>
             </Drawer>
           </div>
-          <p className="font-bold text-xl">
-            {data?.data?.firstname} {data?.data?.lastname}
-          </p>
-          <p className="hidden sm:block">
-            Member since {data?.data?.createdAt}
-          </p>
+          {isLoading ? (
+            <>
+              <div className="mt-2 h-5 w-40 rounded bg-white/70 animate-pulse" />
+              <div className="mt-2 h-4 w-56 rounded bg-white/60 animate-pulse" />
+            </>
+          ) : (
+            <>
+              <p className="font-bold text-xl">
+                {data?.data?.firstname} {data?.data?.lastname}
+              </p>
+              <p className="hidden sm:block">Member since {data?.data?.createdAt}</p>
+            </>
+          )}
         </div>
       </div>
-      <ProfileForm />
+      {isLoading ? (
+        <div className="mx-auto mt-6 max-w-3xl px-4">
+          <div className="h-9 w-48 rounded bg-muted animate-pulse" />
+          <div className="mt-4 space-y-3">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-10 w-full rounded bg-muted/70 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <ProfileForm />
+      )}
     </div>
   );
 }

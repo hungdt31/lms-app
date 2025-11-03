@@ -166,9 +166,9 @@ export default function TeacherPage() {
           </div>
         )}
       </div>
-      <div className="flex justify-center px-3 lg:px-0">
+      <div className="flex justify-center px-3 pt-5 lg:px-0">
         <Table>
-          <TableCaption>A list of your course.</TableCaption>
+          <TableCaption>Danh sách khóa học</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]"></TableHead>

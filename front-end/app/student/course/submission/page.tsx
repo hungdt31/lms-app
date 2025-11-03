@@ -15,10 +15,10 @@ import {
 import { AiOutlineFileJpg } from "react-icons/ai";
 import { BsFiletypePng } from "react-icons/bs";
 import { BsFiletypeSvg } from "react-icons/bs";
-import LoginLooading from "@/components/loading/login";
+import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import TimeConvert from "@/helpers/TimeConvert";
-import { X, PencilLine, SquarePlus, Info } from "lucide-react";
+import { X, PencilLine, SquarePlus, Info, XCircle } from "lucide-react";
 import { FileUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,12 +38,11 @@ import { ChangeEvent, useEffect, useState, useRef } from "react";
 import { Separator } from "@/components/ui/separator";
 import UserSubmissionQuery from "@/hooks/submission";
 import Submission from "@/lib/axios/submission";
-import { set } from "date-fns";
 import BreadcrumbNav from "./breadcrumb";
 export default function SubmissionPage() {
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<Boolean>(false);
   const [fileList, setFileList] = useState<any>(null);
   const [deleteList, setDeleteList] = useState<any>([]);
@@ -54,33 +53,37 @@ export default function SubmissionPage() {
   const [addClick, setAddClick] = useState<Boolean>(false);
   const id: string = useSearchParams().get("id") as string;
   const userResult = UserSubmissionQuery(id);
-  console.log(userResult);
   useEffect(() => {
     setFileList(userResult?.data?.data?.files);
-    console.log(userResult?.data?.data?.files);
   }, [userResult?.isSuccess, userResult?.data]);
-  const GetIcon = (str: string) => {
-    if (str.includes(".pdf")) return <FaRegFilePdf size={20} />;
-    else if (str.includes(".docx")) return <BsFiletypeDocx size={20} />;
-    else if (str.includes(".jpg")) return <AiOutlineFileJpg size={20} />;
-    else if (str.includes(".png")) return <BsFiletypePng size={20} />;
-    else if (str.includes(".svg")) return <BsFiletypeSvg size={20} />;
-    else return <GrDocument size={20} />;
+  const GetIcon = (filename: string) => {
+    const ext = (filename?.split(".").pop() || "").toLowerCase();
+    switch (ext) {
+      case "pdf":
+        return <FaRegFilePdf size={20} />;
+      case "docx":
+        return <BsFiletypeDocx size={20} />;
+      case "jpg":
+      case "jpeg":
+        return <AiOutlineFileJpg size={20} />;
+      case "png":
+        return <BsFiletypePng size={20} />;
+      case "svg":
+        return <BsFiletypeSvg size={20} />;
+      default:
+        return <GrDocument size={20} />;
+    }
   };
   const fetchInfo = async () => {
     const info = await Submission.GetSubmission(id);
-    console.log(info?.data);
     setInfo(info?.data);
   };
   useEffect(() => {
     fetchInfo();
   }, []);
   const handleAddFile = (e: any) => {
-    const arr = [];
-    for (let i = 0; i < e?.target?.files?.length; i++) {
-      arr.push(e?.target?.files[i]);
-    }
-    setAddList(arr);
+    const files = Array.from(e?.target?.files || []);
+    setAddList(files);
   };
   const handleUpdate = () => {
     Swal.fire({
@@ -115,11 +118,6 @@ export default function SubmissionPage() {
         setLoading(false);
       }
     });
-    // console.log({
-    //   deleteList,
-    //   addList,
-    //   id
-    // })
   };
   const handleCreate = async () => {
     setLoading(true);
@@ -135,10 +133,6 @@ export default function SubmissionPage() {
       text: rs?.mess,
       icon: rs?.success ? "success" : "error",
     });
-    // console.log({
-    //   addList,
-    //   id,
-    // });
     if (rs?.success) {
       if (ref2?.current) ref2.current.value = null;
       setAddList([]);
@@ -151,30 +145,29 @@ export default function SubmissionPage() {
     <div className="">
       <BreadcrumbNav />
       <div className="flex justify-center">
-        <div>
-          <div className="dark:text-orange-500 flex items-center gap-3 my-5 ml-3 lg:ml-0">
-            <div className="w-[50px] h-[50px] flex justify-center items-center bg-orange-500 dark:bg-black text-white dark:text-orange-500 rounded-lg">
+        <div className="lg:w-[60%] w-[90%]">
+          <div className="dark:text-orange-500 flex items-center gap-4 my-6">
+            <div className="w-[50px] h-[50px] flex justify-center items-center bg-orange-500 dark:bg-black text-white dark:text-orange-500 rounded-xl shadow-sm">
               <FileUp size={30} />
             </div>
-            <div className="">
-              <p className="h-[3px] w-[50px] bg-orange-500 ml-auto"></p>
-              <h1 className="font-bold text-2xl border-l-2 border-orange-500 border-r-2 px-3">
+            <div>
+              <h1 className="font-bold text-3xl tracking-tight text-foreground">
                 {info?.title}
               </h1>
-              <p className="h-[3px] w-[50px] bg-orange-500"></p>
+              <div className="h-1 w-20 bg-orange-500 rounded mt-1" />
             </div>
           </div>
-          <Card className="w-full">
+          <Card className="w-full rounded-xl shadow-sm">
             <CardHeader>
-              <div className="flex gap-3 items-center">
-                <CardTitle>Opened:</CardTitle>
-                <CardDescription>
-                  {TimeConvert(info?.start_date)}
-                </CardDescription>
-              </div>
-              <div className="flex gap-3 items-center">
-                <CardTitle>Due:</CardTitle>
-                <CardDescription>{TimeConvert(info?.end_date)}</CardDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-2">
+                  <CardTitle className="text-base">Opened:</CardTitle>
+                  <CardDescription>{TimeConvert(info?.start_date)}</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CardTitle className="text-base">Due:</CardTitle>
+                  <CardDescription>{TimeConvert(info?.end_date)}</CardDescription>
+                </div>
               </div>
             </CardHeader>
             <Separator />
@@ -184,27 +177,20 @@ export default function SubmissionPage() {
               ></div>
             </CardContent>
             <CardFooter>
-              <div className="flex flex-col gap-3">
-                {info?.files?.map((el: any, index: any) => {
-                  return (
-                    <div
-                      className="flex gap-3 items-center flex-wrap"
-                      key={index}
-                    >
+              <div className="flex flex-col gap-3 w-full">
+                {info?.files?.length ? (
+                  info?.files?.map((el: any, index: any) => (
+                    <div className="flex gap-3 items-center flex-wrap" key={index}>
                       {GetIcon(el?.title)}
-                      <a
-                        href={el?.url}
-                        target="_blank"
-                        className="text-cyan-500 hover:underline"
-                      >
+                      <a href={el?.url} target="_blank" className="text-cyan-500 hover:underline">
                         {el.title}
                       </a>
-                      <p className="ml-3 text-xs text-gray-500">
-                        {TimeConvert(el?.createdAt)}
-                      </p>
+                      <p className="ml-3 text-xs text-gray-500">{TimeConvert(el?.createdAt)}</p>
                     </div>
-                  );
-                })}
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">Không có tài liệu đính kèm</p>
+                )}
               </div>
             </CardFooter>
           </Card>
@@ -212,10 +198,10 @@ export default function SubmissionPage() {
       </div>
       <div className="flex justify-center py-5">
         {userResult?.data?.data ? (
-          <Card className="lg:w-[60%] w-[90%]">
+          <Card className="lg:w-[60%] w-[90%] rounded-xl shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center justify-between w-[100%]">
-                <p className="text-orange-500 text-xl">Nộp bài __</p>
+                <p className="text-orange-500 text-xl">Nộp bài</p>
                 <div className="flex gap-3 items-center">
                   <Popover>
                     <PopoverTrigger>
@@ -240,13 +226,20 @@ export default function SubmissionPage() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <PencilLine
-                          className="cursor-pointer"
-                          onClick={() => setEdit(!edit)}
-                        />
+                        {edit ? (
+                          <XCircle
+                            className="cursor-pointer"
+                            onClick={() => setEdit(false)}
+                          />
+                        ) : (
+                          <PencilLine
+                            className="cursor-pointer"
+                            onClick={() => setEdit(true)}
+                          />
+                        )}
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Update submission</p>
+                        <p>{edit ? "Close edit" : "Edit submission"}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -267,7 +260,7 @@ export default function SubmissionPage() {
                   ? TimeConvert(userResult?.data?.data?.editGradeAt)
                   : "..."}
               </CardDescription>
-              <p className="my-5">Các tập tin đã nộp</p>
+              <p className="my-5 font-medium">Các tập tin đã nộp</p>
               {fileList?.map((el: any, index: number) => {
                 return (
                   <div
@@ -357,18 +350,25 @@ export default function SubmissionPage() {
                 </div>
               )}
             </CardContent>
-            <CardFooter>
+            <CardFooter className="justify-end">
               {edit && (
-                <Button onClick={handleUpdate}>
-                  {loading ? <LoginLooading /> : "Update"}
+                <Button onClick={handleUpdate} disabled={loading}>
+                  {loading ? (
+                    <span className="inline-flex items-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Đang cập nhật...
+                    </span>
+                  ) : (
+                    "Update"
+                  )}
                 </Button>
               )}
             </CardFooter>
           </Card>
         ) : (
-          <Card>
+          <Card className="lg:w-[60%] w-[90%] rounded-xl shadow-sm">
             <CardHeader>
-              <p className="text-rose-900 text-xl">Nộp bài __</p>
+              <p className="text-rose-900 text-xl">Nộp bài</p>
             </CardHeader>
             <CardContent>
               <Label htmlFor="file">Upload file</Label>
@@ -406,14 +406,17 @@ export default function SubmissionPage() {
                 );
               })}
             </CardContent>
-            <CardFooter>
-              {loading ? (
-                <LoginLooading />
-              ) : (
-                <Button onClick={handleCreate} variant={"secondary"}>
-                  Submit
-                </Button>
-              )}
+            <CardFooter className="justify-end">
+              <Button onClick={handleCreate} variant={"secondary"} disabled={loading}>
+                {loading ? (
+                  <span className="inline-flex items-center">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Đang gửi...
+                  </span>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </CardFooter>
           </Card>
         )}

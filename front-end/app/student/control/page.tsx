@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { SquareCheckBig, FileUp } from "lucide-react";
+import { SquareCheckBig, FileUp, SearchX } from "lucide-react";
 import Semester from "@/lib/axios/semester";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
@@ -86,14 +86,14 @@ export default function ControlPage() {
             </p>
           </div>
           <div className="flex justify-center px-4 py-5">
-            <Card className="w-full">
-              <CardHeader className="flex flex-row items-center">
-                <div className="flex gap-3 items-center pt-3 flex-wrap">
+            <Card className="w-full rounded-xl shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div className="flex gap-4 items-center pt-1 flex-wrap w-full">
                   <Select
                     defaultValue="1"
                     onValueChange={(e) => setDateFilter(e)}
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[180px] sm:w-[200px]">
                       <SelectValue placeholder="Select a range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -110,7 +110,7 @@ export default function ControlPage() {
                     defaultValue="1"
                     onValueChange={(e) => setTypeFilter(e)}
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[180px] sm:w-[200px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -121,7 +121,7 @@ export default function ControlPage() {
                     </SelectContent>
                   </Select>
                   <Input
-                    className="ml-7"
+                    className="flex-1 min-w-[240px]"
                     placeholder="Search by activity name"
                     onChange={(e) => setNameFilter(e?.target?.value)}
                   />
@@ -131,7 +131,7 @@ export default function ControlPage() {
               <CardContent>
                 {type_filter == "1" ? (
                   <div>
-                    {notice?.map((item: any, index: any) => (
+                    {Array.isArray(notice) && notice.length > 0 ? notice.map((item: any, index: any) => (
                       <div className="my-3" key={index}>
                         <p className="font-bold">{item?.date}</p>
                         <div>
@@ -192,11 +192,16 @@ export default function ControlPage() {
                         </div>
                         <Separator />
                       </div>
-                    ))}
+                    )) : (
+                      <div className="w-full py-16 flex flex-col items-center justify-center text-muted-foreground rounded-lg bg-muted/20">
+                        <SearchX className="h-8 w-8 mb-2" />
+                        <p className="font-medium">Không có hoạt động phù hợp</p>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div>
-                    {notice?.map((item: any, index: any) => (
+                    {Array.isArray(notice) && notice.length > 0 ? notice.map((item: any, index: any) => (
                       <div className="my-3" key={index}>
                         <p className="font-bold text-main dark:text-white text-lg mb-3">
                           [{item?.course_id}] {item?.title} -{" "}
@@ -270,7 +275,12 @@ export default function ControlPage() {
                         </div>
                         <Separator />
                       </div>
-                    ))}
+                    )) : (
+                      <div className="w-full py-16 flex flex-col items-center justify-center text-muted-foreground rounded-lg bg-muted/20">
+                        <SearchX className="h-8 w-8 mb-2" />
+                        <p className="font-medium">Không có hoạt động phù hợp</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>

@@ -21,9 +21,10 @@ export default function Notice() {
   }, []);
   return (
     <div className="flex flex-col items-center pb-9">
-      <h1 className="text-main dark:text-white text-2xl font-bold p-5 pt-9">
-        Bảng tin
-      </h1>
+      <h2 className="text-main dark:text-white text-2xl font-bold p-5 pt-9">
+        Thông báo &amp; Tin tức quan trọng
+      </h2>
+      <div className="mx-auto mb-8 h-1 w-20 rounded bg-primary" />
       <Accordion type="single" collapsible className="w-[80%]">
         {data?.map((item: any, index: any) => (
           <AccordionItem key={item.id} value={`item-${index + 1}`}>

@@ -369,6 +369,18 @@ export const thread_columns: ColumnDef<ThreadInfo>[] = [
   {
     accessorKey: "title",
     header: "Title",
+    cell: ({ row }) => {
+      const router = useRouter();
+      const thread = row.original as any;
+      return (
+        <button
+          className="text-primary hover:underline"
+          onClick={() => router.push(`/student/course/forum/thread?id=${thread.id}`)}
+        >
+          {thread.title}
+        </button>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
