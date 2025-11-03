@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileUp } from "lucide-react";
+import { FileUp, ArrowLeft } from "lucide-react";
 import Submission from "@/lib/axios/submission";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -34,6 +34,8 @@ export default function SubmissionPage() {
   const cid: string = useSearchParams().get("id") as string;
   const [submission, setSubmission] = useState<any>(null);
   const [submitResult, setSubmitResult] = useState<any>(null);
+  const [loadingSubmission, setLoadingSubmission] = useState<boolean>(false);
+  const [loadingResult, setLoadingResult] = useState<boolean>(false);
   const [open, setOpen] = useState<Boolean>(false);
   const [score, setScore] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,17 +45,19 @@ export default function SubmissionPage() {
     else return <IoDocumentTextOutline size={20} />;
   };
   const fetchSubmission = async () => {
+    setLoadingSubmission(true);
     const submit = await Submission.GetSubmission(sid);
-    console.log(submit);
     setSubmission(submit?.data);
+    setLoadingSubmission(false);
   };
   const fetchSubmissionResult = async () => {
+    setLoadingResult(true);
     const submit = await Submission.GetSubmissionResult({
       submissionId: sid,
       userId: uid,
     });
     setSubmitResult(submit?.data);
-    console.log(submit);
+    setLoadingResult(false);
   };
   useEffect(() => {
     fetchSubmission();
@@ -98,35 +102,62 @@ export default function SubmissionPage() {
   };
   return (
     <div className="w-full">
-      <div className="text-rose-900 flex items-center gap-3 my-5">
-        <FileUp size={30} />
-        <h1 className="font-bold text-2xl">{submission?.title}</h1>
+      <div className="text-rose-900 flex items-center gap-3 my-5 justify-between">
+        <Button variant={"secondary"} onClick={() => router.push(`/teacher/course/detail?id=${cid}`)} className="gap-2">
+          <ArrowLeft className="h-4 w-4" /> Trở về
+        </Button>
+        <div className="flex items-center gap-3">
+          <FileUp size={30} />
+          {loadingSubmission ? (
+            <div className="h-6 w-64 bg-muted rounded animate-pulse" />
+          ) : (
+            <h1 className="font-bold text-2xl">{submission?.title}</h1>
+          )}
+        </div>
       </div>
       <Card className="w-full">
         <CardHeader>
-          <div className="flex gap-3 items-center">
-            <CardTitle>Opened:</CardTitle>
-            <CardDescription>
-              {TimeConvert(submission?.start_date)}
-            </CardDescription>
-          </div>
-          <div className="flex gap-3 items-center">
-            <CardTitle>Due:</CardTitle>
-            <CardDescription>
-              {TimeConvert(submission?.end_date)}
-            </CardDescription>
-          </div>
+          {loadingSubmission ? (
+            <div className="space-y-2">
+              <div className="h-4 w-40 bg-muted rounded animate-pulse" />
+              <div className="h-4 w-36 bg-muted rounded animate-pulse" />
+            </div>
+          ) : (
+            <>
+              <div className="flex gap-3 items-center">
+                <CardTitle>Opened:</CardTitle>
+                <CardDescription>
+                  {TimeConvert(submission?.start_date)}
+                </CardDescription>
+              </div>
+              <div className="flex gap-3 items-center">
+                <CardTitle>Due:</CardTitle>
+                <CardDescription>
+                  {TimeConvert(submission?.end_date)}
+                </CardDescription>
+              </div>
+            </>
+          )}
         </CardHeader>
         <Separator />
         <CardContent className="mt-5">
-          <div
-            dangerouslySetInnerHTML={{ __html: submission?.description }}
-          ></div>
+          {loadingSubmission ? (
+            <div className="h-24 w-full bg-muted/60 rounded animate-pulse" />
+          ) : (
+            <div
+              dangerouslySetInnerHTML={{ __html: submission?.description }}
+            ></div>
+          )}
         </CardContent>
         <CardFooter>
           <div className="flex flex-col gap-3">
-            {submission?.files?.map((el: any, index: any) => {
-              return (
+            {loadingSubmission ? (
+              <>
+                <div className="h-6 w-64 bg-muted rounded animate-pulse" />
+                <div className="h-6 w-56 bg-muted rounded animate-pulse" />
+              </>
+            ) : (
+              submission?.files?.map((el: any, index: any) => (
                 <div className="flex gap-3 items-center flex-wrap" key={index}>
                   {GetIcon(el?.title)}
                   <a
@@ -140,45 +171,58 @@ export default function SubmissionPage() {
                     {TimeConvert(el?.createdAt)}
                   </p>
                 </div>
-              );
-            })}
+              ))
+            )}
           </div>
         </CardFooter>
       </Card>
       {uid && (
         <Card className="w-full mt-5">
           <CardHeader>
-            <div className="flex gap-3 items-center">
-              <CardTitle>Đã nộp:</CardTitle>
-              <CardDescription>
-                {TimeConvert(submitResult?.createdAt)}
-              </CardDescription>
-            </div>
+            {loadingResult ? (
+              <div className="h-4 w-40 bg-muted rounded animate-pulse" />
+            ) : (
+              <div className="flex gap-3 items-center">
+                <CardTitle>Đã nộp:</CardTitle>
+                <CardDescription>
+                  {TimeConvert(submitResult?.createdAt)}
+                </CardDescription>
+              </div>
+            )}
           </CardHeader>
           <Separator />
           <CardContent className="mt-5">
-            <div className="flex gap-3 items-center">
-              <p className="font-bold">From</p>
-              <Avatar>
-                <AvatarImage src={submitResult?.user?.avatar} />
-                <AvatarFallback>
-                  {submitResult?.user?.firstname[0]}
-                  {submitResult?.user?.lastname[0]}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-bold">
-                  {submitResult?.user?.firstname} {submitResult?.user?.lastname}
-                </p>
-                <p className="text-gray-500">{submitResult?.user?.email}</p>
+            {loadingResult ? (
+              <div className="h-10 w-72 bg-muted rounded animate-pulse" />
+            ) : (
+              <div className="flex gap-3 items-center">
+                <p className="font-bold">From</p>
+                <Avatar>
+                  <AvatarImage src={submitResult?.user?.avatar} />
+                  <AvatarFallback>
+                    {submitResult?.user?.firstname[0]}
+                    {submitResult?.user?.lastname[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-bold">
+                    {submitResult?.user?.firstname} {submitResult?.user?.lastname}
+                  </p>
+                  <p className="text-gray-500">{submitResult?.user?.email}</p>
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
           <CardFooter>
             <div className="flex flex-col gap-3">
               <p className="font-bold">Bài nộp</p>
-              {submitResult?.files?.map((el: any, index: any) => {
-                return (
+              {loadingResult ? (
+                <>
+                  <div className="h-6 w-64 bg-muted rounded animate-pulse" />
+                  <div className="h-6 w-56 bg-muted rounded animate-pulse" />
+                </>
+              ) : (
+                submitResult?.files?.map((el: any, index: any) => (
                   <div
                     className="flex gap-3 items-center flex-wrap"
                     key={index}
@@ -195,8 +239,8 @@ export default function SubmissionPage() {
                       {TimeConvert(el?.createdAt)}
                     </p>
                   </div>
-                );
-              })}
+                ))
+              )}
               {submitResult?.isChecked ? (
                 <div>
                   <div className="flex gap-3 items-center mb-3">

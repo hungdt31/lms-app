@@ -32,8 +32,8 @@ export default function TeacherPage() {
   const user = UserQuery();
   // console.log(mutation);
   return (
-    <div className="flex justify-center flex-col items-center gap-5 lg:mx-14 mx-5 mb-5">
-      <div className="flex gap-5 items-center mt-5 lg:flex-row flex-col">
+    <div className="mx-auto max-w-7xl px-4 pb-12">
+      <div className="flex gap-5 items-center justify-center mt-6 lg:flex-row flex-col">
         <Select
           onValueChange={(el: any) => {
             setInfo(el);
@@ -43,7 +43,7 @@ export default function TeacherPage() {
             });
           }}
         >
-          <SelectTrigger className="w-[250px]">
+          <SelectTrigger className="w-[260px]">
             <SelectValue placeholder="Select semester" />
           </SelectTrigger>
           <SelectContent>
@@ -57,50 +57,45 @@ export default function TeacherPage() {
           </SelectContent>
         </Select>
         {info && (
-          <div className="flex gap-4 sm:flex-row flex-col mb-3 sm:mb-0 items-center">
-            {" From "}
-            <Button variant={"secondary"}>
-              {TimeConvert(info?.start_date)}
-            </Button>
-            {" to "}
+          <div className="flex gap-3 sm:flex-row flex-col mb-3 sm:mb-0 items-center text-sm">
+            From
+            <Button variant={"secondary"}>{TimeConvert(info?.start_date)}</Button>
+            to
             <Button variant={"secondary"}>{TimeConvert(info?.end_date)}</Button>
           </div>
         )}
       </div>
-      <Card className="px-7 w-full">
-        <CardHeader>
-          <Button className="badge badge-primary p-5" variant="secondary">
-            <Layers className="mr-3" />{" "}
-            <strong>
-              Khóa học <Badge>{mutation.data?.data?.length}</Badge>
-            </strong>
-          </Button>
+      <Card className="w-full rounded-xl shadow-sm mt-5">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="inline-flex items-center gap-2 rounded-lg border bg-muted/40 px-4 py-2">
+            <Layers className="h-4 w-4" />
+            <span className="font-semibold">Khóa học</span>
+            <Badge variant="secondary">{mutation.data?.data?.length ?? 0}</Badge>
+          </div>
         </CardHeader>
         <CardContent>
           {mutation.isPending && <BlockLoading />}
-          {mutation.isError && <p>Something is not good ..</p>}
+          {mutation.isError && <p className="text-sm text-red-500">Có lỗi xảy ra. Vui lòng thử lại.</p>}
           {mutation.isSuccess && (
-            <div className="flex flex-wrap gap-5 mt-3 justify-center mb-3">
-              {mutation.data?.data?.map((el: any, index: any) => {
-                return (
-                  <Link
-                    href={`/teacher/course/detail?id=${el?.id}`}
-                    key={index}
-                  >
-                    <div className="card w-96 bg-base-100 shadow-xl image-full ">
-                      <figure>
-                        <img src={el?.image} alt="....." />
-                      </figure>
-                      <div className="card-body">
-                        <div className="flex items-center gap-3">
-                          <h2 className="card-title">{el?.title}</h2>
-                        </div>
-                        <p>{el?.course_id}</p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-2">
+              {mutation.data?.data?.length ? (
+                mutation.data?.data?.map((el: any, index: any) => (
+                  <Link href={`/teacher/course/detail?id=${el?.id}`} key={index}>
+                    <div className="relative overflow-hidden rounded-xl shadow-sm group">
+                      <img src={el?.image} alt={el?.title} className="h-48 w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                        <h3 className="font-semibold text-lg truncate">{el?.title}</h3>
+                        <p className="text-sm opacity-80">{el?.course_id}</p>
                       </div>
                     </div>
                   </Link>
-                );
-              })}
+                ))
+              ) : (
+                <div className="col-span-full py-12 text-center text-muted-foreground">
+                  Chưa có khóa học trong học kỳ này
+                </div>
+              )}
             </div>
           )}
         </CardContent>

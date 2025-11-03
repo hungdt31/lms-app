@@ -144,14 +144,13 @@ export default function VideoSection(data: any) {
   };
   return (
     <div>
-      <div className="text-main">
-        <p className="h-[3px] w-[50px] bg-nav ml-auto"></p>
-        <h1 className="font-bold text-2xl border-l-2 border-nav border-r-2 px-3">
+      <div className="mb-4">
+        <h2 className="font-bold text-3xl tracking-tight text-foreground">
           Videos
-        </h1>
-        <p className="h-[3px] w-[50px] bg-nav"></p>
+        </h2>
+        <div className="h-1 w-20 bg-primary rounded mt-1" />
       </div>
-      <div className="p-3 flex gap-3 lg:flex-row flex-col justify-center">
+      <div className="p-3 flex gap-3 lg:flex-row flex-col">
         <Button
           variant={"destructive"}
           onClick={async () => {
@@ -167,7 +166,7 @@ export default function VideoSection(data: any) {
 
         <Sheet key={"bottom"}>
           <SheetTrigger asChild>
-            <Button>Thêm mục tài liệu</Button>
+            <Button>Thêm mục video</Button>
           </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
@@ -250,7 +249,7 @@ export default function VideoSection(data: any) {
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <EditVidSection qr={qr} id={el?.id} />
+                  <EditVidSection qr={qr} id={el?.id} title={el?.title} description={el?.description} />
                   <Button
                     className="py-5"
                     variant={"destructive"}

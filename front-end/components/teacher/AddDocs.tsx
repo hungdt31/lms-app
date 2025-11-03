@@ -22,6 +22,7 @@ import {
 import LoginLooading from "@/components/loading/login";
 import { Input } from "@/components/ui/input";
 import { Button } from "@radix-ui/themes";
+import { Button as Btn } from "../ui/button";
 import Swal from "sweetalert2";
 import { useState } from "react";
 type FormValues = {
@@ -30,7 +31,9 @@ type FormValues = {
   file: File | null; // Change the type of 'file' to File | null
 };
 
-export default function UploadDocument(data: any) {
+type UploadProps = { id: any; qr: any; onClose?: () => void };
+
+export default function UploadDocument(data: UploadProps) {
   // console.log(data)
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -134,9 +137,16 @@ export default function UploadDocument(data: any) {
               {loading ? (
                 <LoginLooading />
               ) : (
-                <Button type="submit" variant="surface">
-                  Submit
-                </Button>
+                <div className="flex items-center gap-3">
+                  <Button type="submit" variant="surface">
+                    Submit
+                  </Button>
+                  {data?.onClose && (
+                    <Btn onClick={data.onClose} variant="outline" className="text-red-700 hover:text-red-500">
+                      Close
+                    </Btn>
+                  )}
+                </div>
               )}
             </form>
           </Form>

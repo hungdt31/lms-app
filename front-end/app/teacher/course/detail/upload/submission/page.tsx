@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 // import JoditReact from "jodit-react-ts";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -57,7 +58,12 @@ export default function SubmissionPage() {
   };
   return (
     <div>
-      <h1 className="font-bold text-lg">Create new submission</h1>
+      <div className="flex items-center justify-between mb-3">
+        <Button variant={"secondary"} onClick={() => router.back()} className="gap-2">
+          <ArrowLeft className="h-4 w-4" /> Trở về
+        </Button>
+        <h1 className="font-bold text-lg">Create new submission</h1>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mockup-window">
           <div className="lg:w-1/2 w-[80%]">

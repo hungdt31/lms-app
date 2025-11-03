@@ -28,13 +28,13 @@ import { LoginLoading } from "@/components/loading";
 import Docs from "@/lib/axios/document";
 
 export default function EditDocSection(data: any) {
-  const { qr, id } = data;
+  const { qr, id, title, content } = data;
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      content: "",
+      title: title || "",
+      content: content || "",
       courseId: id,
     },
   });
@@ -84,14 +84,14 @@ export default function EditDocSection(data: any) {
               <Label htmlFor="title" className="text-right">
                 Title
               </Label>
-              <Input id="title" className="col-span-3" {...register("title")} />
+              <Input id="title" className="col-span-3" {...register("title")} defaultValue={title} />
             </div>
             <p className="text-red-500 text-[14px]">{errors?.title?.message}</p>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Content</Label>
             </div>
             <TextEditor
-              defaultContent={"<p>Write your content here...</p>"} // default content
+              defaultContent={content || "<p>Write your content here...</p>"}
               onChange={(content) => form.setValue("content", content)}
             />
             <p className="text-red-500 text-[14px]">

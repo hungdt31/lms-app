@@ -3,20 +3,12 @@ import { useSearchParams } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   FileText,
-  SquarePlus,
   Plus,
   SquarePen,
   X,
@@ -24,28 +16,32 @@ import {
   MessageCircleQuestion,
 } from "lucide-react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import { Button as Btn } from "../ui/button";
 import { Input } from "@/components/ui/input";
-import { use, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import DocumentSection from "@/lib/axios/document";
 import UploadDocument from "./AddDocs";
 import EditDocSection from "./EditDocSection";
 import { useRouter } from "next/navigation";
+
+// Local short datetime formatter: dd/MM/yyyy HH:mm
+const formatShortDate = (iso?: string) => {
+  if (!iso) return "-";
+  const date = new Date(iso);
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = String(date.getFullYear());
+  const hh = String(date.getHours()).padStart(2, "0");
+  const mm = String(date.getMinutes()).padStart(2, "0");
+  return `${d}/${m}/${y} ${hh}:${mm}`;
+};
 export default function DocSection(data: any) {
   const { qr } = data;
   const router = useRouter();
@@ -56,18 +52,14 @@ export default function DocSection(data: any) {
   const [clickDelete, setClickDelete] = useState<boolean>(false);
   const [option, setOption] = useState<String>("");
   const id: string = useSearchParams().get("id") as string;
-  const setIcon = () => {
-    if (option === "add") {
-      return (
-        <Link href={`/teacher/course/detail/upload?id=${id}`}>
-          <div className="tooltip" data-tip={option}>
-            <SquarePlus />
-          </div>
-        </Link>
-      );
-    } else if (option === "delete") {
-      return <Button onClick={() => HandleDeleteSubmit()}>Delete</Button>;
-    } else return "";
+  // Toggle delete mode for DocumentSections
+  const toggleDeleteMode = async () => {
+    if (option === "delete") {
+      await HandleDeleteSubmit();
+      setOption("");
+    } else {
+      setOption("delete");
+    }
   };
   const HandleDeleteSubmit = async () => {
     Swal.fire({
@@ -116,28 +108,20 @@ export default function DocSection(data: any) {
   };
   return (
     <div>
-      <div className="text-main">
-        <p className="h-[3px] w-[50px] bg-nav ml-auto"></p>
-        <h1 className="font-bold text-2xl border-l-2 border-nav border-r-2 px-3">
+      <div className="mb-4">
+        <h2 className="font-bold text-3xl tracking-tight text-foreground">
           Tài liệu và bài kiểm tra
-        </h1>
-        <p className="h-[3px] w-[50px] bg-nav"></p>
+        </h2>
+        <div className="h-1 w-20 bg-primary rounded mt-1" />
       </div>
       <div className="flex gap-3 items-center"></div>
-      <div className="flex items-center gap-3 mt-5">
-        <Select onValueChange={(e) => setOption(e)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="None" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none" defaultChecked>
-              None
-            </SelectItem>
-            <SelectItem value="add">Thêm mục tài liệu</SelectItem>
-            <SelectItem value="delete">Xóa mục tài liệu</SelectItem>
-          </SelectContent>
-        </Select>
-        {setIcon()}
+      <div className="p-3 flex gap-3 lg:flex-row flex-col items-center">
+        <Btn variant="destructive" onClick={toggleDeleteMode}>
+          {option === "delete" ? "Delete" : "Xóa mục tài liệu"}
+        </Btn>
+        <Link href={`/teacher/course/detail/upload?id=${id}`}>
+          <Btn>Thêm mục tài liệu</Btn>
+        </Link>
       </div>
       <Accordion type="multiple" className="w-full">
         {qr?.data?.data?.DocumentSections?.map((el: any, index: any) => {
@@ -213,7 +197,7 @@ export default function DocSection(data: any) {
                     </Btn>
                   </Link>
 
-                  <EditDocSection qr={qr} id={el?.id} />
+                  <EditDocSection qr={qr} id={el?.id} title={el?.title} content={el?.content} />
                 </div>
                 <div dangerouslySetInnerHTML={{ __html: el?.content }} />
 
@@ -234,9 +218,9 @@ export default function DocSection(data: any) {
                         key={_index}
                       >
                         <FileText className="text-cyan-500" />
-                        <div className="text-cyan-500">
-                          <p className="text-base font-bold">{doc?.title}</p>
-                          <p className="text-xs">{doc?.description}</p>
+                        <div>
+                          <p className="text-base font-bold text-cyan-500">{doc?.title}</p>
+                          <p className="text-xs text-muted-foreground">{doc?.description}</p>
                         </div>
                       </div>
                       {clickDelete && trigger == index && (
@@ -265,11 +249,11 @@ export default function DocSection(data: any) {
                         key={_index}
                       >
                         <SquarePen className="text-red-500" />
-                        <div className="text-red-500">
-                          <div className="text-base font-bold">
+                        <div>
+                          <div className="text-base font-bold text-red-500">
                             {quiz?.title}
                           </div>
-                          <div className="text-xs">{quiz?.description}</div>
+                          <div className="text-xs text-muted-foreground">{quiz?.description}</div>
                         </div>
                       </Link>
                       {clickDelete && trigger == index && (
@@ -303,6 +287,11 @@ export default function DocSection(data: any) {
                           <div className="text-base font-bold">
                             {submission?.title}
                           </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Opened: {formatShortDate(submission?.start_date)}
+                            <span className="mx-2">•</span>
+                            Due: {formatShortDate(submission?.end_date)}
+                          </div>
                         </div>
                       </div>
                       {clickDelete && trigger == index && (
@@ -316,7 +305,7 @@ export default function DocSection(data: any) {
                   );
                 })}
                 {clickAdd && trigger == index && (
-                  <UploadDocument id={el?.id} qr={qr} />
+                  <UploadDocument id={el?.id} qr={qr} onClose={() => setClickAdd(false)} />
                 )}
               </AccordionContent>
             </AccordionItem>

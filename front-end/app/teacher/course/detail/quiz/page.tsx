@@ -1,10 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -20,7 +17,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import TimeConvert from "@/helpers/TimeConvert";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { CgAlignMiddle } from "react-icons/cg";
 import Quiz from "@/lib/axios/quiz";
 import DataTable from "./DataTable";
@@ -28,7 +26,7 @@ import { quiz_columns } from "@/helpers/Column";
 import { SlPeople } from "react-icons/sl";
 import { FaInfoCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import React, { PureComponent } from "react";
+import React from "react";
 import BarChart from "./BarChart";
 import { Badge } from "@/components/ui/badge";
 function GridItem({ title, children }: any) {
@@ -40,11 +38,12 @@ function GridItem({ title, children }: any) {
   );
 }
 export default function QuizPage() {
+  const router = useRouter();
   const id: any = useSearchParams().get("qid");
   const [quiz, setQuiz] = useState<any>(null);
   const fetchData = async () => {
     const rs: any = await Quiz.GetQuizInfo(id);
-    console.log(rs);
+    // console.log(rs);
     setQuiz(rs?.data);
   };
   useEffect(() => {
@@ -52,6 +51,17 @@ export default function QuizPage() {
   }, []);
   return (
     <div className="w-full">
+      <div className="flex justify-center px-2 mb-3">
+        <div className="sm:w-[80%] w-full">
+          <Button
+            variant="secondary"
+            onClick={() => router.back()}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" /> Quay về khóa học
+          </Button>
+        </div>
+      </div>
       <div className="flex justify-center px-2">
         <div className="bg-background grid grid-cols-3 shadow-lg rounded-l-lg rounded-r-lg border-2">
           <div className="p-7 items-center flex flex-col gap-3 border-r-2">

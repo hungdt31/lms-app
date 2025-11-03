@@ -22,23 +22,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Wrench } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-// import JoditReact from "jodit-react-ts";
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Video from "@/lib/axios/video";
 import LoginLooading from "../loading/login";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+import TextEditor from "@/components/text-editor";
 export default function EditVidSection(data: any) {
-  const { qr, id } = data;
+  const { qr, id, title, description } = data;
   const [loading, setLoading] = useState<boolean>(false);
-  const [content, setContent] = useState<String>("");
+  const [content, setContent] = useState<String>(description || "");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: title || "",
+      description: description || "",
     },
   });
+  useEffect(() => {
+    if (title) form.setValue("title", title);
+    if (description) form.setValue("description", description);
+  }, [title, description, form]);
   const {
     register,
     formState: { errors },
@@ -55,21 +57,7 @@ export default function EditVidSection(data: any) {
     qr.refetch();
     setLoading(false);
   };
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-    },
-  };
+  // no external editor config needed for TextEditor
   return (
     <Sheet>
       <SheetTrigger>
@@ -99,17 +87,18 @@ export default function EditVidSection(data: any) {
               <Label htmlFor="title" className="text-right">
                 Title
               </Label>
-              <Input id="title" className="col-span-3" {...register("title")} />
+              <Input id="title" className="col-span-3" {...register("title")} defaultValue={title} />
             </div>
             <p className="text-red-500 text-[14px]">{errors?.title?.message}</p>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Description</Label>
             </div>
-            <JoditReact
-              onChange={(content) => {
-                form.setValue("description", content);
+            <TextEditor
+              defaultContent={description || "<p>Write your content here...</p>"}
+              onChange={(val) => {
+                setContent(val as any);
+                form.setValue("description", val);
               }}
-              config={config}
             />
             <p className="text-red-500 text-[14px]">
               {errors?.description?.message}

@@ -33,9 +33,7 @@ import { Button } from "@/components/ui/button";
 import LoginLooading from "@/components/loading/login";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-// import JoditReact from "jodit-react-ts";
-import dynamic from "next/dynamic";
-const JoditReact = dynamic(() => import("jodit-react-ts"), { ssr: false });
+import TextEditor from "@/components/text-editor";
 export default function UploadQuiz() {
   const router = useRouter();
   const id: string = useSearchParams().get("id") as string;
@@ -109,27 +107,13 @@ export default function UploadQuiz() {
     setLoading(false);
     console.log(data);
   };
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    uploader: {
-      url: "https://xdsoft.net/jodit/finder/?action=fileUpload",
-    },
-    filebrowser: {
-      ajax: {
-        url: "https://xdsoft.net/jodit/finder/",
-      },
-    },
-    style: {
-      background: "white",
-      color: "black",
-    },
-  };
+  // Sử dụng TextEditor nội bộ, không cần cấu hình ngoài
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="lg:flex items-center w-full gap-3 lg:justify-center"
+      className="w-full flex flex-col gap-6 items-center"
     >
-      <div className="flex flex-col gap-5 min-w-[400px]">
+      <div className="flex flex-col gap-5 w-full lg:max-w-md">
         <Input
           type="text"
           placeholder="Nhập tên bài kiểm tra"
@@ -146,13 +130,14 @@ export default function UploadQuiz() {
         />
         <Label>Thời gian giới hạn (ms)</Label>
         <Input
-          type="text"
+          type="number"
+          min={300000}
           placeholder="Nhập thời gian giới hạn"
           {...register("quizData.time_limit", { valueAsNumber: true })}
         />
         <Label>Hệ số</Label>
         <Input
-          type="text"
+          type="number"
           placeholder="Nhập hệ số"
           {...register("quizData.factor", { valueAsNumber: true })}
         />
@@ -186,9 +171,9 @@ export default function UploadQuiz() {
           </SelectContent>
         </Select>
       </div>
-      <div className="grow flex justify-center flex-col items-center max-w-[900px]">
+      <div className="grow flex flex-col items-center w-full">
         <Carousel
-          className="lg:w-1/2 w-[80%] min-w-[300px] mt-3"
+          className="w-full lg:w-3/4 max-w-[900px] mt-3"
           setApi={setApi}
         >
           <CarouselContent>
@@ -209,25 +194,19 @@ export default function UploadQuiz() {
                         <p className="text-4xl font-semibold text-center mb-5">
                           {index + 1}
                         </p>
-                        <JoditReact
+                        <TextEditor
+                          defaultContent="The topic of question"
                           onChange={(content) => {
-                            form.setValue(
-                              `questions.${index}.content`,
-                              content,
-                            );
+                            form.setValue(`questions.${index}.content`, content);
                           }}
-                          config={config}
                         />
                         <div className="mt-3">
                           <Label>Giải thích</Label>
-                          <JoditReact
+                          <TextEditor
+                            defaultContent="Explain the question"
                             onChange={(content) => {
-                              form.setValue(
-                                `questions.${index}.explain`,
-                                content,
-                              );
+                              form.setValue(`questions.${index}.explain`, content);
                             }}
-                            config={config}
                           />
                         </div>
                         <p className="text-red-500 font-light text-[14px] mt-3">
@@ -235,7 +214,7 @@ export default function UploadQuiz() {
                         </p>
                         <div className="flex justify-center">
                           <RadioGroup
-                            className="mt-5 ratio-group"
+                            className="mt-5 ratio-group w-full"
                             onValueChange={(e) => handleChange(e, index)}
                           >
                             {Array.from({ length: 4 }).map((_, _index: any) => {
@@ -249,11 +228,13 @@ export default function UploadQuiz() {
                                     id={_index}
                                     className="radio-item"
                                   />
-                                  <div>
+                                  <div className="flex-1">
                                     <Input
                                       {...register(
                                         `questions.${index}.options.${_index}` as const,
                                       )}
+                                      className="shrink"
+                                      placeholder={`Phương án ${String.fromCharCode(65 + _index)}`}
                                     />
                                     {errors?.questions?.[index]?.options?.[
                                       _index
@@ -287,7 +268,7 @@ export default function UploadQuiz() {
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
-        <div className="grid grid-cols-5 gap-3 my-5">
+        <div className="flex flex-wrap gap-3 my-5 justify-center">
           {fields.map((_, index) => {
             return (
               <Button
@@ -309,9 +290,10 @@ export default function UploadQuiz() {
             <Button
               onClick={() => {
                 append({
-                  desc: "",
+                  content: "",
                   options: ["", "", "", ""],
                   answer: "",
+                  explain: "",
                 });
                 api?.reInit();
               }}
