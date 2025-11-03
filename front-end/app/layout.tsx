@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Open_Sans } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
@@ -8,7 +8,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/context/auth";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/common/Footer";
-const inter = Inter({ subsets: ["latin"] });
 const openSans = Open_Sans({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "LMS App",
@@ -21,8 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(openSans.className, {
+          "debug-screens": process.env.NODE_ENV === "development",
+        })}
+      >
         <Theme>
           <ThemeProvider
             attribute="class"
@@ -31,19 +34,15 @@ export default function RootLayout({
             themes={["blue", "light", "dark"]}
             disableTransitionOnChange
           >
-            <AuthProvider>
-              <div
-                className={cn(openSans.className, {
-                  "debug-screens": process.env.NODE_ENV === "development",
-                })}
-              >
-                {children}
-              </div>
-            </AuthProvider>
+            <div className="min-h-screen flex flex-col">
+              <AuthProvider>
+                <main className="flex-1">{children}</main>
+              </AuthProvider>
+              <Footer />
+            </div>
+            <Toaster />
           </ThemeProvider>
-          <Toaster />
         </Theme>
-        <Footer />
       </body>
     </html>
   );

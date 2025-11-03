@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import QueryProvider from "@/lib/react_query/query_provider";
 import NavLayout from "./nav";
 import "./styles.css";
 import { Suspense } from "react";
 import Loading from "./loading";
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "LMS App",

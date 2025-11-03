@@ -27,34 +27,33 @@ import Header from "./header";
 import QuizCard from "@/components/card/quiz";
 import SubmissionCard from "@/components/card/submission";
 import DocCard from "@/components/card/docLink";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
 import ForumCard from "@/components/card/forum";
+import { CourseScoreAndSubmitQuery } from "@/hooks/result";
 export default function DetailCourse() {
-  const token = new Cookies().get("token");
+  const token = useMemo(() => new Cookies().get("token"), []);
   const router = useRouter();
-  const [result, setResult] = useState<any>(null);
   const index: string = useSearchParams().get("index") as string;
   const course_id: string = useSearchParams().get("id") as string;
-  const { data } = CourseQuery(course_id);
-  console.log(data);
-  const fetchResult = async () => {
-    const res = await Grade.GetQuizResultAndSubmit({
-      id: course_id,
-      token,
-    });
-    console.log(res);
-    setResult(res?.data);
-  };
-  useEffect(() => {
-    fetchResult();
-  }, []);
+  const { data, isLoading } = CourseQuery(course_id);
+  const { data: resultResp, isLoading: resultLoading } = CourseScoreAndSubmitQuery(course_id);
+  const result = resultResp?.data;
   return (
     <div>
       <div className="flex items-center flex-col">
-        <div className="font-bold text-3xl">{data?.data?.title}</div>
-        <p className="pl-11 font-mono">__ {data?.data?.course_id} __</p>
+        {isLoading ? (
+          <>
+            <div className="h-7 w-48 rounded-md bg-gray-200 animate-pulse" />
+            <p className="pl-11 font-mono h-4 w-32 mt-2 rounded bg-gray-100 animate-pulse" />
+          </>
+        ) : (
+          <>
+            <div className="font-bold text-3xl">{data?.data?.title}</div>
+            <p className="pl-11 font-mono">__ {data?.data?.course_id} __</p>
+          </>
+        )}
       </div>
       <Header />
       <br />
@@ -62,7 +61,14 @@ export default function DetailCourse() {
       {index == "0" ? (
         <div className="flex justify-center mx-7">
           <Accordion type="single" collapsible className="lg:w-[60%] w-full">
-            {data?.data?.DocumentSections?.map((el: any, index: any) => (
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="mb-4">
+                    <div className="h-10 w-full rounded bg-gray-100 animate-pulse" />
+                    <div className="mt-3 h-24 w-full rounded bg-gray-50 animate-pulse" />
+                  </div>
+                ))
+              : data?.data?.DocumentSections?.map((el: any, index: any) => (
               <AccordionItem value={`item ${index + 1}`} key={index}>
                 <AccordionTrigger className="font-bold text-xl">
                   {el?.title}
@@ -145,7 +151,7 @@ export default function DetailCourse() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {result?.quizResult?.map((el: any, index: number) => (
+              {(resultLoading ? [] : result?.quizResult) ?.map((el: any, index: number) => (
                 <TableRow key={index} onClick={() => {}}>
                   <TableCell className="font-medium">{index + 1}</TableCell>
                   <TableCell>{el?.quiz?.title}</TableCell>
@@ -166,7 +172,7 @@ export default function DetailCourse() {
                   </TableCell>
                 </TableRow>
               ))}
-              {result?.submitResult?.map((el: any, index: number) => (
+              {(resultLoading ? [] : result?.submitResult) ?.map((el: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">
                     {index + 1 + (result?.quizResult.length || 0)}

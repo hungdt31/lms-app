@@ -272,8 +272,8 @@ export default function ProfileForm() {
               </div>
 
               {loading ? (
-                <div className="py-2">
-                  <LoginLooading />
+                <div className="py-2 flex justify-center">
+                  <LoginLooading label="Đang đăng nhập..." size="lg" />
                 </div>
               ) : (
                 <div className="space-y-4">

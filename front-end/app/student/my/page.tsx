@@ -32,6 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Semester from "@/lib/axios/semester";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ListFilter, ArrowDownAZ, ArrowUpAZ, Check, RotateCcw, SearchX } from "lucide-react";
 export default function MyPage() {
   const cookies = new Cookies();
   const token = cookies.get("token") ?? null;
@@ -66,15 +69,9 @@ export default function MyPage() {
     if (semester?.data) setSemester_id(semester?.data?.id);
   };
   useEffect(() => {
-    Promise.all([fetchCate(), fetchSemester(), fetchSemesterByNow()])
-      .then(([cateResult, semesterResult, SemesterByNowResult]) => {
-        // Handle results
-        console.log("Done !");
-      })
-      .catch((error) => {
-        // Handle error
-        console.log("Error !");
-      });
+    Promise.all([fetchCate(), fetchSemester(), fetchSemesterByNow()]).catch(
+      () => {},
+    );
   }, []);
   // useEffect(() => {
   //   const obj = {
@@ -109,7 +106,7 @@ export default function MyPage() {
         token,
         page,
       });
-      console.log(obj);
+      // silent
     }, 500); // Delay of 0.5 second
 
     // Cleanup function to clear the timeout if the component unmounts
@@ -133,82 +130,134 @@ export default function MyPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-3 items-center p-5">
-        <Input
-          placeholder="Tìm kiếm khóa học"
-          onChange={(e) => {
-            setName(e?.target?.value);
-          }}
-          ref={ref}
-          className="w-[400px]"
-        />
-        <Select onValueChange={(e) => setSemester_id(e)} value={semester_id}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a semester" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Semester</SelectLabel>
-              {semester?.map((el: any, index: any) => {
-                return (
-                  <SelectItem value={el?.id} key={index}>
-                    {el?.description}
-                  </SelectItem>
-                );
-              })}
-              <SelectItem value="all">All</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select onValueChange={(e) => setCate_id(e)} value={cate_id}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Category</SelectLabel>
-              {cate?.map((el: any, index: any) => {
-                return (
-                  <SelectItem value={el?.id} key={index}>
-                    {el?.name}
-                  </SelectItem>
-                );
-              })}
-              <SelectItem value="all">All</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Popover>
-          <PopoverTrigger>
-            <Button variant={"secondary"}>Sắp xếp</Button>
-          </PopoverTrigger>
-          <PopoverContent>
+      <Card className="mx-5 my-4 mb-7 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/70">
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2">
+              <ListFilter className="h-4 w-4 opacity-70" />
+              <span className="text-sm font-medium">Bộ lọc</span>
+            </div>
+            <Input
+              placeholder="Tìm kiếm khóa học"
+              onChange={(e) => {
+                setName(e?.target?.value);
+              }}
+              ref={ref}
+              className="w-[260px] sm:w-[360px]"
+            />
+            <Select onValueChange={(e) => setSemester_id(e)} value={semester_id}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Học kỳ" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Semester</SelectLabel>
+                  {semester?.map((el: any, index: any) => {
+                    return (
+                      <SelectItem value={el?.id} key={index}>
+                        {el?.description}
+                      </SelectItem>
+                    );
+                  })}
+                  <SelectItem value="all">All</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select onValueChange={(e) => setCate_id(e)} value={cate_id}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Danh mục" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Category</SelectLabel>
+                  {cate?.map((el: any, index: any) => {
+                    return (
+                      <SelectItem value={el?.id} key={index}>
+                        {el?.name}
+                      </SelectItem>
+                    );
+                  })}
+                  <SelectItem value="all">All</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Popover>
+              <PopoverTrigger>
+                <Button variant={"secondary"} className="gap-2">
+                  {name_sort === "asc" ? (
+                    <ArrowUpAZ className="h-4 w-4" />
+                  ) : (
+                    <ArrowDownAZ className="h-4 w-4" />
+                  )}
+                  Sắp xếp
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" sideOffset={8} className="w-56 p-2">
+                <Button
+                  variant={"ghost"}
+                  className="w-full justify-start gap-2"
+                  onClick={() => {
+                    setName_Sort("asc");
+                  }}
+                >
+                  <ArrowUpAZ className="h-4 w-4" />
+                  <span className="flex-1 text-left">Tăng dần theo tên</span>
+                  {name_sort === "asc" && <Check className="h-4 w-4 opacity-80" />}
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  className="w-full justify-start gap-2"
+                  onClick={() => {
+                    setName_Sort("desc");
+                  }}
+                >
+                  <ArrowDownAZ className="h-4 w-4" />
+                  <span className="flex-1 text-left">Giảm dần theo tên</span>
+                  {name_sort === "desc" && <Check className="h-4 w-4 opacity-80" />}
+                </Button>
+              </PopoverContent>
+            </Popover>
             <Button
-              variant={"link"}
+              variant={"outline"}
+              className="gap-2"
               onClick={() => {
+                setName("");
+                setCate_id("all");
+                setSemester_id("all");
                 setName_Sort("asc");
+                setPage(1);
+                const input = ref.current;
+                if (input) input.value = "";
+                course.mutate({
+                  name: "",
+                  cate_id: "all",
+                  semester_id: "all",
+                  name_sort: "asc",
+                  token,
+                  page: 1,
+                });
               }}
             >
-              Tăng dần theo tên {name_sort === "asc" ? "✔" : ""}
+              <RotateCcw className="h-4 w-4" /> Làm mới
             </Button>
-            <Button
-              variant={"link"}
-              onClick={() => {
-                setName_Sort("desc");
-              }}
-            >
-              Giảm dần theo tên {name_sort === "desc" ? "✔" : ""}
-            </Button>
-          </PopoverContent>
-        </Popover>
-      </div>
+            {/* Ẩn nhãn thông tin filter để tránh lộ ID và gọn giao diện */}
+          </div>
+        </CardContent>
+      </Card>
       <div className="flex gap-5 px-5 flex-wrap">
-        {courseData?.map((el: any, index: number) => {
-          return <MediaCard key={index}>{el}</MediaCard>;
-        })}
+        {Array.isArray(courseData) && courseData?.length > 0 ? (
+          courseData.map((el: any, index: number) => (
+            <MediaCard key={index}>{el}</MediaCard>
+          ))
+        ) : (
+          <div className="w-full py-16 flex flex-col items-center justify-center text-muted-foreground">
+            <SearchX className="h-8 w-8 mb-2" />
+            <p className="font-medium">Không tìm thấy khóa học phù hợp</p>
+          </div>
+        )}
       </div>
       <Pagination className="pb-5 pt-7">
-        <PaginationContent>
+        <PaginationContent className="list-none">
           <PaginationItem>
             <PaginationPrevious
               onClick={() => setPage(page - 1 < 1 ? page : page - 1)}
