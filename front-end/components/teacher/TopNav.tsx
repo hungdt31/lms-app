@@ -15,6 +15,14 @@ export default function TopNav() {
   const path = usePathname();
   // console.log(path);
   const { data, isPending, error } = UserQuery();
+  
+  // Helper function để kiểm tra link có active không
+  const isActive = (href: string) => {
+    if (href === "/teacher") {
+      return path === "/teacher";
+    }
+    return path.startsWith(href);
+  };
   if (isPending)
     return (
       <div className="m-auto w-screen flex justify-center items-center h-screen">
@@ -47,16 +55,36 @@ export default function TopNav() {
             className="menu menu-sm dropdown-content mt-3 p-2 shadow rounded-box w-52 z-50 bg-nav"
           >
             <li>
-              <Link href={"/teacher"}>Trang chủ</Link>
+              <Link 
+                href={"/teacher"}
+                className={isActive("/teacher") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+              >
+                Trang chủ
+              </Link>
             </li>
             <li>
-              <Link href={"/teacher/course"}>Quản lý khóa học</Link>
+              <Link 
+                href={"/teacher/course"}
+                className={isActive("/teacher/course") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+              >
+                Quản lý khóa học
+              </Link>
             </li>
             <li>
-              <Link href={"/teacher/schedule"}>Lịch dạy học</Link>
+              <Link 
+                href={"/teacher/schedule"}
+                className={isActive("/teacher/schedule") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+              >
+                Lịch dạy học
+              </Link>
             </li>
             <li>
-              <Link href={"/teacher/profile"}>Tài khoản</Link>
+              <Link 
+                href={"/teacher/profile"}
+                className={isActive("/teacher/profile") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+              >
+                Tài khoản
+              </Link>
             </li>
 
             <li>
@@ -75,21 +103,41 @@ export default function TopNav() {
         <div className="hidden lg:block">
           <GraduationCap size={50} />
         </div>
-        <a className="btn btn-ghost text-xl text-nav-text ">LMS</a>
+        <a className="btn btn-ghost text-xl text-nav-text">LMS</a>
       </div>
-      <div className="navbar-center hidden lg:flex text-nav-text ">
+      <div className="navbar-center hidden lg:flex text-nav-text">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link href={"/teacher"}>Trang chủ</Link>
+            <Link 
+              href={"/teacher"}
+              className={isActive("/teacher") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+            >
+              Trang chủ
+            </Link>
           </li>
           <li>
-            <Link href={"/teacher/course"}>Quản lý khóa học</Link>
+            <Link 
+              href={"/teacher/course"}
+              className={isActive("/teacher/course") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+            >
+              Quản lý khóa học
+            </Link>
           </li>
           <li>
-            <Link href={"/teacher/profile"}>Tài khoản</Link>
+            <Link 
+              href={"/teacher/profile"}
+              className={isActive("/teacher/profile") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+            >
+              Tài khoản
+            </Link>
           </li>
           <li>
-            <Link href={"/teacher/schedule"}>Lịch dạy học</Link>
+            <Link 
+              href={"/teacher/schedule"}
+              className={isActive("/teacher/schedule") ? "border-b-2 border-nav-text pb-1 rounded-none" : ""}
+            >
+              Lịch dạy học
+            </Link>
           </li>
           <li>
             <Button

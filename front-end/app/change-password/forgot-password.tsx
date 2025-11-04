@@ -27,6 +27,10 @@ import { ToastAction } from "@radix-ui/react-toast";
 import { Button } from "@radix-ui/themes";
 import ConfirmSchema from "@/lib/zod/ConfirmValidate";
 import { useRouter } from "next/navigation";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+} from "@radix-ui/react-icons";
 export default function ForgotPassword() {
   const router = useRouter();
   const [idUser, setIdUser] = useState<any>(null);
@@ -34,6 +38,8 @@ export default function ForgotPassword() {
   const { toast } = useToast();
   const [otp, setOtp] = useState("");
   const [page, setPage] = useState([true, false, false]);
+  const [showPass, setShowPass] = useState<Boolean>(false);
+  const [showConfirmPass, setShowConfirmPass] = useState<Boolean>(false);
   const alert = (mess: string, variant: any) =>
     toast({
       variant,
@@ -211,7 +217,20 @@ export default function ForgotPassword() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your password" {...field} />
+                        <div className="relative">
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            type={showPass ? "text" : "password"}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPass((state: Boolean) => !state)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+                          >
+                            {showPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -224,7 +243,20 @@ export default function ForgotPassword() {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Confirm your password" {...field} />
+                        <div className="relative">
+                          <Input
+                            placeholder="Confirm your password"
+                            {...field}
+                            type={showConfirmPass ? "text" : "password"}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPass((state: Boolean) => !state)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+                          >
+                            {showConfirmPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

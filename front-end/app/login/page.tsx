@@ -36,13 +36,17 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { usePathname } from "next/navigation";
 
 export default function ProfileForm() {
   // ...
   const [showPass, setShowPass] = useState<Boolean>(false);
-  const isAdmin = useSearchParams().get("admin");
+  const searchParams = useSearchParams();
+  const isAdmin = searchParams.get("admin") || "false"; // Mặc định là user nếu không có query param
   const [loading, setLoading] = useState<any>(false);
   const router = useRouter();
+  const pathname = usePathname();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -136,15 +140,47 @@ export default function ProfileForm() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
-          <Link href="/">
-            <Btn
-              variant="outline"
-              className="flex items-center gap-2"
+          <div className="flex items-center justify-between">
+            <Link href="/">
+              <Btn
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <ArrowLeftIcon />
+                Home
+              </Btn>
+            </Link>
+            
+            {/* Toggle chuyển đổi giữa Admin và User */}
+            <ToggleGroup
+              type="single"
+              value={isAdmin == "true" ? "admin" : "user"}
+              onValueChange={(value) => {
+                if (value === "admin") {
+                  router.push(`${pathname}?admin=true`);
+                } else if (value === "user") {
+                  router.push(`${pathname}?admin=false`);
+                }
+              }}
+              className="border-none rounded-none"
             >
-              <ArrowLeftIcon />
-              Home
-            </Btn>
-          </Link>
+              <ToggleGroupItem
+                value="user"
+                aria-label="User login"
+                className="px-4 py-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground rounded-none"
+              >
+                User
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="admin"
+                aria-label="Admin login"
+                className="px-4 py-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground rounded-none"
+              >
+                Admin
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+          
           <div className="flex justify-center mb-6">
             {/* You can add your logo here */}
             <GraduationCap size={50} />

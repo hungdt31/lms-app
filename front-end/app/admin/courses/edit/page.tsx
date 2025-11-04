@@ -196,7 +196,7 @@ export default function AddCoursePage() {
       if (res?.success) {
         toast({
           title: "Success",
-          description: "Course added successfully",
+          description: "Edit course successfully",
         });
         router.push(`/admin/courses?id=${semesterId}`);
       } else {

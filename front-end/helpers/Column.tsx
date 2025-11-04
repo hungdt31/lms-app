@@ -19,6 +19,22 @@ import {
 import { ArrowUpDown, MoreHorizontal} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
+
+// Utility function để format date nhất quán, tránh hydration mismatch
+const formatDate = (dateString: string | null | undefined): string => {
+  if (!dateString) return "-";
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "-";
+    // Sử dụng UTC methods để đảm bảo nhất quán giữa server và client
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  } catch {
+    return "-";
+  }
+};
 export type UserInfo = {
   id: string;
   mssv: string,
@@ -109,7 +125,7 @@ export const columns: ColumnDef<UserInfo>[] = [
     header: "Date of birth",
     cell: ({ row }) => {
       const date_of_birth = row.getValue("date_of_birth");
-      const formatted = new Date(date_of_birth as string).toUTCString();
+      const formatted = formatDate(date_of_birth as string);
       return <div className="font-medium">{formatted}</div>;
     },
   },
@@ -301,13 +317,94 @@ export const admin_columns: ColumnDef<StudentInfo>[] = [
     },
   },
   {
+    header: "Avatar",
+    cell: ({ row }) => {
+      return (
+        <Avatar>
+          <AvatarImage src={row.original.avatar} alt="@shadcn" />
+          <AvatarFallback>{row.original.firstname[0]}{row.original.lastname[0]}</AvatarFallback>
+        </Avatar>
+      );
+    }
+  },
+  {
+    accessorKey: "firstname",
+    header: "First name",
+  },
+  {
+    accessorKey: "lastname",
+    header: "Last name",
+  },
+  {
+    accessorKey: "date_of_birth",
+    header: "Date of birth",
+    cell: ({ row }) => {
+      const date_of_birth = row.getValue("date_of_birth");
+      const formatted = formatDate(date_of_birth as string);
+      return <div className="font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "gender",
+    header: "Gender",
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => {
+      if (row.getIsSelected()) {
+        return <Input type="text" className="font-medium" defaultValue={row.original.email} onChange={(e) => row.original.email = e.target.value}/>;
+      } else {
+        return <div className="font-medium">{row.original.email}</div>;
+      }
+    }
+  },
+]
+// Columns riêng cho student, có thêm cột MSSV
+export const student_columns: ColumnDef<StudentInfo>[] = [
+  {
+    id: "select",
+    header: ({ table }) => {
+      return (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+          }}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+          }}
+        />
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    header: "No.",
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.index + 1}</div>;
+    },
+  },
+  {
     accessorKey: "mssv",
     header: "MSSV",
     cell: ({ row }) => {
       if (row.getIsSelected()) {
         return <Input type="text" className="font-medium" defaultValue={row.original.mssv} onChange={(e) => row.original.mssv = e.target.value}/>;
       } else {
-        return <div className="font-medium">{row.original.mssv}</div>;
+        return <div className="font-medium">{row.original.mssv || "-"}</div>;
       }
     }
   },
@@ -335,7 +432,7 @@ export const admin_columns: ColumnDef<StudentInfo>[] = [
     header: "Date of birth",
     cell: ({ row }) => {
       const date_of_birth = row.getValue("date_of_birth");
-      const formatted = new Date(date_of_birth as string).toUTCString();
+      const formatted = formatDate(date_of_birth as string);
       return <div className="font-medium">{formatted}</div>;
     },
   },

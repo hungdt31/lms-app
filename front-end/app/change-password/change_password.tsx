@@ -18,9 +18,15 @@ import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+} from "@radix-ui/react-icons";
 export default function ChangePassword() {
   const { toast } = useToast();
   const [loading, setLoading] = useState<any>(false);
+  const [showOldPass, setShowOldPass] = useState<Boolean>(false);
+  const [showNewPass, setShowNewPass] = useState<Boolean>(false);
   const alert = (mess: string, variant: any) =>
     toast({
       variant,
@@ -101,11 +107,20 @@ export default function ChangePassword() {
                 Password
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter old password"
-                  {...field}
-                  type="password"
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="Enter old password"
+                    {...field}
+                    type={showOldPass ? "text" : "password"}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPass((state: Boolean) => !state)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+                  >
+                    {showOldPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -120,11 +135,20 @@ export default function ChangePassword() {
                 New password
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter new password"
-                  {...field}
-                  type="password"
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="Enter new password"
+                    {...field}
+                    type={showNewPass ? "text" : "password"}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPass((state: Boolean) => !state)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100"
+                  >
+                    {showNewPass ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

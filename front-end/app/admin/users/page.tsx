@@ -53,7 +53,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import LoginLooading from "@/components/loading/login";
 import DataTable from "@/components/admin/DataTable";
-import { admin_columns } from "@/helpers/Column";
+import { admin_columns, student_columns } from "@/helpers/Column";
 import { AllUserQuery } from "@/hooks/user";
 
 const formSchema = z.object({
@@ -344,7 +344,7 @@ export default function AdminPage() {
           {users?.student && (
             <DataTable
               data={users?.student}
-              columns={admin_columns}
+              columns={student_columns}
               query={fetchData}
             />
           )}

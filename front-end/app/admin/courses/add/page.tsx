@@ -173,7 +173,7 @@ export default function AddCoursePage() {
       if (res?.success) {
         toast({
           title: "Success",
-          description: "Course added successfully",
+          description: "Add course successfully",
         });
         router.push("/admin/courses");
       } else {
